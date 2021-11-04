@@ -60,5 +60,9 @@ public class LectureManageService {
     }
 
     public void updateAboutRoom(LectureID lectureID, String room){
+        //강의 시간표 여러개중에 어떤거 가져올꺼지?
+        //전체 개설 교과목 가져온다.
+        //전체 개설 교과목과 겹치는 시(공)간 있는지 확인
+        //있으면 예외, 없으면 변경
     }
 }
