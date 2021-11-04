@@ -53,9 +53,12 @@ public class LectureManageService {
         lectureRepo.save(newLecture);
     }
 
-    public void removeLecture(){
+    //TODO : 굳이 여기서 할필요가 있나? 디비에서 처리가능한거 아닌가?
+    //TODO : cascade하는 로직은 디비에서?
+    public void removeLecture(LectureID lectureID){
+        lectureRepo.remove(lectureID);
     }
 
-    public void updateLecture(){
+    public void updateAboutRoom(LectureID lectureID, String room){
     }
 }

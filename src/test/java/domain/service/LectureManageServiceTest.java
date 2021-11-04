@@ -103,7 +103,7 @@ class LectureManageServiceTest {
         );
     }
 
-    @DisplayName("강의생성 실패 테스트-교수 중복시간표")
+    @DisplayName("강의생성 실패 테스트-강의 시간 중복")
     @Test
     public void duplicatedTimeFailTest(){
         Professor p1 = professorRepo.findByID(new ProfessorID("1"));
@@ -112,7 +112,7 @@ class LectureManageServiceTest {
         Set<LectureTime> times = new HashSet<>();
         times.add(
                 new LectureTime(
-                        LectureTime.DayOfWeek.MON,
+                        LectureTime.DayOfWeek.TUE,
                         LectureTime.LecturePeriod.THIRD,
                         LectureTime.LecturePeriod.FIFTH,
                         "D123"
@@ -137,7 +137,79 @@ class LectureManageServiceTest {
             );
         });
 
-        assertEquals("같은시간에 강의가 존재합니다.", exception.getMessage());
+        assertEquals("이미 존재하는 시간입니다.", exception.getMessage());
+    }
 
+    @DisplayName("강의생성 실패 테스트-교수 시간표 중복")
+    @Test
+    public void duplicatedTimeTableFailTest(){
+        Professor p1 = professorRepo.findByID(new ProfessorID("1"));
+        Course c1 = courseRepo.findByID(new CourseID(1));
+
+        Set<LectureTime> times = new HashSet<>();
+        times.add(
+                new LectureTime(
+                        LectureTime.DayOfWeek.TUE,
+                        LectureTime.LecturePeriod.THIRD,
+                        LectureTime.LecturePeriod.FIFTH,
+                        "D124"
+                )
+        );
+
+        manageService.addLecture(
+                new LectureID("1"),
+                c1.getId(),
+                p1.getId(),
+                30,
+                times
+        );
+
+        Set<LectureTime> times2 = new HashSet<>();
+        times2.add(
+                new LectureTime(
+                        LectureTime.DayOfWeek.TUE,
+                        LectureTime.LecturePeriod.THIRD,
+                        LectureTime.LecturePeriod.FIFTH,
+                        "D123"
+                )
+        );
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, ()->{
+            manageService.addLecture(
+                    new LectureID("2"),
+                    c1.getId(),
+                    p1.getId(),
+                    30,
+                    times2
+            );
+        });
+
+        assertEquals("같은시간에 강의가 존재합니다.", exception.getMessage());
+    }
+
+    @DisplayName("강의삭제 성공 테스트")
+    @Test
+    public void deleteLectureTest(){
+        Professor p1 = professorRepo.findByID(new ProfessorID("1"));
+        Course c1 = courseRepo.findByID(new CourseID(1));
+        Set<LectureTime> times = new HashSet<>();
+        times.add(
+                new LectureTime(
+                        LectureTime.DayOfWeek.TUE,
+                        LectureTime.LecturePeriod.THIRD,
+                        LectureTime.LecturePeriod.FIFTH,
+                        "D124"
+                )
+        );
+
+        manageService.addLecture(
+                new LectureID("1"),
+                c1.getId(),
+                p1.getId(),
+                30,
+                times
+        );
+
+        manageService.removeLecture(new LectureID("1"));
     }
 }

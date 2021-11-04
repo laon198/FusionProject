@@ -25,4 +25,9 @@ public class SimpleLectureRepository implements LectureRepository {
     public void save(Lecture lecture){
         repo.put(lecture.getID(), lecture);
     }
+
+    @Override
+    public void remove(LectureID lectureID) {
+        repo.remove(lectureID);
+    }
 }

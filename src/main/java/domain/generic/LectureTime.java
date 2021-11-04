@@ -37,7 +37,7 @@ public class LectureTime {
     }
 
     public boolean isSameRoom(LectureTime time){
-        return time.room==room;
+        return room.equals(time.room);
     }
 
     @Override

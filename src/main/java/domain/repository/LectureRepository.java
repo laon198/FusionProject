@@ -9,4 +9,5 @@ public interface LectureRepository {
     Lecture findByID(LectureID id);
     List<Lecture> findAll();
     void save(Lecture lecture);
+    void remove(LectureID lectureID);
 }
