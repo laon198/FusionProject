@@ -1,4 +1,4 @@
-pugins {
+plugins {
     id 'java'
 }
 
