@@ -21,14 +21,21 @@ public class LectureManageService {
         this.lectureRepo = lectureRepo;
     }
 
+<<<<<<< HEAD
     public void addLecture(long lectureID, long courseID, long professorID,
+=======
+    public void addLecture(LectureID lectureID, CourseID courseID, ProfessorID professorID,
+>>>>>>> be40034d7922ccc897f017a67b80ed559b184bcd
                            int limit, Set<LectureTime> lectureTimes){
         //TODO : lectureID확인 로직 필요
         courseRepo.findByID(courseID); //TODO : 존재하지않을때 예외 로직필요
         Professor p = professorRepo.findByID(professorID); //TODO : 존재하지않을때 예외 로직필요
 
         //TODO : 더 좋은방법?
+<<<<<<< HEAD
         //TODO : 강의를 다가져오기에는 부하가 너무 크지않나?
+=======
+>>>>>>> be40034d7922ccc897f017a67b80ed559b184bcd
         for(Lecture existingLecture : lectureRepo.findAll()){
             for(LectureTime existingTime : existingLecture.getLectureTimes()){
                 for(LectureTime newTime : lectureTimes){
@@ -54,6 +61,7 @@ public class LectureManageService {
         lectureRepo.save(newLecture);
     }
 
+<<<<<<< HEAD
     //TODO : 굳이 여기서 할필요가 있나? 디비에서 처리가능한거 아닌가?
     //TODO : cascade하는 로직은 디비에서?
     public void removeLecture(long lectureID){
@@ -92,3 +100,11 @@ public class LectureManageService {
         lectureRepo.save(targetLecture);
     }
 }
+=======
+    public void removeLecture(){
+    }
+
+    public void updateLecture(){
+    }
+}
+>>>>>>> be40034d7922ccc897f017a67b80ed559b184bcd
