@@ -192,8 +192,8 @@ public class RegisterServiceTest {
     @Test
     public void exceedLimitStdFailTest(){
         registerService.register(1, 1);
-        registerService.register(2, 1);
-        registerService.register(3, 1);
+        registerService.register(1, 2);
+        registerService.register(1, 3);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, ()-> {
             registerService.register(1, 4);
@@ -257,8 +257,7 @@ public class RegisterServiceTest {
     @DisplayName("수강안하는 강의 수강취소 실패 테스트")
     @Test
     public void notRegisteredLectureCancelFailTest(){
-
-        registerService.register(1, 1);
+//        registerService.register(1, 1);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, ()-> {
             registerService.cancel(1, 1);

@@ -53,7 +53,7 @@ public class Lecture {
     }
 
     public void writePlanner(String itemName, String content, long writerID) {
-        if(writerID==lecturerID){
+        if(writerID!=lecturerID){
             throw new IllegalStateException("담당 교과목이 아닙니다.");
         }
 

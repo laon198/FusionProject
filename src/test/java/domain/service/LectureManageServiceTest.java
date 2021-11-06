@@ -217,7 +217,7 @@ class LectureManageServiceTest {
                         LectureTime.DayOfWeek.TUE,
                         LectureTime.LecturePeriod.THIRD,
                         LectureTime.LecturePeriod.FIFTH,
-                        "D124"
+                        "D126"
                 )
         );
 
