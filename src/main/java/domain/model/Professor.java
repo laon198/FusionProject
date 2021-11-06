@@ -6,15 +6,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Professor{
-    private ProfessorID id;
+    private long id;
     private Set<LectureTime> timeTable;
 
-    public Professor(ProfessorID id){
+    public Professor(long id){
         this.id = id;
         timeTable = new HashSet<>();
     }
 
-    public ProfessorID getId() {
+    public long getId() {
         return id;
     }
 

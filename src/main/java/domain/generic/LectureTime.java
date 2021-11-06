@@ -40,6 +40,15 @@ public class LectureTime {
         return room.equals(time.room);
     }
 
+    public LectureTime setRoom(String room) {
+        return new LectureTime(
+                this.lectureDay,
+                this.startTime,
+                this.endTime,
+                room
+        );
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

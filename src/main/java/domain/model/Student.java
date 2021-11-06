@@ -5,10 +5,10 @@ import domain.generic.LectureTime;
 import java.util.*;
 
 public class Student{
-    private StudentID id;
+    private long id;
     private int maxCredit = 21;
     private int credit;
-    private List<LectureID> registeredLectureIDs;
+    private List<Long> registeredLectureIDs;
     private Set<LectureTime> timeTable;
     private Year year;
 
@@ -16,25 +16,25 @@ public class Student{
         FRESHMAN, SOPHOMORE, JUNIOR, SENIOR
     }
 
-    public Student(StudentID stdID, Year year){
+    public Student(long stdID, Year year){
         this.id = stdID;
         this.year = year;
         registeredLectureIDs = new ArrayList<>();
         timeTable = new HashSet<>();
     }
 
-    public StudentID getID(){return id;}
-    public List<LectureID> getRegisteredLectureIDs(){return registeredLectureIDs;}
+    public long getID(){return id;}
+    public List<Long> getRegisteredLectureIDs(){return registeredLectureIDs;}
     public Year getYear(){return year;}
 
-    public void register(LectureID lectureID,
+    public void register(long lectureID,
                             Set<LectureTime> lectureTimes, int lectureCredit){
         credit += lectureCredit;
         registeredLectureIDs.add(lectureID);
         timeTable.addAll(lectureTimes);
     }
 
-    public void cancel(LectureID lectureID,
+    public void cancel(long lectureID,
                        Set<LectureTime> lectureTimes, int lectureCredit){
         credit -= lectureCredit;
         registeredLectureIDs.remove(lectureID);
@@ -60,9 +60,9 @@ public class Student{
         return true;
     }
 
-    public boolean hasLecture(LectureID lectureID) {
-        for(LectureID myLectureID : registeredLectureIDs){
-            if(myLectureID.equals(lectureID)){
+    public boolean hasLecture(long lectureID) {
+        for(long myLectureID : registeredLectureIDs){
+            if(myLectureID==lectureID){
                 return true;
             }
         }

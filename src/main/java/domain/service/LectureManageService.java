@@ -21,13 +21,14 @@ public class LectureManageService {
         this.lectureRepo = lectureRepo;
     }
 
-    public void addLecture(LectureID lectureID, CourseID courseID, ProfessorID professorID,
+    public void addLecture(long lectureID, long courseID, long professorID,
                            int limit, Set<LectureTime> lectureTimes){
         //TODO : lectureID확인 로직 필요
         courseRepo.findByID(courseID); //TODO : 존재하지않을때 예외 로직필요
         Professor p = professorRepo.findByID(professorID); //TODO : 존재하지않을때 예외 로직필요
 
         //TODO : 더 좋은방법?
+        //TODO : 강의를 다가져오기에는 부하가 너무 크지않나?
         for(Lecture existingLecture : lectureRepo.findAll()){
             for(LectureTime existingTime : existingLecture.getLectureTimes()){
                 for(LectureTime newTime : lectureTimes){
@@ -55,14 +56,39 @@ public class LectureManageService {
 
     //TODO : 굳이 여기서 할필요가 있나? 디비에서 처리가능한거 아닌가?
     //TODO : cascade하는 로직은 디비에서?
-    public void removeLecture(LectureID lectureID){
+    public void removeLecture(long lectureID){
         lectureRepo.remove(lectureID);
     }
 
-    public void updateAboutRoom(LectureID lectureID, String room){
-        //강의 시간표 여러개중에 어떤거 가져올꺼지?
-        //전체 개설 교과목 가져온다.
-        //전체 개설 교과목과 겹치는 시(공)간 있는지 확인
-        //있으면 예외, 없으면 변경
+    //TODO : 교수와 학생의 강의시간 의존 문제
+    public void updateAboutRoom(long lectureID,
+                                    LectureTime targetLectureTime, String room){
+        Lecture targetLecture = lectureRepo.findByID(lectureID);
+
+        if(!targetLecture.hasLectureTime(targetLectureTime)){
+            throw new IllegalArgumentException("시간과 강의실이 잘못되었습니다.");
+        }
+
+        LectureTime updatedTime = targetLectureTime.setRoom(room);
+
+        for(Lecture existingLecture : lectureRepo.findAll()){
+            for(LectureTime existingTime : existingLecture.getLectureTimes()){
+                if(existingTime.isSameRoom(updatedTime) &&
+                        existingTime.isOverlappedTime(updatedTime)){
+                    throw new IllegalArgumentException("이미 해당시간에 강의실이 사용중 입니다.");
+                }
+            }
+        }
+
+        targetLecture.removeTime(targetLectureTime);
+        targetLecture.addTime(updatedTime);
+
+        lectureRepo.save(targetLecture);
+    }
+
+    public void updateAboutMaxStd(long lectureID, int max){
+        Lecture targetLecture = lectureRepo.findByID(lectureID);
+        targetLecture.setLimit(max);
+        lectureRepo.save(targetLecture);
     }
 }

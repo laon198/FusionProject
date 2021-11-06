@@ -6,8 +6,8 @@ import domain.model.LectureID;
 import java.util.List;
 
 public interface LectureRepository {
-    Lecture findByID(LectureID id);
-    List<Lecture> findAll();
+    Lecture findByID(long id);
     void save(Lecture lecture);
-    void remove(LectureID lectureID);
+    void remove(long lectureID);
+    List<Lecture> findAll();
 }

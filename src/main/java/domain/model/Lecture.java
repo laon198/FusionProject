@@ -6,15 +6,16 @@ import domain.generic.Period;
 import java.util.*;
 
 public class Lecture {
-    private LectureID id;
+    private long id;
     private int limit;
-    private CourseID courseID;
-    private ProfessorID lecturerID;
+    private long courseID;
+    private long lecturerID;
     private Set<LectureTime> lectureTimes;
-    private List<StudentID> registeredStudentIDs;
+    private List<Long> registeredStudentIDs;
     private LecturePlanner planner;
 
-    public Lecture(LectureID lectureID, ProfessorID professorID, int limitPersonNum, CourseID courseID,
+    //TODO : set을 직접 받는 것 별로 좋지 않은듯
+    public Lecture(long lectureID, long professorID, int limitPersonNum, long courseID,
                    Set<LectureTime> lectureTimes){ //TODO : 강의시간 더나은 방법으로
         id = lectureID;
         lecturerID = professorID;
@@ -25,11 +26,18 @@ public class Lecture {
         planner = new LecturePlanner();
     }
 
-    public LectureID getID(){return id;}
-    public CourseID getCourseID(){ return courseID;}
+    public long getID(){return id;}
+    public long getCourseID(){ return courseID;}
     public Set<LectureTime> getLectureTimes(){ return lectureTimes;}
 
-    public void register(StudentID stdID){
+    public void setLimit(int limit){
+        if(limit<0){
+            throw new IllegalArgumentException("최소 수강인원은 0명 부터입니다.");
+        }
+        this.limit = limit;
+    }
+
+    public void register(long stdID){
         registeredStudentIDs.add(stdID);
     }
 
@@ -40,12 +48,12 @@ public class Lecture {
         return true;
     }
 
-    public void cancel(StudentID stdID) {
+    public void cancel(long stdID) {
         registeredStudentIDs.remove(stdID);
     }
 
-    public void writePlanner(String itemName, String content, ProfessorID writerID) {
-        if(!writerID.equals(lecturerID)){
+    public void writePlanner(String itemName, String content, long writerID) {
+        if(writerID==lecturerID){
             throw new IllegalStateException("담당 교과목이 아닙니다.");
         }
 
@@ -57,8 +65,16 @@ public class Lecture {
     }
 
     public boolean isEqualCourse(Lecture lecture) {
-        return lecture.courseID.equals(courseID);
+        return lecture.courseID==courseID;
     }
+
+    public boolean hasLectureTime(LectureTime lTime){
+        return lectureTimes.contains(lTime);
+    }
+
+    public void removeTime(LectureTime time) { lectureTimes.remove(time); }
+
+    public void addTime(LectureTime time) { lectureTimes.add(time); }
 
     @Override
     public boolean equals(Object o) {

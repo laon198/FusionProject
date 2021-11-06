@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SimpleProfessorRepository implements ProfessorRepository {
-    private Map<ProfessorID, Professor> repo = new HashMap<>();
+    private Map<Long, Professor> repo = new HashMap<>();
 
     @Override
-    public Professor findByID(ProfessorID id) {
+    public Professor findByID(long id) {
         return repo.get(id);
     }
 

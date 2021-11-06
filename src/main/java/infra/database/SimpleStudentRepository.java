@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SimpleStudentRepository implements StudentRepository {
-    private Map<StudentID, Student> repo = new HashMap<>();
+    private Map<Long, Student> repo = new HashMap<>();
 
-    public Student findByID(StudentID id) {
+    public Student findByID(long id) {
         return repo.get(id);
     }
 

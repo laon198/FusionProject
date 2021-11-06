@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 public class SimpleLectureRepository implements LectureRepository {
-    private Map<LectureID, Lecture> repo = new HashMap<>();
+    private Map<Long, Lecture> repo = new HashMap<>();
 
     @Override
-    public Lecture findByID(LectureID id) {
+    public Lecture findByID(long id) {
         return repo.get(id);
     }
 
@@ -27,7 +27,7 @@ public class SimpleLectureRepository implements LectureRepository {
     }
 
     @Override
-    public void remove(LectureID lectureID) {
+    public void remove(long lectureID) {
         repo.remove(lectureID);
     }
 }

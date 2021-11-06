@@ -31,18 +31,10 @@ public class LecturePlannerTest {
 
     @BeforeEach
     public void setup() throws Exception {
-        Professor p1 = new Professor(
-                new ProfessorID("1")
-        );
-        Professor p2 = new Professor(
-                new ProfessorID("2")
-        );
-        Professor p3 = new Professor(
-                new ProfessorID("3")
-        );
-        Professor p4 = new Professor(
-                new ProfessorID("4")
-        );
+        Professor p1 = new Professor(1);
+        Professor p2 = new Professor(2);
+        Professor p3 = new Professor(3);
+        Professor p4 = new Professor(4);
 
         professorRepo.save(p1);
         professorRepo.save(p2);
@@ -60,10 +52,10 @@ public class LecturePlannerTest {
         );
 
         Lecture l1 = new Lecture(
-                new LectureID("1"),
+                1,
                 p1.getId(),
                 2,
-                new Course(new CourseID(1), 3).getId(),
+                new Course(1, 3).getId(),
                 time1
                );
 
@@ -78,10 +70,10 @@ public class LecturePlannerTest {
         );
 
         Lecture l2 = new Lecture(
-                new LectureID("2"),
+                2,
                 p2.getId(),
                 2,
-                new Course(new CourseID(2), 3).getId(),
+                new Course(2, 3).getId(),
                 time2
                 );
 
@@ -96,19 +88,19 @@ public class LecturePlannerTest {
         );
 
         Lecture l3 = new Lecture(
-                new LectureID("3"),
+                3,
                 p3.getId(),
                 2,
-                new Course(new CourseID(3), 3).getId(),
+                new Course(3, 3).getId(),
                 time3
                 );
 
 
         Lecture l4 = new Lecture(
-                new LectureID("4"),
+                4,
                 p4.getId(),
                 2,
-                new Course(new CourseID(3), 3).getId(),
+                new Course(3, 3).getId(),
                 time3
                 );
 
@@ -123,10 +115,10 @@ public class LecturePlannerTest {
         );
 
         Lecture l5 = new Lecture(
-                new LectureID("5"),
+                5,
                 p4.getId(),
                 2,
-                new Course(new CourseID(3), 3).getId(),
+                new Course(3, 3).getId(),
                 time4
                 );
 
@@ -141,10 +133,10 @@ public class LecturePlannerTest {
         );
 
         Lecture l6 = new Lecture(
-                new LectureID("6"),
+                6,
                 p4.getId(),
                 2,
-                new Course(new CourseID(4), 21).getId(),
+                new Course(4, 21).getId(),
                 time5
                 );
 
@@ -161,8 +153,8 @@ public class LecturePlannerTest {
     @DisplayName("강의계획서 입력성공 테스트")
     @Test
     public void setItemSuccessTest(){
-        Lecture l1 = lectureRepo.findByID(new LectureID("1"));
-        Professor p1 = professorRepo.findByID(new ProfessorID("1"));
+        Lecture l1 = lectureRepo.findByID(1);
+        Professor p1 = professorRepo.findByID(1);
 
         l1.writePlanner("bookName", "operating system", p1.getId());
     }
@@ -170,8 +162,8 @@ public class LecturePlannerTest {
     @DisplayName("강의계획서 입력실패 테스트 - 맞지않는 항목")
     @Test
     public void notExistItemFailTest(){
-        Lecture l1 = lectureRepo.findByID(new LectureID("1"));
-        Professor p1 = professorRepo.findByID(new ProfessorID("1"));
+        Lecture l1 = lectureRepo.findByID(1);
+        Professor p1 = professorRepo.findByID(1);
 
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, ()->{
@@ -184,8 +176,8 @@ public class LecturePlannerTest {
     @DisplayName("강의계획서 입력 실패 테스트 - 해당강의 교수가 아닐때")
     @Test
     public void notEqualLecturerFailTest(){
-        Lecture l1 = lectureRepo.findByID(new LectureID("1"));
-        Professor p2 = professorRepo.findByID(new ProfessorID("2"));
+        Lecture l1 = lectureRepo.findByID(1);
+        Professor p2 = professorRepo.findByID(2);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, ()->{
             l1.writePlanner("bookName", "operating system", p2.getId());
@@ -197,8 +189,8 @@ public class LecturePlannerTest {
     @DisplayName("강의계획서 입력 실패 테스트 - 강의계획서 입력기간 아닐때")
     @Test
     public void notPeriodFailTest(){
-        Lecture l1 = lectureRepo.findByID(new LectureID("1"));
-        Professor p1 = professorRepo.findByID(new ProfessorID("1"));
+        Lecture l1 = lectureRepo.findByID(1);
+        Professor p1 = professorRepo.findByID(1);
 
         l1.setPlannerWritingPeriod(new Period(
                 LocalDateTime.of(2020,01,01,12,00),

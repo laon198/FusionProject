@@ -3,20 +3,19 @@ package domain.model;
 import java.util.Objects;
 
 public class Course {
-    private CourseID id;
+    private long id;
     private String courseCode;
     private String department;
     private int credit;
 
-    public Course(CourseID id, int credit){
+    public Course(long id, int credit){
         this.id = id;
         this.credit = credit;
     }
 
-    public CourseID getId() {
+    public long getId() {
         return id;
     }
-
     public int getCredit() {
         return credit;
     }
