@@ -1,7 +1,6 @@
 package domain.repository;
 
 import domain.model.Lecture;
-import domain.model.LectureID;
 
 import java.util.List;
 

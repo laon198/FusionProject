@@ -1,8 +1,6 @@
 package application;
 
 
-import domain.model.LectureID;
-import domain.model.StudentID;
 import domain.repository.CourseRepository;
 import domain.repository.LectureRepository;
 import domain.repository.StudentRepository;

@@ -1,8 +1,6 @@
 package application;
 
 import domain.model.Lecture;
-import domain.model.LectureID;
-import domain.model.ProfessorID;
 import domain.repository.LectureRepository;
 
 public class ProfessorService {

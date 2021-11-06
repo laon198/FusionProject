@@ -7,9 +7,9 @@ import java.util.*;
 
 public class Lecture {
     private long id;
-    private int limit;
     private long courseID;
     private long lecturerID;
+    private int limit;
     private Set<LectureTime> lectureTimes;
     private List<Long> registeredStudentIDs;
     private LecturePlanner planner;

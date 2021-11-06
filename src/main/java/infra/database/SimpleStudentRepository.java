@@ -1,7 +1,6 @@
 package infra.database;
 
 import domain.model.Student;
-import domain.model.StudentID;
 import domain.repository.StudentRepository;
 
 import java.util.HashMap;

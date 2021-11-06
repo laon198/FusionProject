@@ -1,7 +1,6 @@
 package infra.database;
 
 import domain.model.Professor;
-import domain.model.ProfessorID;
 import domain.repository.ProfessorRepository;
 
 import java.util.HashMap;

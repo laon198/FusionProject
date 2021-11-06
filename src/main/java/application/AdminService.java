@@ -3,8 +3,6 @@ package application;
 import domain.generic.LectureTime;
 import domain.generic.Period;
 import domain.model.Lecture;
-import domain.model.LectureID;
-import domain.model.ProfessorID;
 import domain.repository.CourseRepository;
 import domain.repository.LectureRepository;
 import domain.repository.ProfessorRepository;
