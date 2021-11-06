@@ -6,26 +6,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Professor{
-<<<<<<< HEAD
     private long id;
     private Set<LectureTime> timeTable;
 
     public Professor(long id){
-=======
-    private ProfessorID id;
-    private Set<LectureTime> timeTable;
-
-    public Professor(ProfessorID id){
->>>>>>> be40034d7922ccc897f017a67b80ed559b184bcd
         this.id = id;
         timeTable = new HashSet<>();
     }
 
-<<<<<<< HEAD
     public long getId() {
-=======
-    public ProfessorID getId() {
->>>>>>> be40034d7922ccc897f017a67b80ed559b184bcd
         return id;
     }
 
