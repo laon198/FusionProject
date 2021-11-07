@@ -13,7 +13,11 @@ public class Student{
     private Year year;
 
     public enum Year {
-        FRESHMAN, SOPHOMORE, JUNIOR, SENIOR
+        FRESHMAN(1), SOPHOMORE(2), JUNIOR(3), SENIOR(4);
+        private final int year;
+        Year(int year){
+            this.year = year;
+        }
     }
 
     public Student(long stdID, Year year){
