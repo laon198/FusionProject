@@ -1,12 +1,15 @@
+
 import domain.model.Course;
 import infra.MyBatisConnectionFactory;
 import infra.database.CourseDAO;
 
 import java.sql.*;
+
 import java.util.List;
 
 public class test {
     public static void main(String[] args) throws Exception {
+
 
         CourseDAO courseDAO = new CourseDAO(MyBatisConnectionFactory.getSqlSessionFactory());
         List<Course> courses = courseDAO.ReadAll();

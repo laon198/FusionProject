@@ -16,6 +16,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,11 +60,41 @@ class LectureManageServiceTest {
         courseRepo.save(c3);
         courseRepo.save(c4);
 
-        Student std1 = new Student(1, Student.Year.FRESHMAN);
-        Student std2 = new Student(2, Student.Year.FRESHMAN);
-        Student std3 = new Student(3, Student.Year.FRESHMAN);
-        Student std4 = new Student(4, Student.Year.FRESHMAN);
-        Student std5 = new Student(5, Student.Year.SOPHOMORE);
+        Student std1 = Student.builder()
+                    .id(1)
+                    .year(1)
+                    .name("kim")
+                    .department("컴소공")
+                    .birthDate(LocalDate.of(1999,03,29))
+                    .build();
+        Student std2 = Student.builder()
+                    .id(2)
+                    .year(1)
+                    .name("lee")
+                    .department("컴소공")
+                .birthDate(LocalDate.of(1999,03,29))
+                .build();
+        Student std3 = Student.builder()
+                    .id(3)
+                    .year(1)
+                    .name("lee")
+                    .department("컴소공")
+                .birthDate(LocalDate.of(1999,03,29))
+                .build();
+        Student std4 = Student.builder()
+                    .id(4)
+                    .year(1)
+                    .name("lee")
+                    .department("컴소공")
+                .birthDate(LocalDate.of(1999,03,29))
+                .build();
+        Student std5 = Student.builder()
+                    .id(5)
+                    .year(2)
+                    .name("lee")
+                    .department("컴소공")
+                .birthDate(LocalDate.of(1999,03,29))
+                .build();
 
         stdRepo.save(std1);
         stdRepo.save(std2);

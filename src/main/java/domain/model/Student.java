@@ -2,25 +2,108 @@ package domain.model;
 
 import domain.generic.LectureTime;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
-public class Student{
-    private long id;
-    private int maxCredit = 21;
-    private int credit;
-    private List<Long> registeredLectureIDs;
-    private Set<LectureTime> timeTable;
+public class Student extends Member{
     private Year year;
+    private int maxCredit;
+    private int credit;
+    private final List<Long> registeredLectureIDs;
+    private final Set<LectureTime> timeTable;
 
     public enum Year {
-        FRESHMAN, SOPHOMORE, JUNIOR, SENIOR
+        FRESHMAN(1), SOPHOMORE(2), JUNIOR(3), SENIOR(4);
+        private final int year;
+        Year(int year){
+            this.year = year;
+        }
     }
 
-    public Student(long stdID, Year year){
-        this.id = stdID;
-        this.year = year;
-        registeredLectureIDs = new ArrayList<>();
-        timeTable = new HashSet<>();
+    public static class Builder{
+        private Long id;
+        private int credit;
+        private int maxCredit=21;
+        private Year year;
+        private String name;
+        private String department;
+        private LocalDate birthDate;
+        private List<Long> registeredLectureIDs = new ArrayList<Long>();
+        private Set<LectureTime> timeTable = new HashSet<LectureTime>();
+
+        public Builder id(long value){
+            id = value;
+            return this;
+        }
+
+        public Builder name(String value){
+            name = value;
+            return this;
+        }
+
+        public Builder department(String value){
+            department = value;
+            return this;
+        }
+
+        public Builder birthDate(LocalDate value){
+            birthDate = value;
+            return this;
+        }
+
+        public Builder year(int value){
+            if(value==1){
+                year = Year.FRESHMAN;
+            }else if(value==2){
+                year = Year.SOPHOMORE;
+            }else if(value==3){
+                year = Year.JUNIOR;
+            }else if(value==4){
+                year = Year.SENIOR;
+            }else{
+                throw new IllegalArgumentException("1~4학년만 존재합니다.");
+            }
+            return this;
+        }
+
+        public Builder credit(int value){
+            credit = value;
+            return this;
+        }
+
+        public Builder maxCredit(int value){
+            maxCredit = value;
+            return this;
+        }
+
+        public Builder registeredLectureIDs(Long... lectureIDs){
+            registeredLectureIDs = Arrays.asList(lectureIDs);
+            return this;
+        }
+
+        public Builder timeTable(LectureTime... lectureTimes){
+            timeTable = new HashSet(Arrays.asList(lectureTimes));
+            return this;
+        }
+
+        public Student build(){
+            return new Student(this);
+        }
+    }//end of builder class
+
+    public static Builder builder(){
+        return new Builder();
+    }
+
+    private Student(Builder builder){
+        super(builder.id, builder.name,
+                builder.department, builder.birthDate);
+        year = builder.year;
+        registeredLectureIDs = builder.registeredLectureIDs;
+        timeTable = builder.timeTable;
+        credit = builder.credit;
+        maxCredit = builder.maxCredit;
     }
 
     public long getID(){return id;}
