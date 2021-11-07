@@ -10,7 +10,9 @@ public class StudentDTO extends MemberDTO {
     private int maxCredit = 21;
     private int credit;
     private int year;
+    private String studentCode;
 //    private List<Long> registeredLectureIDs;
+
 //    private Set<LectureTime> timeTable;
 
     public static class Builder{
@@ -20,7 +22,8 @@ public class StudentDTO extends MemberDTO {
         private int year;
         private String name;
         private String department;
-        private LocalDate birthDate;
+        private String studentCode;
+        private String birthDate;
         private List<Long> registeredLectureIDs = new ArrayList<>();
         private Set<LectureTime> timeTable = new HashSet<>();
 
@@ -39,8 +42,13 @@ public class StudentDTO extends MemberDTO {
             return this;
         }
 
-        public Builder birthDate(LocalDate value){
+        public Builder birthDate(String value){
             birthDate = value;
+            return this;
+        }
+
+        public Builder studentCode(String value){
+            studentCode = value;
             return this;
         }
 
@@ -86,7 +94,22 @@ public class StudentDTO extends MemberDTO {
 //            timeTable = builder.timeTable;
             credit = builder.credit;
             maxCredit = builder.maxCredit;
+            studentCode = builder.studentCode;
         }
 
+    public String getStudentCode() {
+        return studentCode;
+    }
 
+    public int getYear() {
+        return year;
+    }
+
+    public int getCredit() {
+        return credit;
+    }
+
+    public int getMaxCredit() {
+        return maxCredit;
+    }
 }

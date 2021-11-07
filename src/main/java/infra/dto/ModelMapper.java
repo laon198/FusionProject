@@ -10,34 +10,64 @@ import java.util.List;
 import java.util.Set;
 
 public class ModelMapper {
-    public static StudentDTO studentToDTO(Student std) throws NoSuchFieldException, IllegalAccessException {
-        long id = getLongField(std, "id");
-        String name = getStringField(std, "name");
-        String department = getStringField(std, "department");
-        LocalDate birthDate = getLocalDateField(std, "birthDate");
-        int credit = getIntField(std, "credit");
-        int maxCredit = getIntField(std, "maxCredit");
-        int year = getYearField(std, "year");
+    public static StudentDTO studentToDTO(Student std){
+        try{
+            long id = getSuperLongField(std, "id");
+            String name = getSuperStringField(std, "name");
+            String department = getSuperStringField(std, "department");
+            String birthDate = getSuperStringField(std, "birthDate");
+            String studentCode = getStringField(std, "studentCode");
+            int credit = getIntField(std, "credit");
+            int maxCredit = getIntField(std, "maxCredit");
+            int year = getYearField(std, "year");
 
 //        //TODO : 이렇게 받으면 DTO에서 학생객체에 변경을 가할 수 있어.
 //        List<Long> registeredLectureIDs = getLongList(std, "registeredLectureIDs");
 //        Set<LectureTime> timeTable = getTimeTable(std, "timeTable");
 
-        return StudentDTO.builder()
-                .id(id)
-                .name(name)
-                .department(department)
-                .birthDate(birthDate)
-                .credit(credit)
-                .maxCredit(maxCredit)
-                .year(year)
-                .build();
+            return StudentDTO.builder()
+                    .id(id)
+                    .name(name)
+                    .department(department)
+                    .birthDate(birthDate)
+                    .credit(credit)
+                    .studentCode(studentCode)
+                    .maxCredit(maxCredit)
+                    .year(year)
+                    .build();
+        }catch(NoSuchFieldException fieldException) {
+            fieldException.getStackTrace();
+        }catch(IllegalAccessException accessException){
+            accessException.getStackTrace();
+        }
+
+        return null;
+    }
+
+    private static String getSuperStringField(Student obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        Field f1 = obj.getClass().getSuperclass().getDeclaredField(fieldName);
+        f1.setAccessible(true);
+        return (String)f1.get(obj);
+    }
+
+    private static long getSuperLongField(Student obj, String fieldName) throws IllegalAccessException, NoSuchFieldException {
+        Field f1 = obj.getClass().getSuperclass().getDeclaredField(fieldName);
+        f1.setAccessible(true);
+        return (long)f1.get(obj);
     }
 
     private static int getYearField(Student obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
         Field f1 = obj.getClass().getDeclaredField(fieldName);
         f1.setAccessible(true);
-        return (int)f1.get(obj);
+        if(f1.get(obj)==Student.Year.FRESHMAN){
+            return 1;
+        }else if(f1.get(obj)==Student.Year.SOPHOMORE){
+            return 2;
+        } else if(f1.get(obj)==Student.Year.JUNIOR){
+            return 3;
+        } else{
+            return 4;
+        }
     }
 
 

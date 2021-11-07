@@ -3,6 +3,8 @@ package infra.database;
 import domain.model.Student;
 import domain.repository.StudentRepository;
 import infra.PooledDataSource;
+import infra.dto.ModelMapper;
+import infra.dto.StudentDTO;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -55,6 +57,44 @@ public class RDBStudentRepository implements StudentRepository {
 
     @Override
     public void save(Student student) {
+        StudentDTO stdDTO = ModelMapper.studentToDTO(student);
+        StringBuilder memberQuery = new StringBuilder(
+                "UPDATE members_tb " +
+                "SET name=?, " +
+                "department=?, " +
+                "birthday=? " +
+                "WHERE member_SQ=?;"
+        );
+        StringBuilder stdQuery = new StringBuilder(
+                "UPDATE students_tb " +
+                "SET student_code=?, " +
+                "year=?, " +
+                "max_credit=?, " +
+                "credit=? " +
+                "WHERE member_SQ=?;"
+        );
+
+        try{
+            PreparedStatement memberStmt = getPreparedStmt(new String(memberQuery));
+            PreparedStatement stdStmt = getPreparedStmt(new String(stdQuery));
+
+            memberStmt.setString(1, stdDTO.getName());
+            memberStmt.setString(2, stdDTO.getDepartment());
+            memberStmt.setString(3, String.valueOf(stdDTO.getBirthDate()));
+            memberStmt.setLong(4, stdDTO.getId());
+
+            stdStmt.setString(1, stdDTO.getStudentCode());
+            stdStmt.setInt(2, stdDTO.getYear());
+            stdStmt.setInt(3, stdDTO.getMaxCredit());
+            stdStmt.setInt(4, stdDTO.getCredit());
+            stdStmt.setLong(5, stdDTO.getId());
+
+            memberStmt.executeUpdate();
+            stdStmt.executeUpdate();
+
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
     }
 
     private List<Student> getStdFrom(ResultSet resSet) throws SQLException {

@@ -6,9 +6,9 @@ public abstract class Member{
     protected Long id;
     protected String name;
     protected String department;
-    protected LocalDate birthDate;
+    protected String birthDate;
 
-    protected Member(Long id, String name, String dep, LocalDate birthDate){
+    protected Member(Long id, String name, String dep, String birthDate){
         this.id = id;
         this.name = name;
         this.department = dep;
