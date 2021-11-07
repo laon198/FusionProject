@@ -3,13 +3,13 @@ package domain.model;
 import domain.generic.LectureTime;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class Student extends Member{
     private Year year;
     private int maxCredit;
     private int credit;
+    private String studentCode;
     private final List<Long> registeredLectureIDs;
     private final Set<LectureTime> timeTable;
 
@@ -28,7 +28,8 @@ public class Student extends Member{
         private Year year;
         private String name;
         private String department;
-        private LocalDate birthDate;
+        private String studentCode;
+        private String birthDate;
         private List<Long> registeredLectureIDs = new ArrayList<Long>();
         private Set<LectureTime> timeTable = new HashSet<LectureTime>();
 
@@ -47,8 +48,13 @@ public class Student extends Member{
             return this;
         }
 
-        public Builder birthDate(LocalDate value){
+        public Builder birthDate(String value){
             birthDate = value;
+            return this;
+        }
+
+        public Builder studentCode(String value){
+            studentCode = value;
             return this;
         }
 
@@ -104,9 +110,11 @@ public class Student extends Member{
         timeTable = builder.timeTable;
         credit = builder.credit;
         maxCredit = builder.maxCredit;
+        studentCode = builder.studentCode;
     }
 
     public long getID(){return id;}
+    //TODO : 자기자신 반환말고 다르게
     public List<Long> getRegisteredLectureIDs(){return registeredLectureIDs;}
     public Year getYear(){return year;}
 

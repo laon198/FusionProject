@@ -10,7 +10,7 @@ public class Professor extends Member{
     private Set<LectureTime> timeTable;
 
     public Professor(long id){
-        super(id, "a", "b", LocalDate.of(1999,03,29)); //TODO
+        super(id, "a", "b", "19990329"); //TODO
         timeTable = new HashSet<>();
     }
 
