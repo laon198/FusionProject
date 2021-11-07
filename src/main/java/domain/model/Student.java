@@ -2,14 +2,16 @@ package domain.model;
 
 import domain.generic.LectureTime;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class Student extends Member{
     private Year year;
-    private int maxCredit=21;
-    private int credit=0;
-    private final List<Long> registeredLectureIDs; //TODO
-    private final Set<LectureTime> timeTable; //TODO
+    private int maxCredit;
+    private int credit;
+    private final List<Long> registeredLectureIDs;
+    private final Set<LectureTime> timeTable;
 
     public enum Year {
         FRESHMAN(1), SOPHOMORE(2), JUNIOR(3), SENIOR(4);
@@ -22,12 +24,13 @@ public class Student extends Member{
     public static class Builder{
         private Long id;
         private int credit;
-        private int maxCredit;
+        private int maxCredit=21;
         private Year year;
         private String name;
         private String department;
-        private List<Long> registeredLectureIDs = new ArrayList<>(); //TODO
-        private Set<LectureTime> timeTable = new HashSet<>(); //TODO
+        private LocalDate birthDate;
+        private List<Long> registeredLectureIDs = new ArrayList<Long>();
+        private Set<LectureTime> timeTable = new HashSet<LectureTime>();
 
         public Builder id(long value){
             id = value;
@@ -41,6 +44,11 @@ public class Student extends Member{
 
         public Builder department(String value){
             department = value;
+            return this;
+        }
+
+        public Builder birthDate(LocalDate value){
+            birthDate = value;
             return this;
         }
 
@@ -89,10 +97,13 @@ public class Student extends Member{
     }
 
     private Student(Builder builder){
-        super(builder.id, builder.name, builder.department);
+        super(builder.id, builder.name,
+                builder.department, builder.birthDate);
         year = builder.year;
         registeredLectureIDs = builder.registeredLectureIDs;
         timeTable = builder.timeTable;
+        credit = builder.credit;
+        maxCredit = builder.maxCredit;
     }
 
     public long getID(){return id;}

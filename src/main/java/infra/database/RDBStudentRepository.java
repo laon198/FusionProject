@@ -17,9 +17,14 @@ public class RDBStudentRepository implements StudentRepository {
 
     @Override
     public Student findByID(long id){
-        String query = "SELECT * FROM students_tb WHERE student_ID=?";
+        StringBuilder query = new StringBuilder(
+                "SELECT * FROM students_tb AS s " +
+                "JOIN members_tb AS m " +
+                "ON s.member_SQ = m.member_SQ "+
+                "WHERE m.member_SQ = ? "
+        );
         try{
-            PreparedStatement pstmt = getPreparedStmt(query);
+            PreparedStatement pstmt = getPreparedStmt(new String(query));
             pstmt.setLong(1, id);
             ResultSet res = pstmt.executeQuery();
             return getStdFrom(res).get(0);
@@ -32,9 +37,12 @@ public class RDBStudentRepository implements StudentRepository {
 
     @Override
     public List<Student> findAll() {
-        String query = "SELECT * FROM students_tb";
+        StringBuilder query = new StringBuilder(
+                "SELECT * FROM students_tb AS s " +
+                "JOIN members_tb AS m " +
+                "ON s.member_SQ = m.member_SQ");
         try{
-            PreparedStatement pstmt = getPreparedStmt(query);
+            PreparedStatement pstmt = getPreparedStmt(new String(query));
             ResultSet res = pstmt.executeQuery();
             return getStdFrom(res);
 
@@ -48,16 +56,20 @@ public class RDBStudentRepository implements StudentRepository {
     private List<Student> getStdFrom(ResultSet resSet) throws SQLException {
         List<Student> stdList = new ArrayList<>();
         long resID = 0;
-        int grade = 0;
+        int year = 0;
+        String name;
+        String birthDate;
 
         while(resSet.next()) {
-            resID = resSet.getLong("student_ID");
-            grade = resSet.getInt("grade");
+            resID = resSet.getLong("member_SQ");
+            year = resSet.getInt("year");
+            name = resSet.getString("name");
 
             stdList.add(
                     Student.builder()
                             .id(resID)
-                            .year(grade)
+                            .year(year)
+                            .name(name)
                             .build()
             );
         }

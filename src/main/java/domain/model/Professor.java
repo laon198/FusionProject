@@ -2,6 +2,7 @@ package domain.model;
 
 import domain.generic.LectureTime;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,7 +10,7 @@ public class Professor extends Member{
     private Set<LectureTime> timeTable;
 
     public Professor(long id){
-        super(id, "a", "b"); //TODO
+        super(id, "a", "b", LocalDate.of(1999,03,29)); //TODO
         timeTable = new HashSet<>();
     }
 
