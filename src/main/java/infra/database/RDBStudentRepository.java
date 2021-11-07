@@ -53,6 +53,10 @@ public class RDBStudentRepository implements StudentRepository {
         return null;
     }
 
+    @Override
+    public void save(Student student) {
+    }
+
     private List<Student> getStdFrom(ResultSet resSet) throws SQLException {
         List<Student> stdList = new ArrayList<>();
         long resID = 0;
@@ -86,7 +90,4 @@ public class RDBStudentRepository implements StudentRepository {
         return pstmt;
     }
 
-    @Override
-    public void save(Student student) {
-    }
 }

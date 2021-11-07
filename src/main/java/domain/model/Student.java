@@ -3,7 +3,6 @@ package domain.model;
 import domain.generic.LectureTime;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class Student extends Member{
@@ -107,6 +106,7 @@ public class Student extends Member{
     }
 
     public long getID(){return id;}
+    //TODO : 자기자신 반환말고 다르게
     public List<Long> getRegisteredLectureIDs(){return registeredLectureIDs;}
     public Year getYear(){return year;}
 
