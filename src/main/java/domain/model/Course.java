@@ -5,12 +5,17 @@ import java.util.Objects;
 public class Course {
     private long id;
     private String courseCode;
+    private String courseName;
     private String department;
     private int targetYear;
     private int credit;
 
-    public Course(long id, int credit){
+    public Course(long id, String courseCode, String courseName, String department, int targetYear, int credit) {
         this.id = id;
+        this.courseCode = courseCode;
+        this.courseName = courseName;
+        this.department = department;
+        this.targetYear = targetYear;
         this.credit = credit;
     }
 

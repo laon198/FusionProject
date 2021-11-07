@@ -4,15 +4,25 @@
     <resultMap id="result" type="domain.model.Course">
         <result property="id" column="course_SQ"/>
         <result property="courseCode" column="course_code"/>
-        <result property="department" column="department_SQ"/>
+        <result property="courseName" column="course_name"/>
+        <result property="department" column="department"/>
+        <result property="targetYear" column="target_year"/>
         <result property="credit" column="credit"/>
     </resultMap>
+
 
 
     <select id="ReadAll" resultMap="result">
         SELECT *
         FROM COURSES_TB
-        </select>
+    </select>
+
+    <select id="FindByOption" resultMap="result">
+        SELECT *
+        FROM COURSES_TB
+        <where></where>
+    </select>
+
 
     <select id="ReadTargetGrade" resultMap="result">
         SELECT *
@@ -23,15 +33,19 @@
         </if>
     </select>
 
-<!--    <update id="UpdateCourseName" parameterType="String">-->
-<!--        UPDATE COURSES_TB-->
-<!--        SET courseName=#{courseName}-->
-<!--        WHERE course_id = #{id}-->
-<!--    </update>-->
+    <update id="UpdateCourse">
+        UPDATE COURSES_TB
+        SET course_code=#{courseCode},
+            department=#{department},
+            course_name=#{courseName},
+            target_year=#{targetYear},
+            credit=#{credit}
+        WHERE course_SQ = #{id}
+    </update>
 
-<!--    <insert id="CreateCourse" parameterType="persistence.dto.CourseDTO">-->
-<!--        INSERT INTO COURSES_TB(course_SQ, course_code, department_SQ, course_name, target_grade, credit)-->
-<!--        VALUES (#{id}, #{courseCode}, #{department}, #{courseName}, #{targetYear}, #{credit})-->
-<!--    </insert>-->
+    <insert id="CreateCourse">
+        INSERT INTO COURSES_TB(course_SQ, course_code, department, course_name, target_year, credit)
+        VALUES (#{id}, #{courseCode}, #{department}, #{courseName}, #{targetYear}, #{credit})
+    </insert>
 
 </mapper>

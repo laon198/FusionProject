@@ -1,19 +1,28 @@
 
 import domain.model.Course;
+import domain.model.Lecture;
 import infra.MyBatisConnectionFactory;
 import infra.database.CourseDAO;
+import infra.database.RDBCourseRepository;
+import infra.database.RDBLectureRepository;
+import infra.dto.CourseDTO;
+import infra.dto.ModelMapper;
 
 import java.sql.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class test {
     public static void main(String[] args) throws Exception {
 
 
-        CourseDAO courseDAO = new CourseDAO(MyBatisConnectionFactory.getSqlSessionFactory());
-        List<Course> courses = courseDAO.ReadAll();
-        System.out.println(courses.size());
+        RDBLectureRepository rdbLectureRepository = new RDBLectureRepository(MyBatisConnectionFactory.getSqlSessionFactory());
+        List<Lecture> list = rdbLectureRepository.findAll();
+        System.out.println(list.size());
+//        RDBCourseRepository rdbCourseRepository = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
+//        Course course = new Course(1,"cs0002","과기영독2","컴퓨터소프트웨어공학과",3,3);
+//        rdbCourseRepository.save(course);
 
 
 //        Connection conn = null;
