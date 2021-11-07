@@ -1,5 +1,6 @@
 package infra;
 
+import infra.mapper.LectureMapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -16,6 +17,12 @@ public class  MyBatisConnectionFactory {
             Reader reader = Resources.getResourceAsReader(resource);
             if (sqlSessionFactory == null) {
                 sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader,"development");
+                Class[] mappers = {
+                        LectureMapper.class,
+                };
+                for(Class mapper : mappers){
+                    sqlSessionFactory.getConfiguration().addMapper(mapper);
+                }
             }
         }
         catch (FileNotFoundException fileNotFoundException) {

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.CourseMapper">
+    <resultMap id="result" type="domain.model.Course">
+        <result property="id" column="course_SQ"/>
+        <result property="courseCode" column="course_code"/>
+        <result property="department" column="department_SQ"/>
+        <result property="credit" column="credit"/>
+    </resultMap>
+
+
+    <select id="ReadAll" resultMap="result">
+        SELECT *
+        FROM COURSES_TB
+        </select>
+
+    <select id="ReadTargetGrade" resultMap="result">
+        SELECT *
+        FROM COURSES_TB
+        WHERE
+        <if test="targetYear != null">
+            targetYear like CONCAT('%',#{targetYear},'%')
+        </if>
+    </select>
+
+<!--    <update id="UpdateCourseName" parameterType="String">-->
+<!--        UPDATE COURSES_TB-->
+<!--        SET courseName=#{courseName}-->
+<!--        WHERE course_id = #{id}-->
+<!--    </update>-->
+
+<!--    <insert id="CreateCourse" parameterType="persistence.dto.CourseDTO">-->
+<!--        INSERT INTO COURSES_TB(course_SQ, course_code, department_SQ, course_name, target_grade, credit)-->
+<!--        VALUES (#{id}, #{courseCode}, #{department}, #{courseName}, #{targetYear}, #{credit})-->
+<!--    </insert>-->
+
+</mapper>

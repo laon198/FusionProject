@@ -19,6 +19,6 @@
         </environment>
     </environments>
     <mappers>
-        <mapper resource="sqlmapper/board.xml"/>
+        <mapper resource="sqlmapper/course.xml"/>
     </mappers>
 </configuration>
