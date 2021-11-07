@@ -12,7 +12,7 @@
             <!-- connecting to Local MySql -->
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://localhost/mydb?characterEncoding=utf8&amp;serverTimezone=UTC&amp;useSSL=false"/>
+                <property name="url" value="jdbc:mysql://localhost/fusionproject?characterEncoding=utf8&amp;serverTimezone=UTC&amp;useSSL=false"/>
                 <property name="username" value="root"/>
                 <property name="password" value="1234"/>
             </dataSource>
