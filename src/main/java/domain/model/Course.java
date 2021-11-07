@@ -6,6 +6,7 @@ public class Course {
     private long id;
     private String courseCode;
     private String department;
+    private int targetYear;
     private int credit;
 
     public Course(long id, int credit){

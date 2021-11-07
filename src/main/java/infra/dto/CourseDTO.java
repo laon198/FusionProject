@@ -1,5 +1,13 @@
 package infra.dto;
 
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 public class CourseDTO {
     private long id;
     private int targetYear;
