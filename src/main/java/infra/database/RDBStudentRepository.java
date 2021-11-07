@@ -54,23 +54,12 @@ public class RDBStudentRepository implements StudentRepository {
             resID = resSet.getLong("student_ID");
             grade = resSet.getInt("grade");
 
-            if (grade == 1) {
-                stdList.add(
-                        new Student(resID, Student.Year.FRESHMAN)
-                );
-            } else if (grade == 2) {
-                stdList.add(
-                        new Student(resID, Student.Year.SOPHOMORE)
-                );
-            } else if (grade == 3) {
-                stdList.add(
-                        new Student(resID, Student.Year.JUNIOR)
-                );
-            } else {
-                stdList.add(
-                        new Student(resID, Student.Year.SENIOR)
-                );
-            }
+            stdList.add(
+                    Student.builder()
+                            .id(resID)
+                            .year(grade)
+                            .build()
+            );
         }
 
         return stdList;

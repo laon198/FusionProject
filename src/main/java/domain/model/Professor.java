@@ -5,12 +5,11 @@ import domain.generic.LectureTime;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Professor{
-    private long id;
+public class Professor extends Member{
     private Set<LectureTime> timeTable;
 
     public Professor(long id){
-        this.id = id;
+        super(id, "a", "b"); //TODO
         timeTable = new HashSet<>();
     }
 
