@@ -25,8 +25,10 @@ public class RDBStudentRepository implements StudentRepository {
                 "ON s.member_SQ = m.member_SQ "+
                 "WHERE m.member_SQ = ? "
         );
+        Connection conn = null;
         try{
-            PreparedStatement pstmt = getPreparedStmt(new String(query));
+            conn = ds.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(new String(query));
             pstmt.setLong(1, id);
             ResultSet res = pstmt.executeQuery();
             return getStdFrom(res).get(0);
@@ -42,8 +44,10 @@ public class RDBStudentRepository implements StudentRepository {
                 "SELECT * FROM students_tb AS s " +
                 "JOIN members_tb AS m " +
                 "ON s.member_SQ = m.member_SQ");
+        Connection conn = null;
         try{
-            PreparedStatement pstmt = getPreparedStmt(new String(query));
+            conn = ds.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(new String(query));
             ResultSet res = pstmt.executeQuery();
             return getStdFrom(res);
 
@@ -75,9 +79,12 @@ public class RDBStudentRepository implements StudentRepository {
                         "max_credit=?;"
         );
 
+        Connection conn = null;
         try{
-            PreparedStatement memberStmt = getPreparedStmt(new String(memberQuery));
-            PreparedStatement stdStmt = getPreparedStmt(new String(stdQuery));
+            conn = ds.getConnection();
+            conn.setAutoCommit(false);
+            PreparedStatement memberStmt = conn.prepareStatement(new String(memberQuery));
+            PreparedStatement stdStmt = conn.prepareStatement(new String(stdQuery));
 
             memberStmt.setLong(1, stdDTO.getId());
             memberStmt.setString(2, stdDTO.getName());
@@ -99,9 +106,14 @@ public class RDBStudentRepository implements StudentRepository {
 
             memberStmt.execute();
             stdStmt.execute();
-
+            conn.commit();
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
+            try{
+                conn.rollback();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -128,14 +140,4 @@ public class RDBStudentRepository implements StudentRepository {
 
         return stdList;
     }
-
-
-    //TODO : prepareStmt받아오는거 따로 클래스 뺄까?
-    private PreparedStatement getPreparedStmt(String query) throws SQLException {
-        PreparedStatement pstmt = null;
-        Connection conn =  ds.getConnection();
-        pstmt = conn.prepareStatement(query);
-        return pstmt;
-    }
-
 }
