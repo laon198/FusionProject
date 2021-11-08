@@ -1,5 +1,6 @@
 package infra.database;
 
+import domain.generic.LectureTime;
 import domain.model.Professor;
 import domain.model.Student;
 import domain.repository.ProfessorRepository;
@@ -14,7 +15,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RDBProfessorRepository implements ProfessorRepository {
     private final DataSource ds = PooledDataSource.getDataSource();
@@ -116,6 +119,26 @@ public class RDBProfessorRepository implements ProfessorRepository {
 
     }
 
+    private ResultSet findLectureInfo(String profCode){
+        StringBuilder query = new StringBuilder(
+                "SELECT * FROM lectures_tb AS l " +
+                        "JOIN lecture_times_tb AS t " +
+                        "ON l.lecture_SQ = t.lecture_SQ "+
+                        "WHERE l.professor_code = ? "
+        );
+
+        Connection conn = null;
+        try{
+            conn = ds.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(new String(query));
+            pstmt.setString(1, profCode);
+            return pstmt.executeQuery();
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        return null;
+    }
+
     private List<Professor> getProfFrom(ResultSet resSet) throws SQLException {
         List<Professor> profList = new ArrayList<>();
         long resID = 0;
@@ -123,6 +146,7 @@ public class RDBProfessorRepository implements ProfessorRepository {
         String name;
         String birthDay;
         String department;
+        Set<LectureTime> timeTable = new HashSet<>();
 
         while(resSet.next()) {
             resID = resSet.getLong("member_SQ");
@@ -130,6 +154,18 @@ public class RDBProfessorRepository implements ProfessorRepository {
             name = resSet.getString("name");
             birthDay = resSet.getString("birthDay");
             department = resSet.getString("department");
+
+            ResultSet lectureInfo = findLectureInfo(professor_code);
+            while(lectureInfo.next()){
+                timeTable.add(
+                        LectureTime.builder()
+                                .lectureDay(lectureInfo.getString("day_of_week"))
+                                .room(lectureInfo.getString("lecture_room"))
+                                .startTime(lectureInfo.getInt("start_period"))
+                                .endTime(lectureInfo.getInt("end_period"))
+                                .build()
+                );
+            }
 
             profList.add(
                     Professor.builder()

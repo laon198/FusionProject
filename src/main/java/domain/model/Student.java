@@ -9,7 +9,7 @@ public class Student extends Member{
     private int maxCredit;
     private int credit;
     private String studentCode;
-    private final List<Long> registeredLectureIDs;
+    private final Set<Registering> myRegisterings;
     private final Set<LectureTime> timeTable;
 
     public enum Year {
@@ -21,7 +21,7 @@ public class Student extends Member{
     }
 
     public static class Builder{
-        private Long id;
+        private long id;
         private int credit;
         private int maxCredit=21;
         private Year year;
@@ -29,8 +29,8 @@ public class Student extends Member{
         private String department;
         private String studentCode;
         private String birthDate;
-        private List<Long> registeredLectureIDs = new ArrayList<Long>();
-        private Set<LectureTime> timeTable = new HashSet<LectureTime>();
+        private Set<Registering> myRegisterings = new HashSet<>();
+        private Set<LectureTime> timeTable = new HashSet<>();
 
         public Builder id(long value){
             id = value;
@@ -82,8 +82,8 @@ public class Student extends Member{
             return this;
         }
 
-        public Builder registeredLectureIDs(List<Long> value){
-            registeredLectureIDs = new ArrayList<>(value);
+        public Builder myRegisterings(Set<Registering> value){
+            myRegisterings = value;
             return this;
         }
 
@@ -102,31 +102,31 @@ public class Student extends Member{
     }
 
     private Student(Builder builder){
-        super(builder.id, builder.name,
-                builder.department, builder.birthDate);
+        super(builder.id, builder.name, builder.department, builder.birthDate);
         year = builder.year;
-        registeredLectureIDs = builder.registeredLectureIDs;
+        myRegisterings = builder.myRegisterings;
         timeTable = builder.timeTable;
         credit = builder.credit;
         maxCredit = builder.maxCredit;
         studentCode = builder.studentCode;
     }
 
-    public long getID(){return id;}
-    public Long[] getRegisteredLectureIDs(){return (Long[])registeredLectureIDs.toArray();}
+    public Set<Registering> getMyRegisterings(){
+        return new HashSet<>(myRegisterings);
+    }
     public Year getYear(){return year;}
 
-    public void register(long lectureID,
+    public void register(Registering registering,
                             Set<LectureTime> lectureTimes, int lectureCredit){
         credit += lectureCredit;
-        registeredLectureIDs.add(lectureID);
+        myRegisterings.add(registering);
         timeTable.addAll(lectureTimes);
     }
 
-    public void cancel(long lectureID,
+    public void cancel(Registering registering,
                        Set<LectureTime> lectureTimes, int lectureCredit){
         credit -= lectureCredit;
-        registeredLectureIDs.remove(lectureID);
+        myRegisterings.remove(registering);
         timeTable.removeAll(lectureTimes);
     }
 
@@ -150,8 +150,8 @@ public class Student extends Member{
     }
 
     public boolean hasLecture(long lectureID) {
-        for(long myLectureID : registeredLectureIDs){
-            if(myLectureID==lectureID){
+        for(Registering registering : myRegisterings){
+            if(registering.getLectureID()==lectureID){
                 return true;
             }
         }

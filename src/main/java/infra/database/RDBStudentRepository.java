@@ -38,25 +38,6 @@ public class RDBStudentRepository implements StudentRepository {
         }
     }
 
-    private ResultSet findLectureInfo(String stdCode){
-        StringBuilder query = new StringBuilder(
-                "SELECT * FROM enrollments_tb AS e " +
-                        "JOIN lecture_times_tb AS t " +
-                        "ON e.lecture_SQ = t.lecture_SQ "+
-                        "WHERE e.student_code = ? "
-        );
-
-        Connection conn = null;
-        try{
-            conn = ds.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(new String(query));
-            pstmt.setString(1, stdCode);
-            return pstmt.executeQuery();
-        }catch(SQLException sqlException){
-            sqlException.printStackTrace();
-        }
-        return null;
-    }
 
     @Override
     public List<Student> findAll() {
@@ -137,6 +118,26 @@ public class RDBStudentRepository implements StudentRepository {
         }
     }
 
+    private ResultSet findLectureInfo(String stdCode){
+        StringBuilder query = new StringBuilder(
+                "SELECT * FROM enrollments_tb AS e " +
+                        "JOIN lecture_times_tb AS t " +
+                        "ON e.lecture_SQ = t.lecture_SQ "+
+                        "WHERE e.student_code = ? "
+        );
+
+        Connection conn = null;
+        try{
+            conn = ds.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(new String(query));
+            pstmt.setString(1, stdCode);
+            return pstmt.executeQuery();
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        return null;
+    }
+
     private List<Student> getStdFrom(ResultSet resSet) throws SQLException {
         List<Student> stdList = new ArrayList<>();
         long resID = 0;
@@ -180,7 +181,6 @@ public class RDBStudentRepository implements StudentRepository {
                             .department(department)
                             .studentCode(studentCode)
                             .timeTable(timeTable)
-                            .registeredLectureIDs(new ArrayList<>(registeredLectureIds))
                             .build()
             );
         }

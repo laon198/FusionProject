@@ -11,7 +11,7 @@ public class Professor extends Member{
 
 
     public static class Builder{
-        private Long id;
+        private long id;
         private String name;
         private String department;
         private String birthDate;
@@ -58,16 +58,11 @@ public class Professor extends Member{
     }
 
     public Professor(Builder builder){
-        super(builder.id, builder.name,
-                builder.department, builder.birthDate); //TODO
+        super(builder.id, builder.name, builder.department, builder.birthDate);
         timeTable = builder.timeTable;
         professorCode = builder.professorCode;
     }
 
-
-    public long getId() {
-        return id;
-    }
 
     public void addTimeTable(Set<LectureTime> lectureTimes){
         if(isDuplicatedLectureTime(lectureTimes)){

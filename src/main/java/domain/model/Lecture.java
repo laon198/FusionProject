@@ -11,6 +11,7 @@ public class Lecture {
     private long lecturerID;
     private int limit;
     private Set<LectureTime> lectureTimes;
+    private Set<Registering> myRegisterings;
     private List<Long> registeredStudentIDs;
     private LecturePlanner planner;
 
@@ -37,8 +38,8 @@ public class Lecture {
         this.limit = limit;
     }
 
-    public void register(long stdID){
-        registeredStudentIDs.add(stdID);
+    public void register(Registering registering){
+        myRegisterings.add(registering);
     }
 
     public boolean validLimitNum(){
