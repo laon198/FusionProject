@@ -32,9 +32,8 @@ public class RDBStudentRepository implements StudentRepository {
             return getStdFrom(res).get(0);
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
+            throw new IllegalArgumentException("잘못된 id값입니다.");
         }
-
-        return null;
     }
 
     @Override

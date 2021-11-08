@@ -31,10 +31,30 @@ public class LecturePlannerTest {
 
     @BeforeEach
     public void setup() throws Exception {
-        Professor p1 = new Professor(1);
-        Professor p2 = new Professor(2);
-        Professor p3 = new Professor(3);
-        Professor p4 = new Professor(4);
+        Professor p1 = Professor.builder()
+                .id(1)
+                .name("kim")
+                .department("SE")
+                .birthDate("19801112")
+                .build();
+        Professor p2 = Professor.builder()
+                .id(2)
+                .name("lee")
+                .department("SE")
+                .birthDate("19801112")
+                .build();
+        Professor p3 = Professor.builder()
+                .id(3)
+                .name("lee a")
+                .department("SE")
+                .birthDate("19801112")
+                .build();
+        Professor p4 = Professor.builder()
+                .id(4)
+                .name("kim b")
+                .department("SE")
+                .birthDate("19801112")
+                .build();
 
         professorRepo.save(p1);
         professorRepo.save(p2);

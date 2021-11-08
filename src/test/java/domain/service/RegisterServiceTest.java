@@ -38,7 +38,12 @@ public class RegisterServiceTest {
     @BeforeEach
     public void init() throws Exception {
         registerService = new RegisterService(lectureRepo, courseRepo, stdRepo);
-        Professor p1 = new Professor(1);
+        Professor p1 = Professor.builder()
+                .id(1)
+                .name("kim")
+                .department("SE")
+                .birthDate("19801112")
+                .build();
 
         Course c1 = new Course(1, "SE0002", "융합프로젝트", "SE", 2, 3);
         Course c2 = new Course(2, "SE0003", "과기독", "SE", 2, 3);
