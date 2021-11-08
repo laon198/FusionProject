@@ -1,13 +1,12 @@
 
 import domain.model.Course;
 import domain.model.Lecture;
+import domain.model.Professor;
 import domain.model.Student;
+import domain.repository.ProfessorRepository;
 import domain.repository.StudentRepository;
 import infra.MyBatisConnectionFactory;
-import infra.database.CourseDAO;
-import infra.database.RDBCourseRepository;
-import infra.database.RDBLectureRepository;
-import infra.database.RDBStudentRepository;
+import infra.database.*;
 import infra.dto.CourseDTO;
 import infra.dto.ModelMapper;
 import infra.option.course.CourseCodeOption;
@@ -20,9 +19,19 @@ import java.util.List;
 
 public class test {
     public static void main(String[] args) throws Exception {
-        StudentRepository stdRepo = new RDBStudentRepository();
-        Student std = stdRepo.findByOption(new StudentCodeOption("20180603")).get(0);
-        System.out.println(std);
+        ProfessorRepository profRepo = new RDBProfessorRepository();
+        profRepo.save(
+                Professor.builder()
+                .id(31)
+                .name("kim")
+                .department("SE")
+                .birthDate("0329")
+                .professorCode("P1555")
+                .build()
+        );
+//        StudentRepository stdRepo = new RDBStudentRepository();
+//        Student std = stdRepo.findByOption(new StudentCodeOption("20180603")).get(0);
+//        System.out.println(std);
 
 //        RDBLectureRepository rdbLectureRepository = new RDBLectureRepository(MyBatisConnectionFactory.getSqlSessionFactory());
 //        List<Lecture> list = rdbLectureRepository.findAll();

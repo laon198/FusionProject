@@ -9,7 +9,6 @@ public class Professor extends Member{
     private Set<LectureTime> timeTable;
     private String professorCode;
 
-
     public static class Builder{
         private long id;
         private String name;
@@ -43,8 +42,8 @@ public class Professor extends Member{
             return this;
         }
 
-        public Builder timeTable(LectureTime... lectureTimes){
-            timeTable = new HashSet(Arrays.asList(lectureTimes));
+        public Builder timeTable(Set<LectureTime> value){
+            timeTable = new HashSet(value);
             return this;
         }
 
@@ -82,5 +81,14 @@ public class Professor extends Member{
             }
         }
         return false;
+    }
+
+    //TODO : 테스트용
+    @Override
+    public String toString() {
+        return "Professor{" +
+                "timeTable=" + timeTable +
+                ", professorCode='" + professorCode + '\'' +
+                '}';
     }
 }

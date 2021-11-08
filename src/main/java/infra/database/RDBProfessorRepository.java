@@ -10,10 +10,7 @@ import infra.dto.ProfessorDTO;
 import infra.dto.StudentDTO;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -84,7 +81,7 @@ public class RDBProfessorRepository implements ProfessorRepository {
         );
 
         Connection conn = null;
-
+        Savepoint point1 = null;
         try{
             conn = ds.getConnection();
             conn.setAutoCommit(false);
@@ -103,18 +100,21 @@ public class RDBProfessorRepository implements ProfessorRepository {
             profStmt.setString(2, profDTO.getProfessorCode());
             profStmt.setString(3, profDTO.getProfessorCode());
 
-
-            memberStmt.execute();
-            profStmt.execute();
-
+            point1 = conn.setSavepoint("point1");
+            boolean b = memberStmt.execute();
+            conn.commit();
+            boolean a = profStmt.execute();
+            //TODO : Unique컬럼에 대한 예외는 안뜨고 삽입은 안됨
             conn.commit();
         }catch(SQLException sqlException){
-            try{
-                conn.rollback();
-            }catch (SQLException e){
-                e.printStackTrace();
-            }
             sqlException.printStackTrace();
+            if(conn!=null){
+                try{
+                    conn.rollback(point1);
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
         }
 
     }
@@ -174,6 +174,7 @@ public class RDBProfessorRepository implements ProfessorRepository {
                             .birthDate(birthDay)
                             .department(department)
                             .professorCode(professor_code)
+                            .timeTable(timeTable)
                             .build()
             );
         }
