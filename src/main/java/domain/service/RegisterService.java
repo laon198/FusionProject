@@ -8,6 +8,7 @@ import domain.repository.CourseRepository;
 import domain.repository.LectureRepository;
 import domain.repository.RegisteringRepository;
 import domain.repository.StudentRepository;
+import infra.option.student.StudentCodeOption;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,9 +30,9 @@ public class RegisterService {
     }
 
     //TODO : 바로 객체 받을지 아이디로 받을지 생각
-    public void register(long lectureID, long studentID){
+    public void register(long lectureID, String studentCode){
         Lecture lecture = lectureRepo.findByID(lectureID);
-        Student student = studentRepo.findByID(studentID);
+        Student student = studentRepo.findByOption(new StudentCodeOption(studentCode)).get(0);
         Course course = courseRepo.findByID(lecture.getCourseID());
 
         if(!isValidPeriodAbout(student)){
@@ -61,7 +62,7 @@ public class RegisterService {
 
         Registering newReg = Registering.builder()
                                 .lectureID(lectureID)
-                                .studentID(studentID)
+                                .studentCode(studentCode)
                                 .build();
 
         lecture.register(newReg);

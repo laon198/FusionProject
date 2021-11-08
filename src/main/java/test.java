@@ -11,6 +11,7 @@ import infra.database.RDBStudentRepository;
 import infra.dto.CourseDTO;
 import infra.dto.ModelMapper;
 import infra.option.course.CourseCodeOption;
+import infra.option.student.StudentCodeOption;
 
 import java.sql.*;
 
@@ -20,7 +21,7 @@ import java.util.List;
 public class test {
     public static void main(String[] args) throws Exception {
         StudentRepository stdRepo = new RDBStudentRepository();
-        Student std = stdRepo.findByID(2);
+        Student std = stdRepo.findByOption(new StudentCodeOption("20180603")).get(0);
         System.out.println(std);
 
 //        RDBLectureRepository rdbLectureRepository = new RDBLectureRepository(MyBatisConnectionFactory.getSqlSessionFactory());

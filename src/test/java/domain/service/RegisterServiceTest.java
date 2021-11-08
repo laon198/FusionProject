@@ -66,7 +66,7 @@ public class RegisterServiceTest {
 
         Lecture l1 = new Lecture(
                 1,
-                p1.getId(),
+                p1.getID(),
                 2,
                 c1.getId(),
                 time1
@@ -84,7 +84,7 @@ public class RegisterServiceTest {
 
         Lecture l2 = new Lecture(
                 2,
-                p1.getId(),
+                p1.getID(),
                 2,
                 c2.getId(),
                 time2
@@ -102,7 +102,7 @@ public class RegisterServiceTest {
 
         Lecture l3 = new Lecture(
                 3,
-                p1.getId(),
+                p1.getID(),
                 2,
                 c2.getId(),
                 time3
@@ -111,7 +111,7 @@ public class RegisterServiceTest {
 
         Lecture l4 = new Lecture(
                 4,
-                p1.getId(),
+                p1.getID(),
                 2,
                 c3.getId(),
                 time3
@@ -129,7 +129,7 @@ public class RegisterServiceTest {
 
         Lecture l5 = new Lecture(
                 5,
-                p1.getId(),
+                p1.getID(),
                 2,
                 c3.getId(),
                 time4
@@ -147,7 +147,7 @@ public class RegisterServiceTest {
 
         Lecture l6 = new Lecture(
                 6,
-                p1.getId(),
+                p1.getID(),
                 2,
                 c4.getId(),
                 time5

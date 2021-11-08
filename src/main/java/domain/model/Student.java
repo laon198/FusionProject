@@ -111,6 +111,18 @@ public class Student extends Member{
         studentCode = builder.studentCode;
     }
 
+    @Override
+    public String toString() {
+        return "Student{" +
+                "year=" + year +
+                ", maxCredit=" + maxCredit +
+                ", credit=" + credit +
+                ", studentCode='" + studentCode + '\'' +
+                ", myRegisterings=" + myRegisterings +
+                ", timeTable=" + timeTable +
+                '}';
+    }
+
     public Set<Registering> getMyRegisterings(){
         return new HashSet<>(myRegisterings);
     }

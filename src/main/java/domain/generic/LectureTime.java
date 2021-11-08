@@ -11,6 +11,16 @@ public class LectureTime {
         FIFTH, SIXTH, SEVENTH, EIGHTH, NINTH
     }
 
+    @Override
+    public String toString() {
+        return "LectureTime{" +
+                "lectureDay=" + lectureDay +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", room='" + room + '\'' +
+                '}';
+    }
+
     private DayOfWeek lectureDay;
     private LecturePeriod startTime;
     private LecturePeriod endTime;

@@ -1,21 +1,59 @@
 package infra.database;
 
 import domain.generic.LectureTime;
+import domain.model.Registering;
 import domain.model.Student;
 import domain.repository.StudentRepository;
 import infra.PooledDataSource;
 import infra.dto.ModelMapper;
 import infra.dto.StudentDTO;
+import infra.option.student.StudentOption;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class RDBStudentRepository implements StudentRepository {
     private final DataSource ds = PooledDataSource.getDataSource();
+
+    @Override
+    public List<Student> findByOption(StudentOption... options) {
+        String and = " AND ";
+        String where = " WHERE ";
+        StringBuilder query = new StringBuilder(
+                "SELECT * FROM students_tb AS s " +
+                        "JOIN members_tb AS m " +
+                        "ON s.member_SQ = m.member_SQ "
+        );
+
+        for(int i=0; i<options.length; i++){
+            if(i==0){
+                query.append(where);
+            }
+
+            query.append(options[i].getQuery());
+
+            if(i!=options.length-1){
+                query.append(and);
+            }
+        }
+
+        Connection conn = null;
+        try{
+            conn = ds.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(new String(query));
+            ResultSet res = pstmt.executeQuery();
+            return getStdFrom(res);
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        return null;
+    }
 
     @Override
     public Student findByID(long id){
@@ -118,12 +156,30 @@ public class RDBStudentRepository implements StudentRepository {
         }
     }
 
-    private ResultSet findLectureInfo(String stdCode){
+    private ResultSet findLectureTime(String stdCode){
         StringBuilder query = new StringBuilder(
-                "SELECT * FROM enrollments_tb AS e " +
+                "SELECT * FROM registerings_tb AS r " +
                         "JOIN lecture_times_tb AS t " +
-                        "ON e.lecture_SQ = t.lecture_SQ "+
-                        "WHERE e.student_code = ? "
+                        "ON r.lecture_SQ = t.lecture_SQ "+
+                        "WHERE r.student_code = ? "
+        );
+
+        Connection conn = null;
+        try{
+            conn = ds.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(new String(query));
+            pstmt.setString(1, stdCode);
+            return pstmt.executeQuery();
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        return null;
+    }
+
+    private ResultSet findRegistering(String stdCode){
+        StringBuilder query = new StringBuilder(
+                "SELECT * FROM registerings_tb AS r " +
+                        "WHERE r.student_code = ? "
         );
 
         Connection conn = null;
@@ -147,7 +203,7 @@ public class RDBStudentRepository implements StudentRepository {
         String department;
         String studentCode;
         Set<LectureTime> timeTable = new HashSet<>();
-        Set<Long> registeredLectureIds = new HashSet<>();
+        Set<Registering> myRegisterings = new HashSet<>();
 
         while(resSet.next()) {
             resID = resSet.getLong("member_SQ");
@@ -157,17 +213,26 @@ public class RDBStudentRepository implements StudentRepository {
             birthDate = resSet.getString("birthDay");
             studentCode = resSet.getString("student_code");
 
-            ResultSet lectureInfo = findLectureInfo(studentCode);
+            ResultSet lectureInfo = findLectureTime(studentCode);
             while(lectureInfo.next()){
-                registeredLectureIds.add(
-                        lectureInfo.getLong("lecture_SQ")
-                );
                 timeTable.add(
                         LectureTime.builder()
                         .lectureDay(lectureInfo.getString("day_of_week"))
                         .room(lectureInfo.getString("lecture_room"))
                         .startTime(lectureInfo.getInt("start_period"))
                         .endTime(lectureInfo.getInt("end_period"))
+                        .build()
+                );
+            }
+
+            ResultSet registering = findRegistering(studentCode);
+            while(registering.next()){
+                myRegisterings.add(
+                        Registering.builder()
+                        .id(registering.getLong("registering_SQ"))
+                        .studentCode(registering.getString("student_code"))
+                        .lectureID(registering.getLong("lecture_SQ"))
+                        .registeringTime(registering.getString("register_date"))
                         .build()
                 );
             }
@@ -181,6 +246,7 @@ public class RDBStudentRepository implements StudentRepository {
                             .department(department)
                             .studentCode(studentCode)
                             .timeTable(timeTable)
+                            .myRegisterings(myRegisterings)
                             .build()
             );
         }
