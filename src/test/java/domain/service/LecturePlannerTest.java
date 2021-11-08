@@ -55,7 +55,7 @@ public class LecturePlannerTest {
                 1,
                 p1.getId(),
                 2,
-                new Course(1, 3).getId(),
+                1,
                 time1
                );
 
@@ -73,7 +73,7 @@ public class LecturePlannerTest {
                 2,
                 p2.getId(),
                 2,
-                new Course(2, 3).getId(),
+                2,
                 time2
                 );
 
@@ -91,7 +91,7 @@ public class LecturePlannerTest {
                 3,
                 p3.getId(),
                 2,
-                new Course(3, 3).getId(),
+                3,
                 time3
                 );
 
@@ -100,7 +100,7 @@ public class LecturePlannerTest {
                 4,
                 p4.getId(),
                 2,
-                new Course(3, 3).getId(),
+        3,
                 time3
                 );
 
@@ -118,7 +118,7 @@ public class LecturePlannerTest {
                 5,
                 p4.getId(),
                 2,
-                new Course(3, 3).getId(),
+                3,
                 time4
                 );
 
@@ -136,7 +136,7 @@ public class LecturePlannerTest {
                 6,
                 p4.getId(),
                 2,
-                new Course(4, 21).getId(),
+                4,
                 time5
                 );
 

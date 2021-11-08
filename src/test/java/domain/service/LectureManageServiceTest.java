@@ -51,10 +51,10 @@ class LectureManageServiceTest {
         professorRepo.save(p3);
         professorRepo.save(p4);
 
-        Course c1 = new Course(1, 3);
-        Course c2 = new Course(2, 3);
-        Course c3 = new Course(3, 3);
-        Course c4 = new Course(4, 21);
+        Course c1 = new Course(1, "SE0002", "융합프로젝트", "SE", 2, 3);
+        Course c2 = new Course(2, "SE0003", "과기독", "SE", 2, 3);
+        Course c3 = new Course(3, "SE0004", "운영체제", "SE", 2, 3);
+        Course c4 = new Course(4, "SE0005", "자료구조", "SE", 2, 21);
         courseRepo.save(c1);
         courseRepo.save(c2);
         courseRepo.save(c3);

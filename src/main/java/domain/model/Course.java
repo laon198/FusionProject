@@ -10,6 +10,8 @@ public class Course {
     private int targetYear;
     private int credit;
 
+    public Course(){}
+
     public Course(long id, String courseCode, String courseName, String department, int targetYear, int credit) {
         this.id = id;
         this.courseCode = courseCode;

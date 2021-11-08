@@ -59,38 +59,47 @@ public class RDBStudentRepository implements StudentRepository {
     public void save(Student student) {
         StudentDTO stdDTO = ModelMapper.studentToDTO(student);
         StringBuilder memberQuery = new StringBuilder(
-                "UPDATE members_tb " +
-                "SET name=?, " +
-                "department=?, " +
-                "birthday=? " +
-                "WHERE member_SQ=?;"
+                "INSERT INTO members_tb (member_SQ, name, birthday, department) " +
+                        "VALUES(?, ?, ?, ?) " +
+                        "ON DUPLICATE KEY UPDATE " +
+                        "name=?, " +
+                        "birthday=?, " +
+                        "department=?;"
         );
         StringBuilder stdQuery = new StringBuilder(
-                "UPDATE students_tb " +
-                "SET student_code=?, " +
-                "year=?, " +
-                "max_credit=?, " +
-                "credit=? " +
-                "WHERE member_SQ=?;"
+                "INSERT INTO students_tb (member_SQ, student_code, year, credit, max_credit) " +
+                        "VALUES(?, ?, ?, ?, ?) " +
+                        "ON DUPLICATE KEY UPDATE " +
+                        "student_code=?, " +
+                        "year=?, " +
+                        "credit=?, " +
+                        "max_credit=?;"
         );
 
         try{
             PreparedStatement memberStmt = getPreparedStmt(new String(memberQuery));
             PreparedStatement stdStmt = getPreparedStmt(new String(stdQuery));
 
-            memberStmt.setString(1, stdDTO.getName());
-            memberStmt.setString(2, stdDTO.getDepartment());
-            memberStmt.setString(3, String.valueOf(stdDTO.getBirthDate()));
-            memberStmt.setLong(4, stdDTO.getId());
+            memberStmt.setLong(1, stdDTO.getId());
+            memberStmt.setString(2, stdDTO.getName());
+            memberStmt.setString(3, stdDTO.getDepartment());
+            memberStmt.setString(4, String.valueOf(stdDTO.getBirthDate()));
+            memberStmt.setString(5, stdDTO.getName());
+            memberStmt.setString(6, stdDTO.getDepartment());
+            memberStmt.setString(7, String.valueOf(stdDTO.getBirthDate()));
 
-            stdStmt.setString(1, stdDTO.getStudentCode());
-            stdStmt.setInt(2, stdDTO.getYear());
-            stdStmt.setInt(3, stdDTO.getMaxCredit());
-            stdStmt.setInt(4, stdDTO.getCredit());
-            stdStmt.setLong(5, stdDTO.getId());
+            stdStmt.setLong(1, stdDTO.getId());
+            stdStmt.setString(2, stdDTO.getStudentCode());
+            stdStmt.setInt(3, stdDTO.getYear());
+            stdStmt.setInt(4, stdDTO.getMaxCredit());
+            stdStmt.setInt(5, stdDTO.getCredit());
+            stdStmt.setString(6, stdDTO.getStudentCode());
+            stdStmt.setInt(7, stdDTO.getYear());
+            stdStmt.setInt(8, stdDTO.getMaxCredit());
+            stdStmt.setInt(9, stdDTO.getCredit());
 
-            memberStmt.executeUpdate();
-            stdStmt.executeUpdate();
+            memberStmt.execute();
+            stdStmt.execute();
 
         }catch(SQLException sqlException){
             sqlException.printStackTrace();

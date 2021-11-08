@@ -1,12 +1,15 @@
 
 import domain.model.Course;
 import domain.model.Lecture;
+import domain.model.Student;
 import infra.MyBatisConnectionFactory;
 import infra.database.CourseDAO;
 import infra.database.RDBCourseRepository;
 import infra.database.RDBLectureRepository;
+import infra.database.RDBStudentRepository;
 import infra.dto.CourseDTO;
 import infra.dto.ModelMapper;
+import infra.option.course.CourseCodeOption;
 
 import java.sql.*;
 
@@ -16,13 +19,14 @@ import java.util.List;
 public class test {
     public static void main(String[] args) throws Exception {
 
-
-        RDBLectureRepository rdbLectureRepository = new RDBLectureRepository(MyBatisConnectionFactory.getSqlSessionFactory());
-        List<Lecture> list = rdbLectureRepository.findAll();
-        System.out.println(list.size());
-//        RDBCourseRepository rdbCourseRepository = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
-//        Course course = new Course(1,"cs0002","과기영독2","컴퓨터소프트웨어공학과",3,3);
-//        rdbCourseRepository.save(course);
+//        RDBLectureRepository rdbLectureRepository = new RDBLectureRepository(MyBatisConnectionFactory.getSqlSessionFactory());
+//        List<Lecture> list = rdbLectureRepository.findAll();
+////        System.out.println(list.size());
+        RDBCourseRepository rdbCourseRepository = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
+////        Course course = new Course(2,"cs0002","과기영독3","컴퓨터소프트웨어공학과",3,3);
+////        rdbCourseRepository.save(course);
+        List<Course> list = rdbCourseRepository.findByOption(new CourseCodeOption("cs0002"));
+//        List<Course> list = rdbCourseRepository.findAll();
 
 
 //        Connection conn = null;

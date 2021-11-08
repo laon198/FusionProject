@@ -3,6 +3,7 @@ package infra.database;
 import domain.model.Course;
 import domain.repository.CourseRepository;
 import infra.option.Option;
+import infra.option.course.CourseOption;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,8 +12,12 @@ import java.util.Map;
 public class SimpleCourseRepository implements CourseRepository {
     private Map<Long, Course> repo = new HashMap<>();
 
-    @Override
     public List<Course> findByOption(Option... option) {
+        return null;
+    }
+
+    @Override
+    public List<Course> findByOption(CourseOption... option) {
         return null;
     }
 
