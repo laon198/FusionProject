@@ -1,5 +1,6 @@
 package infra.database;
 
+import domain.generic.LectureTime;
 import domain.model.Student;
 import domain.repository.StudentRepository;
 import infra.PooledDataSource;
@@ -11,8 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class RDBStudentRepository implements StudentRepository {
     private final DataSource ds = PooledDataSource.getDataSource();
@@ -36,6 +36,26 @@ public class RDBStudentRepository implements StudentRepository {
             sqlException.printStackTrace();
             throw new IllegalArgumentException("잘못된 id값입니다.");
         }
+    }
+
+    private ResultSet findLectureInfo(String stdCode){
+        StringBuilder query = new StringBuilder(
+                "SELECT * FROM enrollments_tb AS e " +
+                        "JOIN lecture_times_tb AS t " +
+                        "ON e.lecture_SQ = t.lecture_SQ "+
+                        "WHERE e.student_code = ? "
+        );
+
+        Connection conn = null;
+        try{
+            conn = ds.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(new String(query));
+            pstmt.setString(1, stdCode);
+            return pstmt.executeQuery();
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -123,17 +143,44 @@ public class RDBStudentRepository implements StudentRepository {
         int year = 0;
         String name;
         String birthDate;
+        String department;
+        String studentCode;
+        Set<LectureTime> timeTable = new HashSet<>();
+        Set<Long> registeredLectureIds = new HashSet<>();
 
         while(resSet.next()) {
             resID = resSet.getLong("member_SQ");
             year = resSet.getInt("year");
             name = resSet.getString("name");
+            department = resSet.getString("department");
+            birthDate = resSet.getString("birthDay");
+            studentCode = resSet.getString("student_code");
+
+            ResultSet lectureInfo = findLectureInfo(studentCode);
+            while(lectureInfo.next()){
+                registeredLectureIds.add(
+                        lectureInfo.getLong("lecture_SQ")
+                );
+                timeTable.add(
+                        LectureTime.builder()
+                        .lectureDay(lectureInfo.getString("day_of_week"))
+                        .room(lectureInfo.getString("lecture_room"))
+                        .startTime(lectureInfo.getInt("start_period"))
+                        .endTime(lectureInfo.getInt("end_period"))
+                        .build()
+                );
+            }
 
             stdList.add(
                     Student.builder()
                             .id(resID)
                             .year(year)
                             .name(name)
+                            .birthDate(birthDate)
+                            .department(department)
+                            .studentCode(studentCode)
+                            .timeTable(timeTable)
+                            .registeredLectureIDs(new ArrayList<>(registeredLectureIds))
                             .build()
             );
         }

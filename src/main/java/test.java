@@ -2,6 +2,7 @@
 import domain.model.Course;
 import domain.model.Lecture;
 import domain.model.Student;
+import domain.repository.StudentRepository;
 import infra.MyBatisConnectionFactory;
 import infra.database.CourseDAO;
 import infra.database.RDBCourseRepository;
@@ -18,14 +19,17 @@ import java.util.List;
 
 public class test {
     public static void main(String[] args) throws Exception {
+        StudentRepository stdRepo = new RDBStudentRepository();
+        Student std = stdRepo.findByID(2);
+        System.out.println(std);
 
 //        RDBLectureRepository rdbLectureRepository = new RDBLectureRepository(MyBatisConnectionFactory.getSqlSessionFactory());
 //        List<Lecture> list = rdbLectureRepository.findAll();
 ////        System.out.println(list.size());
-        RDBCourseRepository rdbCourseRepository = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
-////        Course course = new Course(2,"cs0002","과기영독3","컴퓨터소프트웨어공학과",3,3);
-////        rdbCourseRepository.save(course);
-        List<Course> list = rdbCourseRepository.findByOption(new CourseCodeOption("cs0002"));
+//        RDBCourseRepository rdbCourseRepository = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
+//////        Course course = new Course(2,"cs0002","과기영독3","컴퓨터소프트웨어공학과",3,3);
+//////        rdbCourseRepository.save(course);
+//        List<Course> list = rdbCourseRepository.findByOption(new CourseCodeOption("cs0002"));
 //        List<Course> list = rdbCourseRepository.findAll();
 
 

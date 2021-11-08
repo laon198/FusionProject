@@ -2,7 +2,6 @@ package domain.model;
 
 import domain.generic.LectureTime;
 
-import java.time.LocalDate;
 import java.util.*;
 
 public class Student extends Member{
@@ -83,13 +82,13 @@ public class Student extends Member{
             return this;
         }
 
-        public Builder registeredLectureIDs(Long... lectureIDs){
-            registeredLectureIDs = Arrays.asList(lectureIDs);
+        public Builder registeredLectureIDs(List<Long> value){
+            registeredLectureIDs = new ArrayList<>(value);
             return this;
         }
 
-        public Builder timeTable(LectureTime... lectureTimes){
-            timeTable = new HashSet(Arrays.asList(lectureTimes));
+        public Builder timeTable(Set<LectureTime> value){
+            timeTable = new HashSet(value);
             return this;
         }
 
@@ -114,8 +113,7 @@ public class Student extends Member{
     }
 
     public long getID(){return id;}
-    //TODO : 자기자신 반환말고 다르게
-    public List<Long> getRegisteredLectureIDs(){return registeredLectureIDs;}
+    public Long[] getRegisteredLectureIDs(){return (Long[])registeredLectureIDs.toArray();}
     public Year getYear(){return year;}
 
     public void register(long lectureID,

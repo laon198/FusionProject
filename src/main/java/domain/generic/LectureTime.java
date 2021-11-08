@@ -16,6 +16,122 @@ public class LectureTime {
     private LecturePeriod endTime;
     private String room;
 
+    public static class Builder{
+        private DayOfWeek lectureDay;
+        private LecturePeriod startTime;
+        private LecturePeriod endTime;
+        private String room;
+
+        public Builder lectureDay(String value){
+            switch(value){
+                case "MON":
+                    lectureDay = DayOfWeek.MON;
+                    break;
+                case "TUE":
+                    lectureDay = DayOfWeek.TUE;
+                    break;
+                case "WED":
+                    lectureDay = DayOfWeek.WED;
+                    break;
+                case "THU":
+                    lectureDay = DayOfWeek.THU;
+                    break;
+                case "FRI":
+                    lectureDay = DayOfWeek.FRI;
+                    break;
+                default:
+                    throw new IllegalArgumentException("잘못된 요일입니다");
+            }
+            return this;
+        }
+
+        public Builder room(String value){
+            room = value;
+            return this;
+        }
+
+        public Builder startTime(int value){
+            switch (value){
+                case 1:
+                    startTime = LecturePeriod.FIRST;
+                    break;
+                case 2:
+                    startTime = LecturePeriod.SECOND;
+                    break;
+                case 3:
+                    startTime = LecturePeriod.THIRD;
+                    break;
+                case 4:
+                    startTime = LecturePeriod.FOURTH;
+                    break;
+                case 5:
+                    startTime = LecturePeriod.FIFTH;
+                    break;
+                case 6:
+                    startTime = LecturePeriod.SIXTH;
+                    break;
+                case 7:
+                    startTime = LecturePeriod.SEVENTH;
+                    break;
+                case 8:
+                    startTime = LecturePeriod.EIGHTH;
+                    break;
+                case 9:
+                    startTime = LecturePeriod.NINTH;
+                    break;
+            }
+            return this;
+        }
+
+        public Builder endTime(int value){
+            switch (value){
+                case 1:
+                    endTime = LecturePeriod.FIRST;
+                    break;
+                case 2:
+                    endTime = LecturePeriod.SECOND;
+                    break;
+                case 3:
+                    endTime = LecturePeriod.THIRD;
+                    break;
+                case 4:
+                    endTime = LecturePeriod.FOURTH;
+                    break;
+                case 5:
+                    endTime = LecturePeriod.FIFTH;
+                    break;
+                case 6:
+                    endTime = LecturePeriod.SIXTH;
+                    break;
+                case 7:
+                    endTime = LecturePeriod.SEVENTH;
+                    break;
+                case 8:
+                    endTime = LecturePeriod.EIGHTH;
+                    break;
+                case 9:
+                    endTime = LecturePeriod.NINTH;
+                    break;
+            }
+            return this;
+        }
+
+        public LectureTime build(){
+            return new LectureTime(this);
+        }
+    }
+
+    public static Builder builder(){
+        return new Builder();
+    }
+
+    private LectureTime(Builder builder){
+        lectureDay = builder.lectureDay;
+        startTime = builder.startTime;
+        endTime = builder.endTime;
+        room = builder.room;
+    }
+
     public LectureTime(DayOfWeek dayOfWeek, LecturePeriod startTime, LecturePeriod endTime, String room){
         isValidTime(startTime, endTime);
         lectureDay = dayOfWeek;

@@ -34,9 +34,9 @@ public class ProfessorRepoTest {
     @Test
     public void saveTest(){
         Professor p1 = Professor.builder()
-                .id(11)
+                .id(12)
                 .name("park")
-                .department("CE")
+                .department("SE")
                 .birthDate("19801112")
                 .professorCode("P1236")
                 .build();

@@ -7,6 +7,8 @@ import java.lang.reflect.Field;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -46,10 +48,8 @@ public class ModelMapper {
             int credit = getIntField(std, "credit");
             int maxCredit = getIntField(std, "maxCredit");
             int year = getYearField(std, "year");
-
-//        //TODO : 이렇게 받으면 DTO에서 학생객체에 변경을 가할 수 있어.
-//        List<Long> registeredLectureIDs = getLongList(std, "registeredLectureIDs");
-//        Set<LectureTime> timeTable = getTimeTable(std, "timeTable");
+            List<Long> registeredLectureIDs = getLongList(std, "registeredLectureIDs");
+            Set<LectureTimeDTO> timeTable = getLectureTimeDTOTable(getTimeTable(std, "timeTable"));
 
             return StudentDTO.builder()
                     .id(id)
@@ -60,6 +60,8 @@ public class ModelMapper {
                     .studentCode(studentCode)
                     .maxCredit(maxCredit)
                     .year(year)
+                    .registeredLectureIDs(registeredLectureIDs)
+                    .timeTable(timeTable)
                     .build();
         }catch(NoSuchFieldException | IllegalAccessException e) {
             e.getStackTrace();
@@ -68,8 +70,39 @@ public class ModelMapper {
         return null;
     }
 
+    private static Set<LectureTimeDTO> getLectureTimeDTOTable(Set<LectureTime> timeTable) throws NoSuchFieldException, IllegalAccessException {
+        Set<LectureTimeDTO> dtoList = new HashSet<>();
 
+        for(LectureTime time : timeTable){
+            String room = getStringField(time, "room");
+            LectureTime.DayOfWeek lectureDay = getLectureDay(time, "lectureDay");
+            LectureTime.LecturePeriod startTime = getLecturePeriod(time, "startPeriod");
+            LectureTime.LecturePeriod endTime = getLecturePeriod(time, "endTime");
 
+            dtoList.add(
+                    LectureTimeDTO.builder()
+                        .room(room)
+                        .lectureDay(lectureDay)
+                        .startTime(startTime)
+                        .endTime(endTime)
+                        .build()
+            );
+        }
+
+        return dtoList;
+    }
+
+    private static LectureTime.DayOfWeek getLectureDay(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        Field f1 = obj.getClass().getDeclaredField(fieldName);
+        f1.setAccessible(true);
+        return (LectureTime.DayOfWeek) f1.get(obj);
+    }
+
+    private static LectureTime.LecturePeriod getLecturePeriod(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        Field f1 = obj.getClass().getDeclaredField(fieldName);
+        f1.setAccessible(true);
+        return (LectureTime.LecturePeriod) f1.get(obj);
+    }
 
 //    public static LectureDTO LectureToDTO(Lecture lecture) throws NoSuchFieldException, IllegalAccessException {
 //        long id;
