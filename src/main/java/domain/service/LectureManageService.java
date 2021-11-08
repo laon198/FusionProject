@@ -21,38 +21,38 @@ public class LectureManageService {
         this.lectureRepo = lectureRepo;
     }
 
-    public void addLecture(long lectureID, long courseID, long professorID,
-                           int limit, Set<LectureTime> lectureTimes){
-        //TODO : lectureID확인 로직 필요
-        courseRepo.findByID(courseID); //TODO : 존재하지않을때 예외 로직필요
-        Professor p = professorRepo.findByID(professorID); //TODO : 존재하지않을때 예외 로직필요
-
-        //TODO : 더 좋은방법?
-        //TODO : 강의를 다가져오기에는 부하가 너무 크지않나?
-        for(Lecture existingLecture : lectureRepo.findAll()){
-            for(LectureTime existingTime : existingLecture.getLectureTimes()){
-                for(LectureTime newTime : lectureTimes){
-                    if(existingTime.isSameRoom(newTime) &&
-                        existingTime.isOverlappedTime(newTime)){
-                        throw new IllegalArgumentException("이미 존재하는 시간입니다.");
-                    }
-                }
-            }
-        }
-
-        //TODO : 다른방식으로 생성?
-        Lecture newLecture = new Lecture(
-                lectureID,
-                professorID,
-                limit,
-                courseID,
-                lectureTimes
-        );
-
-        p.addTimeTable(lectureTimes);
-
-        lectureRepo.save(newLecture);
-    }
+//    public void addLecture(long lectureID, long courseID, long professorID,
+//                           int limit, Set<LectureTime> lectureTimes){
+//        //TODO : lectureID확인 로직 필요
+//        courseRepo.findByID(courseID); //TODO : 존재하지않을때 예외 로직필요
+//        Professor p = professorRepo.findByID(professorID); //TODO : 존재하지않을때 예외 로직필요
+//
+//        //TODO : 더 좋은방법?
+//        //TODO : 강의를 다가져오기에는 부하가 너무 크지않나?
+//        for(Lecture existingLecture : lectureRepo.findAll()){
+//            for(LectureTime existingTime : existingLecture.getLectureTimes()){
+//                for(LectureTime newTime : lectureTimes){
+//                    if(existingTime.isSameRoom(newTime) &&
+//                        existingTime.isOverlappedTime(newTime)){
+//                        throw new IllegalArgumentException("이미 존재하는 시간입니다.");
+//                    }
+//                }
+//            }
+//        }
+//
+//        //TODO : 다른방식으로 생성?
+//        Lecture newLecture = new Lecture(
+//                lectureID,
+//                professorID,
+//                limit,
+//                courseID,
+//                lectureTimes
+//        );
+//
+//        p.addTimeTable(lectureTimes);
+//
+//        lectureRepo.save(newLecture);
+//    }
 
     //TODO : 굳이 여기서 할필요가 있나? 디비에서 처리가능한거 아닌가?
     //TODO : cascade하는 로직은 디비에서?

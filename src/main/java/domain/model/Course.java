@@ -1,5 +1,8 @@
 package domain.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Objects;
 
 public class Course {
@@ -10,6 +13,7 @@ public class Course {
     private int targetYear;
     private int credit;
 
+    public Course(){};
     public Course(long id, String courseCode, String courseName, String department, int targetYear, int credit) {
         this.id = id;
         this.courseCode = courseCode;

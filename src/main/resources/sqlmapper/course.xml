@@ -4,12 +4,11 @@
     <resultMap id="result" type="domain.model.Course">
         <result property="id" column="course_SQ"/>
         <result property="courseCode" column="course_code"/>
-        <result property="courseName" column="course_name"/>
         <result property="department" column="department"/>
         <result property="targetYear" column="target_year"/>
+        <result property="courseName" column="course_name"/>
         <result property="credit" column="credit"/>
     </resultMap>
-
 
 
     <select id="ReadAll" resultMap="result">
@@ -17,20 +16,19 @@
         FROM COURSES_TB
     </select>
 
-    <select id="FindByOption" resultMap="result">
+    <select id="FindByOption" resultMap="result" parameterType="CourseOption">
         SELECT *
         FROM COURSES_TB
-        <where></where>
+        <where>
+
+        </where>
     </select>
 
 
-    <select id="ReadTargetGrade" resultMap="result">
+    <select id="ReadTargetGrade" resultMap="result" parameterType="_int">
         SELECT *
         FROM COURSES_TB
-        WHERE
-        <if test="targetYear != null">
-            targetYear like CONCAT('%',#{targetYear},'%')
-        </if>
+        WHERE target_year = #{year}
     </select>
 
     <update id="UpdateCourse">

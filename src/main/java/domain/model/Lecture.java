@@ -2,19 +2,37 @@ package domain.model;
 
 import domain.generic.LectureTime;
 import domain.generic.Period;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.*;
 
 public class Lecture {
     private long id;
     private long courseID;
+    private String lectureCode;
     private long lecturerID;
     private int limit;
+    private String professor;
     private Set<LectureTime> lectureTimes;
     private List<Long> registeredStudentIDs;
     private LecturePlanner planner;
 
     //TODO : set을 직접 받는 것 별로 좋지 않은듯
+    public Lecture(){}
+    public Lecture(long lectureID, long professorID, int limitPersonNum, long courseID, String lectureCode,
+                   Set<LectureTime> lectureTimes){ //TODO : 강의시간 더나은 방법으로
+        id = lectureID;
+        lecturerID = professorID;
+        limit = limitPersonNum;
+        registeredStudentIDs = new ArrayList<>(limitPersonNum);
+        this.lectureTimes = lectureTimes;
+        this.courseID = courseID;
+        planner = new LecturePlanner();
+        this.lectureCode = lectureCode;
+    }
+
+    //TODO : LectureManageService 때문에 만들어 놓은 임시 생성자. 나중에 지우자.
     public Lecture(long lectureID, long professorID, int limitPersonNum, long courseID,
                    Set<LectureTime> lectureTimes){ //TODO : 강의시간 더나은 방법으로
         id = lectureID;
@@ -25,6 +43,11 @@ public class Lecture {
         this.courseID = courseID;
         planner = new LecturePlanner();
     }
+
+
+
+
+
 
     public long getID(){return id;}
     public long getCourseID(){ return courseID;}

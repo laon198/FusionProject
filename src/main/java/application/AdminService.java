@@ -43,13 +43,13 @@ public class AdminService {
         registrar.removeRegisteringPeriod(rPeriod);
     }
 
-    public void addLecture(long lectureID, long courseID, long professorID,
-                           int limit, Set<LectureTime> lectureTimes){
-        lManagerService.addLecture(
-                lectureID, courseID, professorID,
-                    limit, lectureTimes
-        );
-    }
+//    public void addLecture(long lectureID, long courseID, long professorID,
+//                           int limit, Set<LectureTime> lectureTimes){
+//        lManagerService.addLecture(
+//                lectureID, courseID, professorID,
+//                    limit, lectureTimes
+//        );
+//    }
 
     public void removeLecture(long lectureId){
         lManagerService.removeLecture(lectureId);

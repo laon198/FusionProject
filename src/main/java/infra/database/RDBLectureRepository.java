@@ -24,7 +24,33 @@ public class RDBLectureRepository implements LectureRepository {
 
     @Override
     public void save(Lecture lecture) {
+        SqlSession session = sqlSessionFactory.openSession();
+        LectureMapper mapper = session.getMapper(LectureMapper.class);
+        try{
+            mapper.updateLecture();
+            session.commit();
 
+        }catch (Exception e){
+            e.printStackTrace();
+            session.rollback();
+        }finally{
+            session.close();
+        }
+    }
+
+    public void insert(Lecture lecture){
+        SqlSession session = sqlSessionFactory.openSession();
+        LectureMapper mapper = session.getMapper(LectureMapper.class);
+        try{
+            mapper.insert(lecture);
+            session.commit();
+
+        }catch (Exception e){
+            e.printStackTrace();
+            session.rollback();
+        }finally{
+            session.close();
+        }
     }
 
     @Override
