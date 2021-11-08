@@ -5,6 +5,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class ProfessorRepoTest {
     static RDBProfessorRepository profRepo;
 
@@ -18,6 +22,13 @@ public class ProfessorRepoTest {
 //    public void findTest(){
 //
 //    }
+
+    @DisplayName("교수 전체 조회 테스트")
+    @Test
+    public void findAllTest(){
+        List<Professor> list = profRepo.findAll();
+        assertEquals(2, list.size());
+    }
 
     @DisplayName("교수 save테스트-insert")
     @Test

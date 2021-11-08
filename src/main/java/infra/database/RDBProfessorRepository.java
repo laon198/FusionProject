@@ -44,6 +44,25 @@ public class RDBProfessorRepository implements ProfessorRepository {
     }
 
     @Override
+    public List<Professor> findAll() {
+        StringBuilder query = new StringBuilder(
+                "SELECT * FROM professors_tb AS p " +
+                        "JOIN members_tb AS m " +
+                        "ON p.member_SQ = m.member_SQ");
+        try{
+            Connection conn = ds.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(new String(query));
+            ResultSet res = pstmt.executeQuery();
+            return getProfFrom(res);
+
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
     public void save(Professor professor) {
         ProfessorDTO profDTO = ModelMapper.ProfessorToDTO(professor);
         StringBuilder memberQuery = new StringBuilder(
