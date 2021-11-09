@@ -45,7 +45,6 @@ public class ModelMapper {
             String birthDate = getSuperStringField(prof, "birthDate");
             String professorCode = getStringField(prof, "professorCode");
             Set<LectureTimeDTO> timeTable = getLectureTimeDTOTable(getTimeTable(prof, "timeTable"));
-            //TODO : timeTable
 
             return ProfessorDTO.builder()
                     .id(id)
@@ -72,8 +71,8 @@ public class ModelMapper {
             int credit = getIntField(std, "credit");
             int maxCredit = getIntField(std, "maxCredit");
             int year = getYearField(std, "year");
-            List<Long> registeredLectureIDs = getLongList(std, "registeredLectureIDs");
             Set<LectureTimeDTO> timeTable = getLectureTimeDTOTable(getTimeTable(std, "timeTable"));
+            Set<RegisteringDTO> myRegisterings = getRegDTOSet(getRegisteringSet(std, "myRegisterings"));
 
             return StudentDTO.builder()
                     .id(id)
@@ -81,10 +80,10 @@ public class ModelMapper {
                     .department(department)
                     .birthDate(birthDate)
                     .credit(credit)
-                    .studentCode(studentCode)
                     .maxCredit(maxCredit)
+                    .studentCode(studentCode)
                     .year(year)
-                    .registeredLectureIDs(registeredLectureIDs)
+                    .myRegisterings(myRegisterings)
                     .timeTable(timeTable)
                     .build();
         }catch(NoSuchFieldException | IllegalAccessException e) {
@@ -92,6 +91,34 @@ public class ModelMapper {
         }
 
         return null;
+    }
+
+    private static Set<RegisteringDTO> getRegDTOSet(Set<Registering> myRegisterings) throws NoSuchFieldException, IllegalAccessException {
+        Set<RegisteringDTO> regSet = new HashSet<>();
+
+        for(Registering reg : myRegisterings){
+            long id = getLongField(reg, "id");
+            long lectureID = getLongField(reg, "lectureID");
+            String studentCode = getStringField(reg, "studentCode");
+            String registeringTime = getStringField(reg, "registeringTime");
+
+            regSet.add(
+                    RegisteringDTO.builder()
+                    .id(id)
+                    .lectureID(lectureID)
+                    .studentCode(studentCode)
+                    .registeringTime(registeringTime)
+                    .build()
+            );
+        }
+
+        return regSet;
+    }
+
+    private static Set<Registering> getRegisteringSet(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        Field f1 = obj.getClass().getDeclaredField(fieldName);
+        f1.setAccessible(true);
+        return (Set<Registering>)f1.get(obj);
     }
 
     private static Set<LectureTimeDTO> getLectureTimeDTOTable(Set<LectureTime> timeTable) throws NoSuchFieldException, IllegalAccessException {

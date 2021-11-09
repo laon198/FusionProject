@@ -1,7 +1,6 @@
-package domain.service;
+package domain.model;
 
 import domain.generic.Period;
-import domain.model.Student;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

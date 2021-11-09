@@ -4,10 +4,10 @@ package application;
 import domain.repository.CourseRepository;
 import domain.repository.LectureRepository;
 import domain.repository.StudentRepository;
-import domain.service.RegisterService;
+import domain.service.Registrar;
 
 public class StudentService {
-    RegisterService registrar;
+    Registrar registrar;
     LectureRepository lectureRepo;
     CourseRepository courseRepo;
     StudentRepository studentRepo;
