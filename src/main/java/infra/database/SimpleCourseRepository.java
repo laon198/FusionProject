@@ -26,6 +26,11 @@ public class SimpleCourseRepository implements CourseRepository {
         return repo.get(id);
     }
 
+    @Override
+    public List<Course> findByYear(int year) {
+        return null;
+    }
+
     public void save(Course course){
         repo.put(course.getId(), course);
     }

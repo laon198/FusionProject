@@ -296,6 +296,7 @@ class LectureManageServiceTest {
     @DisplayName("강의실 변경 성공 테스트")
     @Test
     public void updateRoomTest(){
+
         Professor p1 = professorRepo.findByID(1);
         Professor p2 = professorRepo.findByID(2);
         Professor p3 = professorRepo.findByID(3);

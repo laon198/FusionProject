@@ -33,43 +33,20 @@ public class test {
 //        Student std = stdRepo.findByOption(new StudentCodeOption("20180603")).get(0);
 //        System.out.println(std);
 
-//        RDBLectureRepository rdbLectureRepository = new RDBLectureRepository(MyBatisConnectionFactory.getSqlSessionFactory());
-//        List<Lecture> list = rdbLectureRepository.findAll();
-////        System.out.println(list.size());
-//        RDBCourseRepository rdbCourseRepository = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
-//////        Course course = new Course(2,"cs0002","과기영독3","컴퓨터소프트웨어공학과",3,3);
-//////        rdbCourseRepository.save(course);
-//        List<Course> list = rdbCourseRepository.findByOption(new CourseCodeOption("cs0002"));
+        RDBLectureRepository rdbLectureRepository = new RDBLectureRepository(MyBatisConnectionFactory.getSqlSessionFactory());
+        List<Lecture> all = rdbLectureRepository.findAll();
+
+        // Course test
+        RDBCourseRepository rdbCourseRepository = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
 //        List<Course> list = rdbCourseRepository.findAll();
-
-
-//        Connection conn = null;
-//        Statement stmt = null;
-//        ResultSet rs = null;
-//        try{
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-////            String url = "jdbc:/**/mysql://localhost/mydb?characterEncoding=utf8&serverTimezone=UTC&useSSL=false";
-//            String url = "jdbc:mysql://localhost/mydb?characterEncoding=utf8&serverTimezone=UTC&useSSL=false";
-//            conn = DriverManager.getConnection(url,"root","1234");
-//            String query = "SELECT * FROM members_tb";
-//
-//            stmt = conn.createStatement();
-//            rs = stmt.executeQuery(query);
-//            while (rs.next()){
-//                String id = rs.getString("member_SQ");
-//                String name = rs.getString("name");
-//                System.out.printf("%s     %s \n",id,name);
-//            }
-//        }catch(ClassNotFoundException e){
-//            e.printStackTrace();
-//        }catch (SQLException e){
-//            System.out.println("error : "+ e);
-//        }finally {
-//            rs.close();
-//            stmt.close();
-//            conn.close();
+//        List<Course> list = rdbCourseRepository.findByYear(3);
+//        List<CourseDTO> courseDTOList = new ArrayList<>();
+//        System.out.println(list);
+//        for(Course course : list){
+//            courseDTOList.add(ModelMapper.courseToDTO(course));
 //        }
-
+//        for(CourseDTO courseDTO : courseDTOList){
+//            System.out.println("courseDTO = " + courseDTO);
 
     }
 }

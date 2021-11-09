@@ -5,6 +5,7 @@
 <configuration>
     <typeAliases>
 <!--        <typeAlias alias="Board" type="infra.dto"/>-->
+        <typeAlias alias="CourseOption" type="infra.option.course.CourseOption"/>
     </typeAliases>
     <environments default="development">
         <environment id="development">
@@ -12,6 +13,7 @@
             <!-- connecting to Local MySql -->
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+
                 <property name="url" value="jdbc:mysql://192.168.0.102:3306/fusionproject?characterEncoding=utf8&amp;serverTimezone=UTC&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"/>
                 <property name="username" value="root"/>
                 <property name="password" value="1234"/>
