@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.jdbc.SQL;
 
+import java.util.Set;
+
 public class LectureSql {
 
     public String findAll(){
@@ -29,7 +31,7 @@ public class LectureSql {
 
     public String selectLectureTimes(long id){
         SQL sql = new SQL(){{
-            SELECT("*");
+            SELECT("start_period, end_period, day_of_week, lecture_room");
             FROM("lECTURE_TIMES_TB");
             INNER_JOIN("LECTURES_TB ON LECTURE_TIMES_TB.lecture_PK = LECTURES_TB.lecture_PK");
             WHERE("LECTURES_TB.lecture_PK = #{id}");
@@ -39,7 +41,7 @@ public class LectureSql {
 
     public String selectRegisterings(long id){
         SQL sql = new SQL(){{
-            SELECT("lecture_PK, start_period, end_period, dat_of_week, lecture_room");
+            SELECT("registering_PK,student_code, LECTURES_TB.lecture_PK, register_date");
             FROM("REGISTERINGS_TB");
             INNER_JOIN("LECTURES_TB ON REGISTERINGS_TB.lecture_PK = LECTURES_TB.lecture_PK");
             WHERE("LECTURES_TB.lecture_PK = #{id}");
@@ -47,7 +49,15 @@ public class LectureSql {
         return sql.toString();
     }
 
-
+    public String selectPlanner(long id){
+        SQL sql = new SQL(){{
+            SELECT("LECTURE_PK");
+            FROM("LECTURE_PLANNERS_TB");
+            INNER_JOIN("LECTURES_TB ON LECTURE_PLANNERS_TB.lecture_PK = LECTURES_TB.lecture_PK");
+            WHERE("LECTURES_TB.lecture_PK = #{id}");
+        }};
+        return sql.toString();
+    }
 
 
 
@@ -56,15 +66,22 @@ public class LectureSql {
         return sql.toString();
     }
 
+    public String insertLectureTimes(){return null;}
 
-    public String insert() {
+    public String insert(LectureDTO lectureDTO) {
+        long courseID = lectureDTO.getCourseID();
+        String lectureCode = lectureDTO.getLectureCode();
+        int limit = lectureDTO.getLimit();
+        int applicant = 0;
+        String lecturerID = lectureDTO.getLecturerID();
+
         SQL sql = new SQL() {{
             INSERT_INTO("LECTURES_TB");
-            VALUES("course_SQ","1");
-            VALUES("capacity","100");
-            VALUES("applicant_CNT","0");
-            VALUES("professor_code", "p1234");
-            VALUES("lecture_code", "SE0004-01");
+            VALUES("course_PK","#{courseID}");
+            VALUES("lecture_code", lectureCode);
+            VALUES("capacity","#{limit}");
+            VALUES("applicant_CNT","#{applicant}");
+            VALUES("professor_code", lecturerID);
         }};
         return sql.toString();
     }
