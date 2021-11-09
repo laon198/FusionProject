@@ -40,13 +40,21 @@ public class RDBStudentRepository implements StudentRepository {
         }
 
         Connection conn = null;
+        PreparedStatement pstmt = null;
         try{
             conn = ds.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(new String(query));
+            pstmt = conn.prepareStatement(new String(query));
             ResultSet res = pstmt.executeQuery();
             return getStdFrom(res);
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
+        }finally {
+            try{
+                pstmt.close();
+                conn.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
         }
 
         return null;
@@ -61,15 +69,23 @@ public class RDBStudentRepository implements StudentRepository {
                 "WHERE m.member_PK = ? "
         );
         Connection conn = null;
+        PreparedStatement pstmt = null;
         try{
             conn = ds.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(new String(query));
+            pstmt = conn.prepareStatement(new String(query));
             pstmt.setLong(1, id);
             ResultSet res = pstmt.executeQuery();
             return getStdFrom(res).get(0);
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
             throw new IllegalArgumentException("잘못된 id값입니다.");
+        }finally {
+            try{
+                pstmt.close();
+                conn.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -81,14 +97,22 @@ public class RDBStudentRepository implements StudentRepository {
                 "JOIN members_tb AS m " +
                 "ON s.member_PK = m.member_PK");
         Connection conn = null;
+        PreparedStatement pstmt = null;
         try{
             conn = ds.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(new String(query));
+            pstmt = conn.prepareStatement(new String(query));
             ResultSet res = pstmt.executeQuery();
             return getStdFrom(res);
 
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
+        }finally {
+            try{
+                pstmt.close();
+                conn.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
         }
 
         return null;
@@ -115,14 +139,16 @@ public class RDBStudentRepository implements StudentRepository {
         );
 
         Connection conn = null;
+        PreparedStatement memberStmt = null;
+        PreparedStatement stdStmt = null;
         long id=-1;
         try{
             conn = ds.getConnection();
             conn.setAutoCommit(true);
-            PreparedStatement memberStmt = conn.prepareStatement(
+            memberStmt = conn.prepareStatement(
                     new String(memberQuery),
                     Statement.RETURN_GENERATED_KEYS);
-            PreparedStatement stdStmt = conn.prepareStatement(new String(stdQuery));
+            stdStmt = conn.prepareStatement(new String(stdQuery));
 
             memberStmt.setString(1, stdDTO.getName());
             memberStmt.setString(2, stdDTO.getBirthDate());
@@ -149,9 +175,16 @@ public class RDBStudentRepository implements StudentRepository {
 //            }catch (SQLException e){
 //                e.printStackTrace();
 //            }
-        }finally{
-            return id;
+        }finally {
+            try{
+                memberStmt.close();
+                stdStmt.close();
+                conn.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
         }
+        return id;
     }
 
     private void update(Student student) {
@@ -173,11 +206,13 @@ public class RDBStudentRepository implements StudentRepository {
         );
 
         Connection conn = null;
+        PreparedStatement memberStmt = null;
+        PreparedStatement stdStmt = null;
         try{
             conn = ds.getConnection();
             conn.setAutoCommit(true);
-            PreparedStatement memberStmt = conn.prepareStatement(new String(memberQuery));
-            PreparedStatement stdStmt = conn.prepareStatement(new String(stdQuery));
+            memberStmt = conn.prepareStatement(new String(memberQuery));
+            stdStmt = conn.prepareStatement(new String(stdQuery));
 
             memberStmt.setString(1, stdDTO.getName());
             memberStmt.setString(2, stdDTO.getBirthDate());
@@ -199,6 +234,14 @@ public class RDBStudentRepository implements StudentRepository {
 //            }catch (SQLException e){
 //                e.printStackTrace();
 //            }
+        }finally {
+            try{
+                memberStmt.close();
+                stdStmt.close();
+                conn.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
         }
     }
 

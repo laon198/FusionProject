@@ -26,28 +26,26 @@ public class RDBProfessorRepository implements ProfessorRepository {
                         "ON p.member_PK = m.member_PK "+
                         "WHERE p.member_PK = ? "
         );
+        Professor prof = null;
         Connection conn = null;
         PreparedStatement pstmt = null;
+        ResultSet res = null;
         try{
             conn = ds.getConnection();
             pstmt = conn.prepareStatement(new String(query));
             pstmt.setLong(1, id);
-            ResultSet res = pstmt.executeQuery();
-            Professor prof = getProfFrom(res).get(0);
-            res.close();
-            return prof;
+            res = pstmt.executeQuery();
+            prof = getProfFrom(res).get(0);
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
-            throw new IllegalArgumentException("잘못된 id값입니다.");
         }finally {
             try{
-                pstmt.close();
                 conn.close();
             }catch(SQLException e){
                 e.printStackTrace();
             }
         }
-
+        return prof;
     }
 
     @Override
@@ -56,28 +54,26 @@ public class RDBProfessorRepository implements ProfessorRepository {
                 "SELECT * FROM professors_tb AS p " +
                         "JOIN members_tb AS m " +
                         "ON p.member_PK = m.member_PK");
+        List<Professor> list = null;
         Connection conn = null;
         PreparedStatement pstmt = null;
+        ResultSet res = null;
         try{
             conn = ds.getConnection();
             pstmt = conn.prepareStatement(new String(query));
-            ResultSet res = pstmt.executeQuery();
-            List<Professor> list = getProfFrom(res);
-            res.close();
-            return list;
-
+            res = pstmt.executeQuery();
+            list = getProfFrom(res);
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }finally {
             try{
-                pstmt.close();
                 conn.close();
             }catch(SQLException e){
                 e.printStackTrace();
             }
         }
 
-        return null;
+        return list;
     }
 
     @Override
@@ -107,10 +103,12 @@ public class RDBProfessorRepository implements ProfessorRepository {
         );
 
         Connection conn = null;
+        PreparedStatement memberStmt = null;
+        PreparedStatement stdStmt = null;
         try{
             conn = ds.getConnection();
-            PreparedStatement memberStmt = conn.prepareStatement(new String(memberQuery));
-            PreparedStatement stdStmt = conn.prepareStatement(new String(profQuery));
+            memberStmt = conn.prepareStatement(new String(memberQuery));
+            stdStmt = conn.prepareStatement(new String(profQuery));
 
             memberStmt.setString(1, profDTO.getName());
             memberStmt.setString(2, profDTO.getBirthDate());
@@ -130,6 +128,12 @@ public class RDBProfessorRepository implements ProfessorRepository {
 //            }catch (SQLException e){
 //                e.printStackTrace();
 //            }
+        }finally {
+            try{
+                conn.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
         }
 
     }
@@ -146,14 +150,16 @@ public class RDBProfessorRepository implements ProfessorRepository {
         );
 
         Connection conn = null;
+        PreparedStatement memberStmt = null;
+        PreparedStatement stdStmt = null;
         long id=-1;
         try{
             conn = ds.getConnection();
-            PreparedStatement memberStmt = conn.prepareStatement(
+            memberStmt = conn.prepareStatement(
                     new String(memberQuery),
                     Statement.RETURN_GENERATED_KEYS
                     );
-            PreparedStatement stdStmt = conn.prepareStatement(new String(profQuery));
+            stdStmt = conn.prepareStatement(new String(profQuery));
 
             memberStmt.setString(1, profDTO.getName());
             memberStmt.setString(2, profDTO.getBirthDate());
@@ -178,8 +184,13 @@ public class RDBProfessorRepository implements ProfessorRepository {
 //                e.printStackTrace();
 //            }
         }finally {
-            return id;
+            try{
+                conn.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
         }
+        return id;
     }
 
     private ResultSet findLectureInfo(String profCode){
@@ -191,15 +202,17 @@ public class RDBProfessorRepository implements ProfessorRepository {
         );
 
         Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet res = null;
         try{
             conn = ds.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(new String(query));
+            pstmt = conn.prepareStatement(new String(query));
             pstmt.setString(1, profCode);
-            return pstmt.executeQuery();
+            res = pstmt.executeQuery();
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }
-        return null;
+        return res;
     }
 
     private List<Professor> getProfFrom(ResultSet resSet) throws SQLException {

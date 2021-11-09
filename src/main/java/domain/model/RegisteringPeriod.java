@@ -8,11 +8,49 @@ import java.util.Set;
 
 public class RegisteringPeriod {
     private Period period;
-    private Set<Student.Year> allowedYearSet;
+    private Student.Year allowedYear;
 
-    public RegisteringPeriod(Period period, Set<Student.Year> allowedYears){
-        this.period = period;
-        allowedYearSet = allowedYears;
+    public static class Builder{
+        private Period period;
+        private Student.Year allowedYear;
+
+        public Builder period(Period value){
+            period = value;
+            return this;
+        }
+
+        public Builder allowedYear(int year){
+            switch (year){
+                case 1:
+                    allowedYear = Student.Year.FRESHMAN;
+                    break;
+                case 2:
+                    allowedYear = Student.Year.SOPHOMORE;
+                    break;
+                case 3:
+                    allowedYear = Student.Year.JUNIOR;
+                    break;
+                case 4:
+                    allowedYear = Student.Year.SENIOR;
+                    break;
+                default:
+                    throw new IllegalArgumentException("1~4학년까지만 존재합니다.");
+            }
+            return this;
+        }
+
+        public RegisteringPeriod build(){
+            return new RegisteringPeriod(this);
+        }
+    }
+
+    public static Builder builder(){
+        return new Builder();
+    }
+
+    private RegisteringPeriod(Builder builder){
+        period = builder.period;
+        allowedYear = builder.allowedYear;
     }
 
     //TODO : method naming??
@@ -31,11 +69,10 @@ public class RegisteringPeriod {
     }
 
     private boolean isAllowedYear(Student.Year year){
-        for(Student.Year allowedYear : allowedYearSet){
-            if(allowedYear==year){
-                return true;
-            }
+        if(allowedYear==year){
+            return true;
         }
+
         return false;
     }
 
@@ -44,11 +81,11 @@ public class RegisteringPeriod {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RegisteringPeriod that = (RegisteringPeriod) o;
-        return Objects.equals(period, that.period) && Objects.equals(allowedYearSet, that.allowedYearSet);
+        return Objects.equals(period, that.period) && allowedYear == that.allowedYear;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(period, allowedYearSet);
+        return Objects.hash(period, allowedYear);
     }
 }
