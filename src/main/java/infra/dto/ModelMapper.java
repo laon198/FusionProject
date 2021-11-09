@@ -4,15 +4,31 @@ import domain.generic.LectureTime;
 import domain.model.*;
 
 import java.lang.reflect.Field;
-
-import java.lang.reflect.Field;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class ModelMapper {
+    public static RegisteringDTO registeringToDTO(Registering reg){
+        try{
+            long id = getLongField(reg, "id");
+            long lectureID = getLongField(reg, "lectureID");
+            String studentCode = getStringField(reg, "studentCode");
+            String registeringTime = getStringField(reg, "registeringTime");
+
+            return RegisteringDTO.builder()
+                    .id(id)
+                    .lectureID(lectureID)
+                    .studentCode(studentCode)
+                    .registeringTime(registeringTime)
+                    .build();
+
+        }catch(NoSuchFieldException | IllegalAccessException e){
+            e.getStackTrace();
+        }
+        return null;
+    }
 
     public static AdminDTO adminToDTO(Admin admin){
         try{
@@ -52,6 +68,7 @@ public class ModelMapper {
                     .department(department)
                     .birthDate(birthDate)
                     .professorCode(professorCode)
+                    .timeTable(timeTable)
                     .build();
 
         }catch(NoSuchFieldException | IllegalAccessException e){
@@ -97,19 +114,7 @@ public class ModelMapper {
         Set<RegisteringDTO> regSet = new HashSet<>();
 
         for(Registering reg : myRegisterings){
-            long id = getLongField(reg, "id");
-            long lectureID = getLongField(reg, "lectureID");
-            String studentCode = getStringField(reg, "studentCode");
-            String registeringTime = getStringField(reg, "registeringTime");
-
-            regSet.add(
-                    RegisteringDTO.builder()
-                    .id(id)
-                    .lectureID(lectureID)
-                    .studentCode(studentCode)
-                    .registeringTime(registeringTime)
-                    .build()
-            );
+            regSet.add(registeringToDTO(reg));
         }
 
         return regSet;
@@ -142,6 +147,7 @@ public class ModelMapper {
 
         return dtoList;
     }
+
 
     private static LectureTime.DayOfWeek getLectureDay(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
         Field f1 = obj.getClass().getDeclaredField(fieldName);
