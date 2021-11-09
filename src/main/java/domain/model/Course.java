@@ -57,7 +57,7 @@ public class Course {
         return new Builder();
     }
 
-    public Course(Builder builder) {
+    private Course(Builder builder) {
         id = builder.id;
         courseCode = builder.courseCode;
         courseName = builder.courseName;

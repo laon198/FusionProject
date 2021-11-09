@@ -20,7 +20,7 @@ public class LectureDTO {
     private int limit;
     private Set<LectureTimeDTO> lectureTimes;
     private Set<RegisteringDTO> myRegisterings;
-    private LecturePlanner planner;
+    private LecturePlannerDTO planner;
 
 
     public static class Builder {
@@ -31,7 +31,7 @@ public class LectureDTO {
         private int limit;
         private Set<LectureTimeDTO> lectureTimes;
         private Set<RegisteringDTO> myRegisterings;
-        private LecturePlanner planner;
+        private LecturePlannerDTO planner;
 
         public Builder id(long id) {
             this.id = id;
@@ -68,7 +68,7 @@ public class LectureDTO {
             return this;
         }
 
-        public Builder planner(LecturePlanner planner) {
+        public Builder planner(LecturePlannerDTO planner) {
             this.planner = planner;
             return this;
         }
@@ -82,7 +82,7 @@ public class LectureDTO {
         return new Builder();
     }
 
-    private LectureDTO(LectureDTO.Builder builder){
+    private LectureDTO(Builder builder){
         id = builder.id;
         courseID = builder.courseID;
         lectureCode = builder.lectureCode;

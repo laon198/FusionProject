@@ -1,15 +1,82 @@
 package infra.dto;
 
 import domain.generic.LectureTime;
+import domain.generic.Period;
 import domain.model.*;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class ModelMapper {
+
+    public static LecturePlanner getPlanner(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        Field f1 = obj.getClass().getDeclaredField(fieldName);
+        f1.setAccessible(true);
+        return (LecturePlanner) f1.get(obj);
+    }
+
+    public static LecturePlannerDTO plannerToDTO(LecturePlanner planner){
+        try{
+            Set<LecturePlannerItemDTO> items = getPlannerItemDTOSet(getPlannerItemSet(planner, "items"));
+            PeriodDTO writePeriod = periodToDTO(getPeriod(planner,"writePeriod"));
+            return LecturePlannerDTO.builder()
+                    .items(items)
+                    .writePeriod(writePeriod)
+                    .build();
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.getStackTrace();
+        }
+    }
+
+    public static Period getPeriod(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        Field f1 = obj.getClass().getDeclaredField(fieldName);
+        f1.setAccessible(true);
+        return (Period) f1.get(obj);
+    }
+
+    public static PeriodDTO periodToDTO(Period period) throws NoSuchFieldException, IllegalAccessException {
+        LocalDateTime beginTime = getLocalDateTimeField(period, "beginTime");
+        LocalDateTime endTime = getLocalDateTimeField(period, "endTime");
+        return PeriodDTO.builder()
+                .beginTime(beginTime)
+                .endTime(endTime)
+                .build();
+    }
+
+    public static Set<LecturePlannerItem> getPlannerItemSet(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        Field f1 = obj.getClass().getDeclaredField(fieldName);
+        f1.setAccessible(true);
+        return (Set<LecturePlannerItem>)f1.get(obj);
+    }
+
+    public static Set<LecturePlannerItemDTO> getPlannerItemDTOSet(Set<LecturePlannerItem> items){
+        Set<LecturePlannerItemDTO> dtoSet = new HashSet<>();
+        for(LecturePlannerItem item : items){
+            dtoSet.add(
+                    getPlannerItemToDTO(item)
+            );
+        }
+
+        return dtoSet;
+    }
+
+    public static LecturePlannerItemDTO getPlannerItemToDTO(LecturePlannerItem item){
+        try{
+            String name = getStringField(item, "name");
+            String content = getStringField(item, "content");
+            return LecturePlannerItemDTO.builder()
+                    .name(name)
+                    .content(content)
+                    .build();
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.getStackTrace();
+        }
+        return null;
+    }
 
     public static AdminDTO adminToDTO(Admin admin) {
         try {
@@ -33,7 +100,6 @@ public class ModelMapper {
 
         return null;
     }
-
 
     public static ProfessorDTO professorToDTO(Professor prof) {
         try {
@@ -100,7 +166,7 @@ public class ModelMapper {
             int limit = getIntField(lecture, "limit");
             Set<LectureTimeDTO> lectureTimes = getLectureTimeDTOTable(getTimeTable(lecture,"lectureTimes"));
             Set<RegisteringDTO> myRegisterings = getRegDTOSet(getRegisteringSet(lecture,"myRegisterings"));
-            LecturePlanner planner = null;
+            LecturePlannerDTO planner = plannerToDTO(getPlanner(lecture, "planner"));
 
             return LectureDTO.builder()
                     .id(id)
@@ -235,10 +301,10 @@ public class ModelMapper {
         return (Set<LectureTime>) f1.get(obj);
     }
 
-    private static LocalDate getLocalDateField(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+    private static LocalDateTime getLocalDateTimeField(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
         Field f1 = obj.getClass().getDeclaredField(fieldName);
         f1.setAccessible(true);
-        return (LocalDate) f1.get(obj);
+        return (LocalDateTime) f1.get(obj);
     }
 
     private static String getStringField(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
