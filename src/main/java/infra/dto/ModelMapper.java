@@ -14,13 +14,37 @@ import java.util.Set;
 
 public class ModelMapper {
 
-    public static ProfessorDTO ProfessorToDTO(Professor prof){
+    public static AdminDTO adminToDTO(Admin admin){
+        try{
+            long id = getSuperLongField(admin, "id");
+            String name = getSuperStringField(admin, "name");
+            String department = getSuperStringField(admin, "department");
+            String birthDate = getSuperStringField(admin, "birthDate");
+            String adminCode = getStringField(admin, "admin_code");
+
+            return AdminDTO.builder()
+                    .id(id)
+                    .name(name)
+                    .department(department)
+                    .birthDate(birthDate)
+                    .adminCode(adminCode)
+                    .build();
+
+        }catch(NoSuchFieldException | IllegalAccessException e){
+            e.getStackTrace();
+        }
+
+        return null;
+    }
+
+    public static ProfessorDTO professorToDTO(Professor prof){
         try{
             long id = getSuperLongField(prof, "id");
             String name = getSuperStringField(prof, "name");
             String department = getSuperStringField(prof, "department");
             String birthDate = getSuperStringField(prof, "birthDate");
             String professorCode = getStringField(prof, "professorCode");
+            Set<LectureTimeDTO> timeTable = getLectureTimeDTOTable(getTimeTable(prof, "timeTable"));
             //TODO : timeTable
 
             return ProfessorDTO.builder()

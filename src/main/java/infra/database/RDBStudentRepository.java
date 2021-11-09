@@ -27,7 +27,7 @@ public class RDBStudentRepository implements StudentRepository {
         StringBuilder query = new StringBuilder(
                 "SELECT * FROM students_tb AS s " +
                         "JOIN members_tb AS m " +
-                        "ON s.member_SQ = m.member_SQ "
+                        "ON s.member_PK = m.member_PK "
         );
 
         for(int i=0; i<options.length; i++){
@@ -60,8 +60,8 @@ public class RDBStudentRepository implements StudentRepository {
         StringBuilder query = new StringBuilder(
                 "SELECT * FROM students_tb AS s " +
                 "JOIN members_tb AS m " +
-                "ON s.member_SQ = m.member_SQ "+
-                "WHERE m.member_SQ = ? "
+                "ON s.member_PK = m.member_PK "+
+                "WHERE m.member_PK = ? "
         );
         Connection conn = null;
         try{
@@ -82,7 +82,7 @@ public class RDBStudentRepository implements StudentRepository {
         StringBuilder query = new StringBuilder(
                 "SELECT * FROM students_tb AS s " +
                 "JOIN members_tb AS m " +
-                "ON s.member_SQ = m.member_SQ");
+                "ON s.member_PK = m.member_PK");
         Connection conn = null;
         try{
             conn = ds.getConnection();
@@ -101,7 +101,7 @@ public class RDBStudentRepository implements StudentRepository {
     public void save(Student student) {
         StudentDTO stdDTO = ModelMapper.studentToDTO(student);
         StringBuilder memberQuery = new StringBuilder(
-                "INSERT INTO members_tb (member_SQ, name, birthday, department) " +
+                "INSERT INTO members_tb (member_PK, name, birthday, department) " +
                         "VALUES(?, ?, ?, ?) " +
                         "ON DUPLICATE KEY UPDATE " +
                         "name=?, " +
@@ -109,7 +109,7 @@ public class RDBStudentRepository implements StudentRepository {
                         "department=?;"
         );
         StringBuilder stdQuery = new StringBuilder(
-                "INSERT INTO students_tb (member_SQ, student_code, year, credit, max_credit) " +
+                "INSERT INTO students_tb (member_PK, student_code, year, credit, max_credit) " +
                         "VALUES(?, ?, ?, ?, ?) " +
                         "ON DUPLICATE KEY UPDATE " +
                         "student_code=?, " +
@@ -160,7 +160,7 @@ public class RDBStudentRepository implements StudentRepository {
         StringBuilder query = new StringBuilder(
                 "SELECT * FROM registerings_tb AS r " +
                         "JOIN lecture_times_tb AS t " +
-                        "ON r.lecture_SQ = t.lecture_SQ "+
+                        "ON r.lecture_PK = t.lecture_PK "+
                         "WHERE r.student_code = ? "
         );
 

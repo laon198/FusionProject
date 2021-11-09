@@ -2,12 +2,10 @@ package infra.database;
 
 import domain.generic.LectureTime;
 import domain.model.Professor;
-import domain.model.Student;
 import domain.repository.ProfessorRepository;
 import infra.PooledDataSource;
 import infra.dto.ModelMapper;
 import infra.dto.ProfessorDTO;
-import infra.dto.StudentDTO;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -24,8 +22,8 @@ public class RDBProfessorRepository implements ProfessorRepository {
         StringBuilder query = new StringBuilder(
                 "SELECT * FROM professors_tb AS p " +
                         "JOIN members_tb AS m " +
-                        "ON p.member_SQ = m.member_SQ "+
-                        "WHERE p.member_SQ = ? "
+                        "ON p.member_PK = m.member_PK "+
+                        "WHERE p.member_PK = ? "
         );
         Connection conn = null;
 
@@ -48,7 +46,7 @@ public class RDBProfessorRepository implements ProfessorRepository {
         StringBuilder query = new StringBuilder(
                 "SELECT * FROM professors_tb AS p " +
                         "JOIN members_tb AS m " +
-                        "ON p.member_SQ = m.member_SQ");
+                        "ON p.member_PK = m.member_PK");
         try{
             Connection conn = ds.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(new String(query));
@@ -64,9 +62,9 @@ public class RDBProfessorRepository implements ProfessorRepository {
 
     @Override
     public void save(Professor professor) {
-        ProfessorDTO profDTO = ModelMapper.ProfessorToDTO(professor);
+        ProfessorDTO profDTO = ModelMapper.professorToDTO(professor);
         StringBuilder memberQuery = new StringBuilder(
-                "INSERT INTO members_tb (member_SQ, name, birthday, department) " +
+                "INSERT INTO members_tb (member_PK, name, birthday, department) " +
                         "VALUES(?, ?, ?, ?) " +
                         "ON DUPLICATE KEY UPDATE " +
                         "name=?, " +
@@ -74,7 +72,7 @@ public class RDBProfessorRepository implements ProfessorRepository {
                         "department=?;"
         );
         StringBuilder profQuery = new StringBuilder(
-                "INSERT INTO professors_tb (member_SQ, professor_code) " +
+                "INSERT INTO professors_tb (member_PK, professor_code) " +
                         "VALUES(?, ?) " +
                         "ON DUPLICATE KEY UPDATE " +
                         "professor_code=? ; "
@@ -123,7 +121,7 @@ public class RDBProfessorRepository implements ProfessorRepository {
         StringBuilder query = new StringBuilder(
                 "SELECT * FROM lectures_tb AS l " +
                         "JOIN lecture_times_tb AS t " +
-                        "ON l.lecture_SQ = t.lecture_SQ "+
+                        "ON l.lecture_PK = t.lecture_PK "+
                         "WHERE l.professor_code = ? "
         );
 
