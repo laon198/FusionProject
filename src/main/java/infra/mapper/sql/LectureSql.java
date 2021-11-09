@@ -29,7 +29,7 @@ public class LectureSql {
 
     public String selectLectureTimes(long id){
         SQL sql = new SQL(){{
-            SELECT("*");
+            SELECT("start_period, end_period, day_of_week, lecture_room");
             FROM("lECTURE_TIMES_TB");
             INNER_JOIN("LECTURES_TB ON LECTURE_TIMES_TB.lecture_PK = LECTURES_TB.lecture_PK");
             WHERE("LECTURES_TB.lecture_PK = #{id}");
@@ -39,7 +39,7 @@ public class LectureSql {
 
     public String selectRegisterings(long id){
         SQL sql = new SQL(){{
-            SELECT("lecture_PK, start_period, end_period, dat_of_week, lecture_room");
+            SELECT("registering_PK,student_code, LECTURES_TB.lecture_PK, register_date");
             FROM("REGISTERINGS_TB");
             INNER_JOIN("LECTURES_TB ON REGISTERINGS_TB.lecture_PK = LECTURES_TB.lecture_PK");
             WHERE("LECTURES_TB.lecture_PK = #{id}");
@@ -47,7 +47,15 @@ public class LectureSql {
         return sql.toString();
     }
 
-
+    public String selectPlanner(long id){
+        SQL sql = new SQL(){{
+            SELECT("LECTURE_PK");
+            FROM("LECTURE_PLANNERS_TB");
+            INNER_JOIN("LECTURES_TB ON LECTURE_PLANNERS_TB.lecture_PK = LECTURES_TB.lecture_PK");
+            WHERE("LECTURES_TB.lecture_PK = #{id}");
+        }};
+        return sql.toString();
+    }
 
 
 
@@ -57,7 +65,7 @@ public class LectureSql {
     }
 
 
-    public String insert() {
+    public String insert(LectureDTO lectureDTO) {
         SQL sql = new SQL() {{
             INSERT_INTO("LECTURES_TB");
             VALUES("course_SQ","1");

@@ -37,22 +37,22 @@ public class RDBCourseRepository implements CourseRepository {
         return list;
     }
 
-    public List<Course> findAll() {
-        SqlSession session = null;
-        List<Course> list = null;
-        try {
-            session = sqlSessionFactory.openSession();
-            session.selectList("mapper.CourseMapper.ReadAll");
-            session.commit();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            session.rollback();
-        }finally {
-            session.close();
-        }
-        return list;
-    }
+//    public List<Course> findAll() {
+//        SqlSession session = null;
+//        List<Course> list = null;
+//        try {
+//            session = sqlSessionFactory.openSession();
+//            session.selectList("mapper.CourseMapper.ReadAll");
+//            session.commit();
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//            session.rollback();
+//        }finally {
+//            session.close();
+//        }
+//        return list;
+//    }
 
 
     @Override

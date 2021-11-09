@@ -3,6 +3,7 @@ package infra.mapper;
 import domain.generic.LectureTime;
 import domain.model.Lecture;
 import domain.model.LecturePlanner;
+import infra.dto.LectureDTO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -29,11 +30,13 @@ public interface LectureMapper {
 
     @InsertProvider(type = infra.mapper.sql.LectureSql.class, method = "insert")
     // @Options(useGeneratedKeys = true, keyProperty = "id")
-    void insert(Lecture lecture);
+    void insert(LectureDTO lectureDTO);
 
     @UpdateProvider(type = infra.mapper.sql.LectureSql.class, method = "update")
     @ResultMap("lectureResultSet")
     void updateLecture();
+
+
 
 
     @SelectProvider(type = infra.mapper.sql.LectureSql.class, method = "selectLectureList")
@@ -43,6 +46,9 @@ public interface LectureMapper {
     @SelectProvider(type = infra.mapper.sql.LectureSql.class, method = "selectLectureTimes")
     List<Map<String,Object>> selectLectureTimes(long id);
 
+
+    @SelectProvider(type = infra.mapper.sql.LectureSql.class, method = "selectRegisterings")
+    List<Map<String,Object>> selectRegisterings(long id);
 
 }
 

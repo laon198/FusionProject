@@ -37,6 +37,7 @@ public class ModelMapper {
         return null;
     }
 
+
     public static ProfessorDTO professorToDTO(Professor prof){
         try{
             long id = getSuperLongField(prof, "id");
@@ -93,6 +94,12 @@ public class ModelMapper {
 
         return null;
     }
+
+    public static LectureDTO lectureToDTO(Lecture lecture){
+        return null;
+    }
+
+
 
     private static Set<LectureTimeDTO> getLectureTimeDTOTable(Set<LectureTime> timeTable) throws NoSuchFieldException, IllegalAccessException {
         Set<LectureTimeDTO> dtoList = new HashSet<>();
