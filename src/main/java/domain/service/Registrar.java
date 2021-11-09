@@ -84,13 +84,4 @@ public class Registrar {
 
         return false;
     }
-
-    //TODO : 겹치는 시간 처리? 좀더 잘처리
-    public void addRegisteringPeriod(RegisteringPeriod period){
-        periodSet.add(period);
-    }
-
-    public void removeRegisteringPeriod(RegisteringPeriod rPeriod) {
-        periodSet.remove(rPeriod);
-    }
 }

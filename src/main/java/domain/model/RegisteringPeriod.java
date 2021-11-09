@@ -7,12 +7,19 @@ import java.util.Objects;
 import java.util.Set;
 
 public class RegisteringPeriod {
+    private long id;
     private Period period;
     private Student.Year allowedYear;
 
     public static class Builder{
+        private long id;
         private Period period;
         private Student.Year allowedYear;
+
+        public Builder id(long value){
+            id = value;
+            return this;
+        }
 
         public Builder period(Period value){
             period = value;
@@ -49,11 +56,11 @@ public class RegisteringPeriod {
     }
 
     private RegisteringPeriod(Builder builder){
+        id = builder.id;
         period = builder.period;
         allowedYear = builder.allowedYear;
     }
 
-    //TODO : method naming??
     public boolean isSatisfiedBy(Student std){
         LocalDateTime nowTime = LocalDateTime.now();
 
@@ -74,6 +81,10 @@ public class RegisteringPeriod {
         }
 
         return false;
+    }
+
+    public long getID() {
+        return id;
     }
 
     @Override

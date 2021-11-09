@@ -51,4 +51,12 @@ public class RegisterAppService {
         regRepo.remove(reg);
     }
 
+    //TODO : 겹치는 시간 처리? 좀더 잘처리
+    public void addRegisteringPeriod(RegisteringPeriod period){
+    }
+
+    public void removeRegisteringPeriod(RegisteringPeriod rPeriod) {
+    }
+
+
 }
