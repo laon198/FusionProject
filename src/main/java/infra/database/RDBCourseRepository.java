@@ -3,6 +3,7 @@ package infra.database;
 import domain.model.Course;
 import domain.repository.CourseRepository;
 import infra.option.Option;
+import infra.option.course.CourseOption;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
@@ -18,6 +19,23 @@ public class RDBCourseRepository implements CourseRepository {
         this.sqlSessionFactory = sqlSessionFactory;
     }
 
+    public List<Course> findAll(){
+        SqlSession session = null;
+        List<Course> list = null;
+
+        try {
+            session = sqlSessionFactory.openSession();
+            session.selectList("mapper.CourseMapper.ReadAll");
+            session.commit();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            session.rollback();
+        }finally {
+            session.close();
+        }
+        return list;
+    }
 
     public List<Course> findAll() {
         SqlSession session = null;
@@ -38,12 +56,19 @@ public class RDBCourseRepository implements CourseRepository {
 
 
     @Override
-    public List<Course> findByOption(Option... option) {
+    public List<Course> findByOption(CourseOption... options) {
         SqlSession session = null;
         List<Course> list = null;
+
+//        StringBuilder query = new StringBuilder();
+//        for(CourseOption option : options){
+//            query.append(option.getQuery());
+////            query.append(" AND ");
+//        }
+
         try {
             session = sqlSessionFactory.openSession();
-            session.selectList("mapper.CourseMapper.FindByOption",option);
+            session.selectList("mapper.CourseMapper.FindByOption");
             session.commit();
         }
         catch (Exception e){

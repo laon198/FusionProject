@@ -31,10 +31,30 @@ public class LecturePlannerTest {
 
     @BeforeEach
     public void setup() throws Exception {
-        Professor p1 = new Professor(1);
-        Professor p2 = new Professor(2);
-        Professor p3 = new Professor(3);
-        Professor p4 = new Professor(4);
+        Professor p1 = Professor.builder()
+                .id(1)
+                .name("kim")
+                .department("SE")
+                .birthDate("19801112")
+                .build();
+        Professor p2 = Professor.builder()
+                .id(2)
+                .name("lee")
+                .department("SE")
+                .birthDate("19801112")
+                .build();
+        Professor p3 = Professor.builder()
+                .id(3)
+                .name("lee a")
+                .department("SE")
+                .birthDate("19801112")
+                .build();
+        Professor p4 = Professor.builder()
+                .id(4)
+                .name("kim b")
+                .department("SE")
+                .birthDate("19801112")
+                .build();
 
         professorRepo.save(p1);
         professorRepo.save(p2);
@@ -55,7 +75,7 @@ public class LecturePlannerTest {
                 1,
                 p1.getId(),
                 2,
-                new Course(1, 3).getId(),
+                1,
                 time1
                );
 
@@ -73,7 +93,7 @@ public class LecturePlannerTest {
                 2,
                 p2.getId(),
                 2,
-                new Course(2, 3).getId(),
+                2,
                 time2
                 );
 
@@ -91,7 +111,7 @@ public class LecturePlannerTest {
                 3,
                 p3.getId(),
                 2,
-                new Course(3, 3).getId(),
+                3,
                 time3
                 );
 
@@ -100,7 +120,7 @@ public class LecturePlannerTest {
                 4,
                 p4.getId(),
                 2,
-                new Course(3, 3).getId(),
+        3,
                 time3
                 );
 
@@ -118,7 +138,7 @@ public class LecturePlannerTest {
                 5,
                 p4.getId(),
                 2,
-                new Course(3, 3).getId(),
+                3,
                 time4
                 );
 
@@ -136,7 +156,7 @@ public class LecturePlannerTest {
                 6,
                 p4.getId(),
                 2,
-                new Course(4, 21).getId(),
+                4,
                 time5
                 );
 

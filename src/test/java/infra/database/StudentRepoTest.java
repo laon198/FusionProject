@@ -40,11 +40,12 @@ public class StudentRepoTest {
     @Test
     public void saveTest(){
         Student std = Student.builder()
-                    .id(5)
-                .name("pro park")
+                    .id(1)
+                .name("changed")
                 .department("SE")
                 .birthDate("19991112")
-                .year(2)
+                .year(3)
+                .studentCode("20180303")
                 .build();
 
         stdRepo.save(std);

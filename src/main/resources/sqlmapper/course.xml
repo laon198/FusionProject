@@ -10,10 +10,8 @@
         <result property="credit" column="credit"/>
     </resultMap>
 
-
     <select id="ReadAll" resultMap="result">
-        SELECT *
-        FROM COURSES_TB
+        SELECT * FROM COURSES_TB
     </select>
 
     <select id="FindByOption" resultMap="result" parameterType="CourseOption">

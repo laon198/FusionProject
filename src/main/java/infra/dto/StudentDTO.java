@@ -11,9 +11,8 @@ public class StudentDTO extends MemberDTO {
     private int credit;
     private int year;
     private String studentCode;
-//    private List<Long> registeredLectureIDs;
-
-//    private Set<LectureTime> timeTable;
+    private List<Long> registeredLectureIDs;
+    private Set<LectureTimeDTO> timeTable;
 
     public static class Builder{
         private Long id;
@@ -25,7 +24,7 @@ public class StudentDTO extends MemberDTO {
         private String studentCode;
         private String birthDate;
         private List<Long> registeredLectureIDs = new ArrayList<>();
-        private Set<LectureTime> timeTable = new HashSet<>();
+        private Set<LectureTimeDTO> timeTable = new HashSet<>();
 
         public Builder id(long value){
             id = value;
@@ -67,13 +66,13 @@ public class StudentDTO extends MemberDTO {
             return this;
         }
 
-        public Builder registeredLectureIDs(Long... lectureIDs){
-            registeredLectureIDs = Arrays.asList(lectureIDs);
+        public Builder registeredLectureIDs(List<Long> registeredLectureIDs){
+            registeredLectureIDs = new ArrayList<>(registeredLectureIDs);
             return this;
         }
 
-        public Builder timeTable(LectureTime... lectureTimes){
-            timeTable = new HashSet(Arrays.asList(lectureTimes));
+        public Builder timeTable(Set<LectureTimeDTO> timeTable){
+            timeTable = new HashSet(timeTable);
             return this;
         }
 
@@ -90,8 +89,8 @@ public class StudentDTO extends MemberDTO {
             super(builder.id, builder.name,
                     builder.department, builder.birthDate);
             year = builder.year;
-//            registeredLectureIDs = builder.registeredLectureIDs;
-//            timeTable = builder.timeTable;
+            registeredLectureIDs = builder.registeredLectureIDs;
+            timeTable = builder.timeTable;
             credit = builder.credit;
             maxCredit = builder.maxCredit;
             studentCode = builder.studentCode;

@@ -4,6 +4,7 @@ import domain.model.Professor;
 import domain.repository.ProfessorRepository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SimpleProfessorRepository implements ProfessorRepository {
@@ -15,7 +16,12 @@ public class SimpleProfessorRepository implements ProfessorRepository {
     }
 
     @Override
+    public List<Professor> findAll() {
+        return null;
+    }
+
+    @Override
     public void save(Professor professor) {
-        repo.put(professor.getId(), professor);
+        repo.put(professor.getID(), professor);
     }
 }

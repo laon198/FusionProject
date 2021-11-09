@@ -38,12 +38,17 @@ public class RegisterServiceTest {
     @BeforeEach
     public void init() throws Exception {
         registerService = new RegisterService(lectureRepo, courseRepo, stdRepo);
-        Professor p1 = new Professor(1);
+        Professor p1 = Professor.builder()
+                .id(1)
+                .name("kim")
+                .department("SE")
+                .birthDate("19801112")
+                .build();
 
-        Course c1 = new Course(1, 3);
-        Course c2 = new Course(2, 3);
-        Course c3 = new Course(3, 3);
-        Course c4 = new Course(4, 21);
+        Course c1 = new Course(1, "SE0002", "융합프로젝트", "SE", 2, 3);
+        Course c2 = new Course(2, "SE0003", "과기독", "SE", 2, 3);
+        Course c3 = new Course(3, "SE0004", "운영체제", "SE", 2, 3);
+        Course c4 = new Course(4, "SE0005", "자료구조", "SE", 2, 21);
         courseRepo.save(c1);
         courseRepo.save(c2);
         courseRepo.save(c3);
@@ -61,7 +66,7 @@ public class RegisterServiceTest {
 
         Lecture l1 = new Lecture(
                 1,
-                p1.getId(),
+                p1.getID(),
                 2,
                 c1.getId(),
                 time1
@@ -79,7 +84,7 @@ public class RegisterServiceTest {
 
         Lecture l2 = new Lecture(
                 2,
-                p1.getId(),
+                p1.getID(),
                 2,
                 c2.getId(),
                 time2
@@ -97,7 +102,7 @@ public class RegisterServiceTest {
 
         Lecture l3 = new Lecture(
                 3,
-                p1.getId(),
+                p1.getID(),
                 2,
                 c2.getId(),
                 time3
@@ -106,7 +111,7 @@ public class RegisterServiceTest {
 
         Lecture l4 = new Lecture(
                 4,
-                p1.getId(),
+                p1.getID(),
                 2,
                 c3.getId(),
                 time3
@@ -124,7 +129,7 @@ public class RegisterServiceTest {
 
         Lecture l5 = new Lecture(
                 5,
-                p1.getId(),
+                p1.getID(),
                 2,
                 c3.getId(),
                 time4
@@ -142,7 +147,7 @@ public class RegisterServiceTest {
 
         Lecture l6 = new Lecture(
                 6,
-                p1.getId(),
+                p1.getID(),
                 2,
                 c4.getId(),
                 time5

@@ -2,10 +2,13 @@ package domain.service;
 
 import domain.model.Course;
 import domain.model.Lecture;
+import domain.model.Registering;
 import domain.model.Student;
 import domain.repository.CourseRepository;
 import domain.repository.LectureRepository;
+import domain.repository.RegisteringRepository;
 import domain.repository.StudentRepository;
+import infra.option.student.StudentCodeOption;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,20 +17,22 @@ public class RegisterService {
     private LectureRepository lectureRepo;
     private CourseRepository courseRepo;
     private StudentRepository studentRepo;
+    private RegisteringRepository regRepo;
     private Set<RegisteringPeriod> periodSet;
 
     public RegisterService(LectureRepository lectureRepo, CourseRepository courseRepo,
-                            StudentRepository studentRepo){
+                            StudentRepository studentRepo, RegisteringRepository regRepo){
         this.lectureRepo = lectureRepo;
         this.courseRepo = courseRepo;
         this.studentRepo = studentRepo;
+        this.regRepo = regRepo;
         periodSet = new HashSet<>();
     }
 
     //TODO : 바로 객체 받을지 아이디로 받을지 생각
-    public void register(long lectureID, long studentID){
+    public void register(long lectureID, String studentCode){
         Lecture lecture = lectureRepo.findByID(lectureID);
-        Student student = studentRepo.findByID(studentID);
+        Student student = studentRepo.findByOption(new StudentCodeOption(studentCode)).get(0);
         Course course = courseRepo.findByID(lecture.getCourseID());
 
         if(!isValidPeriodAbout(student)){
@@ -47,31 +52,37 @@ public class RegisterService {
         }
 
         //TODO : 학생객체가 수강강의 객체를 바로 참조하지못해서 캡슐화가 깨짐
-        for(long id : student.getRegisteredLectureIDs()){
-            Lecture stdLecture = lectureRepo.findByID(id);
+        for(Registering registering : student.getMyRegisterings()){
+            Lecture stdLecture = lectureRepo.findByID(registering.getLectureID());
 
             if(stdLecture.isEqualCourse(lecture)){
                 throw new IllegalArgumentException("중복된 수강입니다.");
             }
         }
 
-        lecture.register(student.getID());
-        student.register(lecture.getID(), lecture.getLectureTimes(), course.getCredit());
+        Registering newReg = Registering.builder()
+                                .lectureID(lectureID)
+                                .studentCode(studentCode)
+                                .build();
 
-        lectureRepo.save(lecture);
-        studentRepo.save(student);
+        lecture.register(newReg);
+        student.register(newReg, lecture.getLectureTimes(), course.getCredit());
+
+        regRepo.save(newReg);
     }
 
     public void cancel(long lectureID, long studentID){
         Lecture lecture = lectureRepo.findByID(lectureID);
         Student student = studentRepo.findByID(studentID);
+        //TODO
+        //findByOption해서 수강신청객체 가져옴
 
         if(!student.hasLecture(lecture.getID())){
             throw new IllegalArgumentException("수강하지 않는 강의 입니다.");
         }
         Course course = courseRepo.findByID(lecture.getCourseID());
 
-        student.cancel(lecture.getID(), lecture.getLectureTimes(), course.getCredit());
+//        student.cancel(, lecture.getLectureTimes(), course.getCredit());
         lecture.cancel(student.getID());
 
         lectureRepo.save(lecture);

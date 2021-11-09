@@ -41,20 +41,40 @@ class LectureManageServiceTest {
     @BeforeEach
     public void init() throws Exception {
         manageService = new LectureManageService(courseRepo, professorRepo, lectureRepo);
-        Professor p1 = new Professor( 1);
-        Professor p2 = new Professor(2);
-        Professor p3 = new Professor(3);
-        Professor p4 = new Professor(4);
+        Professor p1 = Professor.builder()
+                    .id(1)
+                    .name("kim")
+                    .department("SE")
+                    .birthDate("19801112")
+                    .build();
+        Professor p2 = Professor.builder()
+                .id(2)
+                .name("lee")
+                .department("SE")
+                .birthDate("19801112")
+                .build();
+        Professor p3 = Professor.builder()
+                .id(3)
+                .name("lee a")
+                .department("SE")
+                .birthDate("19801112")
+                .build();
+        Professor p4 = Professor.builder()
+                .id(4)
+                .name("kim b")
+                .department("SE")
+                .birthDate("19801112")
+                .build();
 
         professorRepo.save(p1);
         professorRepo.save(p2);
         professorRepo.save(p3);
         professorRepo.save(p4);
 
-        Course c1 = new Course(1, 3);
-        Course c2 = new Course(2, 3);
-        Course c3 = new Course(3, 3);
-        Course c4 = new Course(4, 21);
+        Course c1 = new Course(1, "SE0002", "융합프로젝트", "SE", 2, 3);
+        Course c2 = new Course(2, "SE0003", "과기독", "SE", 2, 3);
+        Course c3 = new Course(3, "SE0004", "운영체제", "SE", 2, 3);
+        Course c4 = new Course(4, "SE0005", "자료구조", "SE", 2, 21);
         courseRepo.save(c1);
         courseRepo.save(c2);
         courseRepo.save(c3);
@@ -276,10 +296,11 @@ class LectureManageServiceTest {
     @DisplayName("강의실 변경 성공 테스트")
     @Test
     public void updateRoomTest(){
-        Professor p1 = professorRepo.findByID("1");
-        Professor p2 = new Professor("2");
-        Professor p3 = new Professor("3");
-        Course c1 = courseRepo.findByID("1");
+
+        Professor p1 = professorRepo.findByID(1);
+        Professor p2 = professorRepo.findByID(2);
+        Professor p3 = professorRepo.findByID(3);
+        Course c1 = courseRepo.findByID(1);
         Set<LectureTime> times = new HashSet<>();
         times.add(
                 new LectureTime(

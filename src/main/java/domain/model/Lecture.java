@@ -15,7 +15,7 @@ public class Lecture {
     private int limit;
     private String professor;
     private Set<LectureTime> lectureTimes;
-    private List<Long> registeredStudentIDs;
+    private Set<Registering> myRegisterings;
     private LecturePlanner planner;
 
     //TODO : set을 직접 받는 것 별로 좋지 않은듯
@@ -25,7 +25,6 @@ public class Lecture {
         id = lectureID;
         lecturerID = professorID;
         limit = limitPersonNum;
-        registeredStudentIDs = new ArrayList<>(limitPersonNum);
         this.lectureTimes = lectureTimes;
         this.courseID = courseID;
         planner = new LecturePlanner();
@@ -60,19 +59,20 @@ public class Lecture {
         this.limit = limit;
     }
 
-    public void register(long stdID){
-        registeredStudentIDs.add(stdID);
+    public void register(Registering registering){
+        myRegisterings.add(registering);
     }
 
     public boolean validLimitNum(){
-        if(registeredStudentIDs.size()>limit){
+        if(myRegisterings.size()>limit){
             return false;
         }
         return true;
     }
 
-    public void cancel(Long stdID) {
-        registeredStudentIDs.remove(stdID);
+
+    public void cancel(long stdID) {
+        myRegisterings.remove(stdID);
     }
 
     public void writePlanner(String itemName, String content, String writerID) {
