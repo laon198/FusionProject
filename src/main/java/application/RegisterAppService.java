@@ -7,14 +7,14 @@ import domain.service.Registrar;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RegisterApplicationService {
+public class RegisterAppService {
     private LectureRepository lectureRepo;
     private StudentRepository stdRepo;
     private CourseRepository courseRepo;
     private RegisteringRepository regRepo;
     private RegPeriodRepository periodRepo;
 
-    public RegisterApplicationService(
+    public RegisterAppService(
             LectureRepository lectureRepo,
             StudentRepository stdRepo,
             CourseRepository courseRepo,

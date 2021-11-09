@@ -25,8 +25,8 @@ public class SimpleStudentRepository implements StudentRepository {
         return null;
     }
 
-
-    public void save(Student student) {
+    public long save(Student student) {
         repo.put(student.getID(), student);
+        return student.getID();
     }
 }

@@ -21,7 +21,7 @@ public class Student extends Member{
     }
 
     public static class Builder{
-        private long id;
+        private long id=-1;
         private int credit;
         private int maxCredit=21;
         private Year year;
@@ -175,4 +175,20 @@ public class Student extends Member{
         return Objects.hash(id);
     }
 
+    public void setName(String value){
+        name = value;
+    }
+
+    //TODO : 테스트용
+    @Override
+    public String toString() {
+        return "Student{" +
+                "year=" + year +
+                ", maxCredit=" + maxCredit +
+                ", credit=" + credit +
+                ", studentCode='" + studentCode + '\'' +
+                ", myRegisterings=" + myRegisterings +
+                ", timeTable=" + timeTable +
+                '}';
+    }
 }

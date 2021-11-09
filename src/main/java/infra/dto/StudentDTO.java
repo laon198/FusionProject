@@ -16,7 +16,7 @@ public class StudentDTO extends MemberDTO {
     private Set<LectureTimeDTO> timeTable;
 
     public static class Builder{
-        private Long id;
+        private Long id=-1L;
         private int credit;
         private int maxCredit=21;
         private int year;

@@ -6,6 +6,7 @@ import domain.repository.ProfessorRepository;
 import infra.PooledDataSource;
 import infra.dto.ModelMapper;
 import infra.dto.ProfessorDTO;
+import infra.dto.StudentDTO;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -61,60 +62,105 @@ public class RDBProfessorRepository implements ProfessorRepository {
     }
 
     @Override
-    public void save(Professor professor) {
-        ProfessorDTO profDTO = ModelMapper.professorToDTO(professor);
+    public long save(Professor professor) {
+        if(professor.getID()==-1){
+            return add(professor);
+        }else{
+            update(professor);
+            return professor.getID();
+        }
+    }
+
+    private void update(Professor prof){
+         ProfessorDTO profDTO = ModelMapper.professorToDTO(prof);
         StringBuilder memberQuery = new StringBuilder(
-                "INSERT INTO members_tb (member_PK, name, birthday, department) " +
-                        "VALUES(?, ?, ?, ?) " +
-                        "ON DUPLICATE KEY UPDATE " +
-                        "name=?, " +
+                "UPDATE members_tb " +
+                        "SET name=?, " +
                         "birthday=?, " +
-                        "department=?;"
+                        "department=? " +
+                        "WHERE member_PK=? "
         );
         StringBuilder profQuery = new StringBuilder(
-                "INSERT INTO professors_tb (member_PK, professor_code) " +
-                        "VALUES(?, ?) " +
-                        "ON DUPLICATE KEY UPDATE " +
-                        "professor_code=? ; "
+                "UPDATE professors_tb " +
+                        "SET professor_code=?," +
+                        "phone_number=? " +
+                        "WHERE member_PK=? "
         );
 
         Connection conn = null;
-        Savepoint point1 = null;
         try{
             conn = ds.getConnection();
-            conn.setAutoCommit(false);
             PreparedStatement memberStmt = conn.prepareStatement(new String(memberQuery));
-            PreparedStatement profStmt = conn.prepareStatement(new String(profQuery));
+            PreparedStatement stdStmt = conn.prepareStatement(new String(profQuery));
 
-            memberStmt.setLong(1, profDTO.getId());
-            memberStmt.setString(2, profDTO.getName());
-            memberStmt.setString(3, profDTO.getBirthDate());
-            memberStmt.setString(4, profDTO.getDepartment());
-            memberStmt.setString(5, profDTO.getName());
-            memberStmt.setString(6, profDTO.getBirthDate());
-            memberStmt.setString(7, profDTO.getDepartment());
+            memberStmt.setString(1, profDTO.getName());
+            memberStmt.setString(2, profDTO.getBirthDate());
+            memberStmt.setString(3, profDTO.getDepartment());
+            memberStmt.setLong(4, profDTO.getId());
 
-            profStmt.setLong(1, profDTO.getId());
-            profStmt.setString(2, profDTO.getProfessorCode());
-            profStmt.setString(3, profDTO.getProfessorCode());
+            stdStmt.setString(1, profDTO.getProfessorCode());
+            stdStmt.setString(2, profDTO.getTelePhone());
+            stdStmt.setLong(3, profDTO.getId());
 
-            point1 = conn.setSavepoint("point1");
-            boolean b = memberStmt.execute();
-            conn.commit();
-            boolean a = profStmt.execute();
-            //TODO : Unique컬럼에 대한 예외는 안뜨고 삽입은 안됨
-            conn.commit();
+            memberStmt.execute();
+            stdStmt.execute();
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
-            if(conn!=null){
-                try{
-                    conn.rollback(point1);
-                }catch (SQLException e){
-                    e.printStackTrace();
-                }
-            }
+//            try{
+//                conn.rollback();
+//            }catch (SQLException e){
+//                e.printStackTrace();
+//            }
         }
 
+    }
+
+    private long add(Professor prof){
+        ProfessorDTO profDTO = ModelMapper.professorToDTO(prof);
+        StringBuilder memberQuery = new StringBuilder(
+                "INSERT INTO members_tb (name, birthday, department) " +
+                        "VALUES(?, ?, ?) "
+        );
+        StringBuilder profQuery = new StringBuilder(
+                "INSERT INTO professors_tb (member_PK, professor_code, phone_number) " +
+                        "VALUES(?, ?, ?) "
+        );
+
+        Connection conn = null;
+        long id=-1;
+        try{
+            conn = ds.getConnection();
+            PreparedStatement memberStmt = conn.prepareStatement(
+                    new String(memberQuery),
+                    Statement.RETURN_GENERATED_KEYS
+                    );
+            PreparedStatement stdStmt = conn.prepareStatement(new String(profQuery));
+
+            memberStmt.setString(1, profDTO.getName());
+            memberStmt.setString(2, profDTO.getBirthDate());
+            memberStmt.setString(3, profDTO.getDepartment());
+
+            memberStmt.execute();
+            ResultSet res = memberStmt.getGeneratedKeys();
+            while(res.next()){
+                id = res.getLong(1);
+            }
+
+            stdStmt.setLong(1, id);
+            stdStmt.setString(2, profDTO.getProfessorCode());
+            stdStmt.setString(3, profDTO.getTelePhone());
+
+            stdStmt.execute();
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+//            try{
+//                conn.rollback();
+//            }catch (SQLException e){
+//                e.printStackTrace();
+//            }
+        }finally {
+            return id;
+        }
     }
 
     private ResultSet findLectureInfo(String profCode){
@@ -144,14 +190,17 @@ public class RDBProfessorRepository implements ProfessorRepository {
         String name;
         String birthDay;
         String department;
-        Set<LectureTime> timeTable = new HashSet<>();
+        String telePhone;
+        Set<LectureTime> timeTable;
 
         while(resSet.next()) {
-            resID = resSet.getLong("member_SQ");
+            resID = resSet.getLong("member_PK");
             professor_code = resSet.getString("professor_code");
             name = resSet.getString("name");
             birthDay = resSet.getString("birthDay");
             department = resSet.getString("department");
+            telePhone = resSet.getString("phone_number");
+            timeTable = new HashSet<>();
 
             ResultSet lectureInfo = findLectureInfo(professor_code);
             while(lectureInfo.next()){
@@ -172,6 +221,7 @@ public class RDBProfessorRepository implements ProfessorRepository {
                             .birthDate(birthDay)
                             .department(department)
                             .professorCode(professor_code)
+                            .telePhone(telePhone)
                             .timeTable(timeTable)
                             .build()
             );

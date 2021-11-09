@@ -50,6 +50,10 @@ public class Registering {
         registeringTime = builder.registeringTime;
     }
 
+    public long getID() {
+        return id;
+    }
+
     public long getLectureID() {
         return lectureID;
     }

@@ -6,7 +6,7 @@ public class AdminDTO extends MemberDTO {
     private String adminCode;
 
     public static class Builder{
-        private long id;
+        private long id=-1;
         private String name;
         private String department;
         private String birthDate;
@@ -48,6 +48,7 @@ public class AdminDTO extends MemberDTO {
 
     private AdminDTO(Builder builder) {
         super(builder.id, builder.name, builder.department, builder.birthDate);
+        adminCode = builder.adminCode;
     }
 
     public String getAdminCode() {

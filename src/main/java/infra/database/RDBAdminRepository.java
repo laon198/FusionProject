@@ -5,12 +5,10 @@ import domain.repository.AdminRepository;
 import infra.PooledDataSource;
 import infra.dto.AdminDTO;
 import infra.dto.ModelMapper;
+import infra.dto.StudentDTO;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,53 +57,103 @@ public class RDBAdminRepository implements AdminRepository {
     }
 
     @Override
-    public void save(Admin admin) {
-        AdminDTO dto = ModelMapper.adminToDTO(admin);
+    public long save(Admin admin) {
+        if(admin.getID()==-1){
+            return add(admin);
+        }else{
+            update(admin);
+            return admin.getID();
+        }
+    }
 
+    private long add(Admin admin){
+        AdminDTO adminDTO = ModelMapper.adminToDTO(admin);
         StringBuilder memberQuery = new StringBuilder(
-                "INSERT INTO members_tb (member_PK, name, birthday, department) " +
-                        "VALUES(?, ?, ?, ?) " +
-                        "ON DUPLICATE KEY UPDATE " +
-                        "name=?, " +
-                        "birthday=?, " +
-                        "department=?;"
+                "INSERT INTO members_tb (name, birthday, department) " +
+                        "VALUES(?, ?, ?) "
         );
         StringBuilder stdQuery = new StringBuilder(
-                "INSERT INTO admin (member_PK, admin_code) " +
-                        "VALUES(?, ?) " +
-                        "ON DUPLICATE KEY UPDATE " +
-                        "admin_code=? "
+                "INSERT INTO admins_tb (member_PK, admin_code) " +
+                        "VALUES(?, ?) "
+        );
+
+        Connection conn = null;
+        long id=-1;
+        try{
+            conn = ds.getConnection();
+            PreparedStatement memberStmt = conn.prepareStatement(
+                    new String(memberQuery),
+                    Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stdStmt = conn.prepareStatement(new String(stdQuery));
+
+            memberStmt.setString(1, adminDTO.getName());
+            memberStmt.setString(2, adminDTO.getBirthDate());
+            memberStmt.setString(3, adminDTO.getDepartment());
+
+            memberStmt.execute();
+            ResultSet res = memberStmt.getGeneratedKeys();
+            while(res.next()){
+                id = res.getLong(1);
+            }
+
+            stdStmt.setLong(1, id);
+            stdStmt.setString(2, adminDTO.getAdminCode());
+
+            stdStmt.execute();
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+//            try{
+//                conn.rollback();
+//            }catch (SQLException e){
+//                e.printStackTrace();
+//            }
+        }finally {
+            return id;
+        }
+
+
+    }
+
+    private void update(Admin admin){
+        AdminDTO adminDTO = ModelMapper.adminToDTO(admin);
+        StringBuilder memberQuery = new StringBuilder(
+                "UPDATE members_tb " +
+                        "SET name=?, " +
+                        "birthday=?, " +
+                        "department=? " +
+                        "WHERE member_PK=? "
+        );
+        StringBuilder stdQuery = new StringBuilder(
+                "UPDATE admins_tb " +
+                        "SET admin_code=?, " +
+                        "WHERE member_PK=? "
         );
 
         Connection conn = null;
         try{
             conn = ds.getConnection();
-            conn.setAutoCommit(false);
             PreparedStatement memberStmt = conn.prepareStatement(new String(memberQuery));
             PreparedStatement stdStmt = conn.prepareStatement(new String(stdQuery));
 
-            memberStmt.setLong(1, dto.getId());
-            memberStmt.setString(2, dto.getName());
-            memberStmt.setString(3, dto.getDepartment());
-            memberStmt.setString(4, String.valueOf(dto.getBirthDate()));
-            memberStmt.setString(5, dto.getName());
-            memberStmt.setString(6, dto.getDepartment());
-            memberStmt.setString(7, dto.getBirthDate());
+            memberStmt.setString(1, adminDTO.getName());
+            memberStmt.setString(2, adminDTO.getBirthDate());
+            memberStmt.setString(3, adminDTO.getDepartment());
+            memberStmt.setLong(4, adminDTO.getId());
 
-            stdStmt.setLong(1, dto.getId());
-            stdStmt.setString(2, dto.getAdminCode());
+            stdStmt.setString(1, adminDTO.getAdminCode());
+            stdStmt.setLong(2, adminDTO.getId());
 
             memberStmt.execute();
             stdStmt.execute();
-            conn.commit();
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
-            try{
-                conn.rollback();
-            }catch (SQLException e){
-                e.printStackTrace();
-            }
+//            try{
+//                conn.rollback();
+//            }catch (SQLException e){
+//                e.printStackTrace();
+//            }
         }
+
     }
 
     private List<Admin> getAdminFrom(ResultSet res) throws SQLException {
@@ -117,7 +165,7 @@ public class RDBAdminRepository implements AdminRepository {
         String adminCode;
 
         while(res.next()){
-            id = res.getLong("member_SQ");
+            id = res.getLong("member_PK");
             name = res.getString("name");
             department = res.getString("department");
             birthDay = res.getString("birthDay");

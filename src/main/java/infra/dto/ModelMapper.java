@@ -7,11 +7,51 @@ import domain.model.*;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class ModelMapper {
+    public static AccountDTO accountToDTO(Account account){
+        try{
+            long pk = getLongField(account, "pk");
+            long memberID = getLongField(account, "memberID");
+            String id = getStringField(account, "id");
+            String password = getStringField(account, "password");
+
+            return AccountDTO.builder()
+                        .pk(pk)
+                        .id(id)
+                        .password(password)
+                        .memberID(memberID)
+                        .build();
+
+        }catch(NoSuchFieldException | IllegalAccessException e){
+            e.getStackTrace();
+        }
+        return null;
+    }
+
+    public static RegisteringDTO registeringToDTO(Registering reg){
+        try{
+            long id = getLongField(reg, "id");
+            long lectureID = getLongField(reg, "lectureID");
+            String studentCode = getStringField(reg, "studentCode");
+            String registeringTime = getStringField(reg, "registeringTime");
+
+            return RegisteringDTO.builder()
+                    .id(id)
+                    .lectureID(lectureID)
+                    .studentCode(studentCode)
+                    .registeringTime(registeringTime)
+                    .build();
+
+        }catch(NoSuchFieldException | IllegalAccessException e){
+            e.getStackTrace();
+        }
+        return null;
+    }
 
     public static LecturePlanner getPlanner(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
         Field f1 = obj.getClass().getDeclaredField(fieldName);
@@ -85,7 +125,7 @@ public class ModelMapper {
             String name = getSuperStringField(admin, "name");
             String department = getSuperStringField(admin, "department");
             String birthDate = getSuperStringField(admin, "birthDate");
-            String adminCode = getStringField(admin, "admin_code");
+            String adminCode = getStringField(admin, "adminCode");
 
             return AdminDTO.builder()
                     .id(id)
@@ -109,6 +149,7 @@ public class ModelMapper {
             String department = getSuperStringField(prof, "department");
             String birthDate = getSuperStringField(prof, "birthDate");
             String professorCode = getStringField(prof, "professorCode");
+            String telePhone = getStringField(prof, "telePhone");
             Set<LectureTimeDTO> timeTable = getLectureTimeDTOTable(getTimeTable(prof, "timeTable"));
 
             return ProfessorDTO.builder()
@@ -117,6 +158,8 @@ public class ModelMapper {
                     .department(department)
                     .birthDate(birthDate)
                     .professorCode(professorCode)
+                    .telePhone(telePhone)
+                    .timeTable(timeTable)
                     .build();
 
         } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -204,6 +247,7 @@ public class ModelMapper {
                             .registeringTime(registeringTime)
                             .build()
             );
+
         }
 
         return regSet;
@@ -236,6 +280,7 @@ public class ModelMapper {
 
         return dtoList;
     }
+
 
     private static LectureTime.DayOfWeek getLectureDay(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
         Field f1 = obj.getClass().getDeclaredField(fieldName);
