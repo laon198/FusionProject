@@ -30,6 +30,7 @@ public class ModelMapper {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.getStackTrace();
         }
+        return null;
     }
 
     public static Period getPeriod(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {

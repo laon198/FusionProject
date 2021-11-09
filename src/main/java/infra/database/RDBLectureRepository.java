@@ -5,6 +5,8 @@ import domain.model.Lecture;
 import domain.model.LecturePlanner;
 import domain.model.Registering;
 import domain.repository.LectureRepository;
+import infra.dto.LectureDTO;
+import infra.dto.LectureTimeDTO;
 import infra.dto.ModelMapper;
 import infra.mapper.LectureMapper;
 import org.apache.ibatis.annotations.Param;
@@ -45,9 +47,11 @@ public class RDBLectureRepository implements LectureRepository {
     public void insert(Lecture lecture) {
         SqlSession session = sqlSessionFactory.openSession();
         LectureMapper mapper = session.getMapper(LectureMapper.class);
+        LectureDTO lectureDTO = ModelMapper.lectureToDTO(lecture);
+        Set<LectureTimeDTO> lectureTimes = lectureDTO.getLectureTimes();
         try {
-//            ModelMapper.
-//            mapper.insert(lecture);
+            mapper.insert(lectureDTO);
+            mapper.insertLectureTimes(lectureTimes);
             session.commit();
 
         } catch (Exception e) {
@@ -62,6 +66,7 @@ public class RDBLectureRepository implements LectureRepository {
     public void remove(long lectureID) {
 
     }
+
 
     @Override
     public List<Lecture> findAll() {

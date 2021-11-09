@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.jdbc.SQL;
 
+import java.util.Set;
+
 public class LectureSql {
 
     public String findAll(){
@@ -64,15 +66,22 @@ public class LectureSql {
         return sql.toString();
     }
 
+    public String insertLectureTimes(){return null;}
 
     public String insert(LectureDTO lectureDTO) {
+        long courseID = lectureDTO.getCourseID();
+        String lectureCode = lectureDTO.getLectureCode();
+        int limit = lectureDTO.getLimit();
+        int applicant = 0;
+        String lecturerID = lectureDTO.getLecturerID();
+
         SQL sql = new SQL() {{
             INSERT_INTO("LECTURES_TB");
-            VALUES("course_SQ","1");
-            VALUES("capacity","100");
-            VALUES("applicant_CNT","0");
-            VALUES("professor_code", "p1234");
-            VALUES("lecture_code", "SE0004-01");
+            VALUES("course_PK","#{courseID}");
+            VALUES("lecture_code", lectureCode);
+            VALUES("capacity","#{limit}");
+            VALUES("applicant_CNT","#{applicant}");
+            VALUES("professor_code", lecturerID);
         }};
         return sql.toString();
     }
