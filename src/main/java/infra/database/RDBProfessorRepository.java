@@ -27,17 +27,25 @@ public class RDBProfessorRepository implements ProfessorRepository {
                         "WHERE p.member_PK = ? "
         );
         Connection conn = null;
-
+        PreparedStatement pstmt = null;
         try{
             conn = ds.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(new String(query));
+            pstmt = conn.prepareStatement(new String(query));
             pstmt.setLong(1, id);
             ResultSet res = pstmt.executeQuery();
-
-            return getProfFrom(res).get(0);
+            Professor prof = getProfFrom(res).get(0);
+            res.close();
+            return prof;
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
             throw new IllegalArgumentException("잘못된 id값입니다.");
+        }finally {
+            try{
+                pstmt.close();
+                conn.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
         }
 
     }
@@ -48,14 +56,25 @@ public class RDBProfessorRepository implements ProfessorRepository {
                 "SELECT * FROM professors_tb AS p " +
                         "JOIN members_tb AS m " +
                         "ON p.member_PK = m.member_PK");
+        Connection conn = null;
+        PreparedStatement pstmt = null;
         try{
-            Connection conn = ds.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(new String(query));
+            conn = ds.getConnection();
+            pstmt = conn.prepareStatement(new String(query));
             ResultSet res = pstmt.executeQuery();
-            return getProfFrom(res);
+            List<Professor> list = getProfFrom(res);
+            res.close();
+            return list;
 
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
+        }finally {
+            try{
+                pstmt.close();
+                conn.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
         }
 
         return null;

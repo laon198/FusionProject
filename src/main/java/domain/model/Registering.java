@@ -79,6 +79,7 @@ public class Registering {
         return Objects.hash(id, lectureID, studentCode, registeringTime);
     }
 
+    //TODO : 테스트용
     @Override
     public String toString() {
         return "Registering{" +
