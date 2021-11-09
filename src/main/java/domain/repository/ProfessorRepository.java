@@ -7,5 +7,5 @@ import java.util.List;
 public interface ProfessorRepository {
     public Professor findByID(long id);
     public List<Professor> findAll();
-    public void save(Professor professor);
+    public long save(Professor professor);
 }

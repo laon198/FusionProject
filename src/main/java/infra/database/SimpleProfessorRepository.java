@@ -21,7 +21,8 @@ public class SimpleProfessorRepository implements ProfessorRepository {
     }
 
     @Override
-    public void save(Professor professor) {
+    public long save(Professor professor) {
         repo.put(professor.getID(), professor);
+        return 1;
     }
 }

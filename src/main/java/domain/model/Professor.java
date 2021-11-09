@@ -8,13 +8,15 @@ import java.util.*;
 public class Professor extends Member{
     private Set<LectureTime> timeTable;
     private String professorCode;
+    private String telePhone;
 
     public static class Builder{
-        private long id;
+        private long id=-1;
         private String name;
         private String department;
         private String birthDate;
         private String professorCode;
+        private String telePhone;
         private Set<LectureTime> timeTable = new HashSet<>();
 
         public Builder id(long value){
@@ -42,6 +44,11 @@ public class Professor extends Member{
             return this;
         }
 
+        public Builder telePhone(String value){
+            telePhone = value;
+            return this;
+        }
+
         public Builder timeTable(Set<LectureTime> value){
             timeTable = new HashSet(value);
             return this;
@@ -60,6 +67,7 @@ public class Professor extends Member{
         super(builder.id, builder.name, builder.department, builder.birthDate);
         timeTable = builder.timeTable;
         professorCode = builder.professorCode;
+        telePhone = builder.telePhone;
     }
 
 
@@ -83,12 +91,19 @@ public class Professor extends Member{
         return false;
     }
 
+    public void setTelePhone(String value){
+        telePhone = value;
+    }
+
     //TODO : 테스트용
+
     @Override
     public String toString() {
         return "Professor{" +
+                "id= " + getID() + '\''+
                 "timeTable=" + timeTable +
                 ", professorCode='" + professorCode + '\'' +
+                ", telePhone='" + telePhone + '\'' +
                 '}';
     }
 }

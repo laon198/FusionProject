@@ -10,6 +10,26 @@ import java.util.List;
 import java.util.Set;
 
 public class ModelMapper {
+    public static AccountDTO accountToDTO(Account account){
+        try{
+            long pk = getLongField(account, "pk");
+            long memberID = getLongField(account, "memberID");
+            String id = getStringField(account, "id");
+            String password = getStringField(account, "password");
+
+            return AccountDTO.builder()
+                        .pk(pk)
+                        .id(id)
+                        .password(password)
+                        .memberID(memberID)
+                        .build();
+
+        }catch(NoSuchFieldException | IllegalAccessException e){
+            e.getStackTrace();
+        }
+        return null;
+    }
+
     public static RegisteringDTO registeringToDTO(Registering reg){
         try{
             long id = getLongField(reg, "id");
@@ -36,7 +56,7 @@ public class ModelMapper {
             String name = getSuperStringField(admin, "name");
             String department = getSuperStringField(admin, "department");
             String birthDate = getSuperStringField(admin, "birthDate");
-            String adminCode = getStringField(admin, "admin_code");
+            String adminCode = getStringField(admin, "adminCode");
 
             return AdminDTO.builder()
                     .id(id)
@@ -60,6 +80,7 @@ public class ModelMapper {
             String department = getSuperStringField(prof, "department");
             String birthDate = getSuperStringField(prof, "birthDate");
             String professorCode = getStringField(prof, "professorCode");
+            String telePhone = getStringField(prof, "telePhone");
             Set<LectureTimeDTO> timeTable = getLectureTimeDTOTable(getTimeTable(prof, "timeTable"));
 
             return ProfessorDTO.builder()
@@ -68,6 +89,7 @@ public class ModelMapper {
                     .department(department)
                     .birthDate(birthDate)
                     .professorCode(professorCode)
+                    .telePhone(telePhone)
                     .timeTable(timeTable)
                     .build();
 

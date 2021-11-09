@@ -10,5 +10,5 @@ public interface StudentRepository {
     public List<Student> findByOption(StudentOption... options);
     public Student findByID(long id);
     public List<Student> findAll();
-    public void save(Student student);
+    public long save(Student student);
 }

@@ -1,20 +1,19 @@
 package infra.dto;
 
-import domain.generic.LectureTime;
-import sun.reflect.misc.ReflectUtil;
-
 import java.util.*;
 
 public class ProfessorDTO extends MemberDTO {
     private String professorCode;
+    private String telePhone;
     private Set<LectureTimeDTO> timeTable;
 
     public static class Builder{
-        private Long id;
+        private Long id=-1L;
         private String name;
         private String department;
         private String birthDate;
         private String professorCode;
+        private String telePhone;
         private Set<LectureTimeDTO> timeTable = new HashSet<>();
 
         public Builder id(long value){
@@ -42,6 +41,11 @@ public class ProfessorDTO extends MemberDTO {
             return this;
         }
 
+        public Builder telePhone(String value){
+            telePhone = value;
+            return this;
+        }
+
         public Builder timeTable(Set<LectureTimeDTO> value){
             timeTable = new HashSet(Arrays.asList(value));
             return this;
@@ -61,9 +65,15 @@ public class ProfessorDTO extends MemberDTO {
                 builder.department, builder.birthDate);
         timeTable = builder.timeTable;
         professorCode = builder.professorCode;
+        telePhone = builder.telePhone;
     }
 
     public String getProfessorCode() {
         return professorCode;
     }
+
+    public String getTelePhone() {
+        return telePhone;
+    }
+
 }

@@ -10,10 +10,7 @@ import infra.dto.StudentDTO;
 import infra.option.student.StudentOption;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -96,63 +93,112 @@ public class RDBStudentRepository implements StudentRepository {
 
         return null;
     }
-
     @Override
-    public void save(Student student) {
+    public long save(Student student) {
+        if(student.getID()==-1){
+            return add(student);
+        }else{
+            update(student);
+            return student.getID();
+        }
+    }
+
+    private long add(Student student) {
         StudentDTO stdDTO = ModelMapper.studentToDTO(student);
         StringBuilder memberQuery = new StringBuilder(
-                "INSERT INTO members_tb (member_PK, name, birthday, department) " +
-                        "VALUES(?, ?, ?, ?) " +
-                        "ON DUPLICATE KEY UPDATE " +
-                        "name=?, " +
-                        "birthday=?, " +
-                        "department=?;"
+                "INSERT INTO members_tb (name, birthday, department) " +
+                        "VALUES(?, ?, ?) "
         );
         StringBuilder stdQuery = new StringBuilder(
                 "INSERT INTO students_tb (member_PK, student_code, year, credit, max_credit) " +
-                        "VALUES(?, ?, ?, ?, ?) " +
-                        "ON DUPLICATE KEY UPDATE " +
-                        "student_code=?, " +
+                        "VALUES(?, ?, ?, ?, ?) "
+        );
+
+        Connection conn = null;
+        long id=-1;
+        try{
+            conn = ds.getConnection();
+            conn.setAutoCommit(true);
+            PreparedStatement memberStmt = conn.prepareStatement(
+                    new String(memberQuery),
+                    Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stdStmt = conn.prepareStatement(new String(stdQuery));
+
+            memberStmt.setString(1, stdDTO.getName());
+            memberStmt.setString(2, stdDTO.getBirthDate());
+            memberStmt.setString(3, stdDTO.getDepartment());
+
+            memberStmt.executeUpdate();
+            ResultSet res = memberStmt.getGeneratedKeys();
+
+            while(res.next()){
+                 id = res.getLong(1);
+            }
+
+            stdStmt.setLong(1, id);
+            stdStmt.setString(2, stdDTO.getStudentCode());
+            stdStmt.setInt(3, stdDTO.getYear());
+            stdStmt.setInt(4, stdDTO.getCredit());
+            stdStmt.setInt(5, stdDTO.getMaxCredit());
+
+            stdStmt.execute();
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+//            try{
+//                conn.rollback();
+//            }catch (SQLException e){
+//                e.printStackTrace();
+//            }
+        }finally{
+            return id;
+        }
+    }
+
+    private void update(Student student) {
+        StudentDTO stdDTO = ModelMapper.studentToDTO(student);
+        StringBuilder memberQuery = new StringBuilder(
+                "UPDATE members_tb " +
+                        "SET name=?, " +
+                        "birthday=?, " +
+                        "department=? " +
+                        "WHERE member_PK=? "
+        );
+        StringBuilder stdQuery = new StringBuilder(
+                "UPDATE students_tb " +
+                        "SET student_code=?, " +
                         "year=?, " +
-                        "credit=?, " +
-                        "max_credit=?;"
+                        "max_credit=?, " +
+                        "credit=? " +
+                        "WHERE member_PK=? "
         );
 
         Connection conn = null;
         try{
             conn = ds.getConnection();
-            conn.setAutoCommit(false);
+            conn.setAutoCommit(true);
             PreparedStatement memberStmt = conn.prepareStatement(new String(memberQuery));
             PreparedStatement stdStmt = conn.prepareStatement(new String(stdQuery));
 
-            memberStmt.setLong(1, stdDTO.getId());
-            memberStmt.setString(2, stdDTO.getName());
+            memberStmt.setString(1, stdDTO.getName());
+            memberStmt.setString(2, stdDTO.getBirthDate());
             memberStmt.setString(3, stdDTO.getDepartment());
-            memberStmt.setString(4, String.valueOf(stdDTO.getBirthDate()));
-            memberStmt.setString(5, stdDTO.getName());
-            memberStmt.setString(6, stdDTO.getDepartment());
-            memberStmt.setString(7, String.valueOf(stdDTO.getBirthDate()));
+            memberStmt.setLong(4, stdDTO.getId());
 
-            stdStmt.setLong(1, stdDTO.getId());
-            stdStmt.setString(2, stdDTO.getStudentCode());
-            stdStmt.setInt(3, stdDTO.getYear());
-            stdStmt.setInt(4, stdDTO.getMaxCredit());
-            stdStmt.setInt(5, stdDTO.getCredit());
-            stdStmt.setString(6, stdDTO.getStudentCode());
-            stdStmt.setInt(7, stdDTO.getYear());
-            stdStmt.setInt(8, stdDTO.getMaxCredit());
-            stdStmt.setInt(9, stdDTO.getCredit());
+            stdStmt.setString(1, stdDTO.getStudentCode());
+            stdStmt.setInt(2, stdDTO.getYear());
+            stdStmt.setInt(3, stdDTO.getMaxCredit());
+            stdStmt.setInt(4, stdDTO.getCredit());
+            stdStmt.setLong(5, stdDTO.getId());
 
-            memberStmt.execute();
+            memberStmt.executeUpdate();
             stdStmt.execute();
-            conn.commit();
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
-            try{
-                conn.rollback();
-            }catch (SQLException e){
-                e.printStackTrace();
-            }
+//            try{
+//                conn.rollback();
+//            }catch (SQLException e){
+//                e.printStackTrace();
+//            }
         }
     }
 
@@ -202,16 +248,18 @@ public class RDBStudentRepository implements StudentRepository {
         String birthDate;
         String department;
         String studentCode;
-        Set<LectureTime> timeTable = new HashSet<>();
-        Set<Registering> myRegisterings = new HashSet<>();
+        Set<LectureTime> timeTable;
+        Set<Registering> myRegisterings;
 
         while(resSet.next()) {
-            resID = resSet.getLong("member_SQ");
+            resID = resSet.getLong("member_PK");
             year = resSet.getInt("year");
             name = resSet.getString("name");
             department = resSet.getString("department");
             birthDate = resSet.getString("birthDay");
             studentCode = resSet.getString("student_code");
+            timeTable = new HashSet<>();
+            myRegisterings = new HashSet<>();
 
             ResultSet lectureInfo = findLectureTime(studentCode);
             while(lectureInfo.next()){
@@ -229,9 +277,9 @@ public class RDBStudentRepository implements StudentRepository {
             while(registering.next()){
                 myRegisterings.add(
                         Registering.builder()
-                        .id(registering.getLong("registering_SQ"))
+                        .id(registering.getLong("registering_PK"))
                         .studentCode(registering.getString("student_code"))
-                        .lectureID(registering.getLong("lecture_SQ"))
+                        .lectureID(registering.getLong("lecture_PK"))
                         .registeringTime(registering.getString("register_date"))
                         .build()
                 );
