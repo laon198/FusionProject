@@ -12,9 +12,44 @@ public class LectureSql {
         SQL sql = new SQL(){{
             SELECT("*");
             FROM("lECTURES_TB");
+            INNER_JOIN("REGISTERINGS_TB ON REGISTERINGS_TB.lecture_PK = LECTURES_TB.lecture_PK");
+            INNER_JOIN("LECTURE_TIMES_TB ON LECTURE_TIMES_TB.lecture_PK = LECTURES_TB.lecture_PK");
+            INNER_JOIN("PROFESSORS_TB ON PROFESSORS_TB.professor_code = LECTURES_TB.professor_code");
         }};
         return sql.toString();
     }
+
+    public String selectLectureList(){
+        SQL sql = new SQL(){{
+            SELECT("*");
+            FROM("lECTURES_TB");
+        }};
+        return sql.toString();
+    }
+
+    public String selectLectureTimes(long id){
+        SQL sql = new SQL(){{
+            SELECT("*");
+            FROM("lECTURE_TIMES_TB");
+            INNER_JOIN("LECTURES_TB ON LECTURE_TIMES_TB.lecture_PK = LECTURES_TB.lecture_PK");
+            WHERE("LECTURES_TB.lecture_PK = #{id}");
+        }};
+        return sql.toString();
+    }
+
+    public String selectRegisterings(long id){
+        SQL sql = new SQL(){{
+            SELECT("lecture_PK, start_period, end_period, dat_of_week, lecture_room");
+            FROM("REGISTERINGS_TB");
+            INNER_JOIN("LECTURES_TB ON REGISTERINGS_TB.lecture_PK = LECTURES_TB.lecture_PK");
+            WHERE("LECTURES_TB.lecture_PK = #{id}");
+        }};
+        return sql.toString();
+    }
+
+
+
+
 
     public String findByOption(){
         SQL sql = new SQL(){{}};

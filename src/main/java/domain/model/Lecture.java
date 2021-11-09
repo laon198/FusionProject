@@ -11,7 +11,7 @@ public class Lecture {
     private long id;
     private long courseID;
     private String lectureCode;
-    private long lecturerID;
+    private String lecturerID;
     private int limit;
     private String professor;
     private Set<LectureTime> lectureTimes;
@@ -20,7 +20,7 @@ public class Lecture {
 
     //TODO : set을 직접 받는 것 별로 좋지 않은듯
     public Lecture(){}
-    public Lecture(long lectureID, long professorID, int limitPersonNum, long courseID, String lectureCode,
+    public Lecture(long lectureID, String professorID, int limitPersonNum, long courseID, String lectureCode,
                    Set<LectureTime> lectureTimes){ //TODO : 강의시간 더나은 방법으로
         id = lectureID;
         lecturerID = professorID;
@@ -33,7 +33,7 @@ public class Lecture {
     }
 
     //TODO : LectureManageService 때문에 만들어 놓은 임시 생성자. 나중에 지우자.
-    public Lecture(long lectureID, long professorID, int limitPersonNum, long courseID,
+    public Lecture(long lectureID, String professorID, int limitPersonNum, long courseID,
                    Set<LectureTime> lectureTimes){ //TODO : 강의시간 더나은 방법으로
         id = lectureID;
         lecturerID = professorID;
@@ -71,11 +71,11 @@ public class Lecture {
         return true;
     }
 
-    public void cancel(long stdID) {
+    public void cancel(Long stdID) {
         registeredStudentIDs.remove(stdID);
     }
 
-    public void writePlanner(String itemName, String content, long writerID) {
+    public void writePlanner(String itemName, String content, String writerID) {
         if(writerID!=lecturerID){
             throw new IllegalStateException("담당 교과목이 아닙니다.");
         }

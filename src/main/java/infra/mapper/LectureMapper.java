@@ -6,6 +6,7 @@ import domain.model.LecturePlanner;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface LectureMapper {
@@ -23,8 +24,8 @@ public interface LectureMapper {
     List<Lecture> getAll();
 
     @SelectProvider(type = infra.mapper.sql.LectureSql.class, method = "findAll")
-    @ResultMap("lectureResultSet")
-    List<Lecture> findAll();
+//    @ResultMap("lectureResultSet")
+    List<Map<String,Object>> findAll();
 
     @InsertProvider(type = infra.mapper.sql.LectureSql.class, method = "insert")
     // @Options(useGeneratedKeys = true, keyProperty = "id")
@@ -33,6 +34,16 @@ public interface LectureMapper {
     @UpdateProvider(type = infra.mapper.sql.LectureSql.class, method = "update")
     @ResultMap("lectureResultSet")
     void updateLecture();
+
+
+    @SelectProvider(type = infra.mapper.sql.LectureSql.class, method = "selectLectureList")
+    List<Map<String,Object>> selectLectureList();
+
+
+    @SelectProvider(type = infra.mapper.sql.LectureSql.class, method = "selectLectureTimes")
+    List<Map<String,Object>> selectLectureTimes(long id);
+
+
 }
 
 

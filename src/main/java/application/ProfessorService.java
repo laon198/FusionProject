@@ -11,7 +11,7 @@ public class ProfessorService {
     }
 
     public void writeLecturePlanner(long lectureID, String itemName,
-                                    String content, long writer){
+                                    String content, String writer){
         Lecture targetLecture = lectureRepo.findByID(lectureID);
         targetLecture.writePlanner(itemName, content, writer);
     }

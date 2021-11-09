@@ -22,7 +22,7 @@ public class Student extends Member{
     }
 
     public static class Builder{
-        private Long id;
+        private long id;
         private int credit;
         private int maxCredit=21;
         private Year year;

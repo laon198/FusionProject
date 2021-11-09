@@ -276,10 +276,10 @@ class LectureManageServiceTest {
     @DisplayName("강의실 변경 성공 테스트")
     @Test
     public void updateRoomTest(){
-        Professor p1 = professorRepo.findByID(1);
-        Professor p2 = new Professor(2);
-        Professor p3 = new Professor(3);
-        Course c1 = courseRepo.findByID(1);
+        Professor p1 = professorRepo.findByID("1");
+        Professor p2 = new Professor("2");
+        Professor p3 = new Professor("3");
+        Course c1 = courseRepo.findByID("1");
         Set<LectureTime> times = new HashSet<>();
         times.add(
                 new LectureTime(

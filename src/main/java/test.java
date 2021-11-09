@@ -17,8 +17,7 @@ public class test {
     public static void main(String[] args) throws Exception {
 
         RDBLectureRepository rdbLectureRepository = new RDBLectureRepository(MyBatisConnectionFactory.getSqlSessionFactory());
-//        List<Lecture> all = rdbLectureRepository.findAll();
-        rdbLectureRepository.insert(new Lecture());
+        List<Lecture> all = rdbLectureRepository.findAll();
 
         // Course test
         RDBCourseRepository rdbCourseRepository = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
