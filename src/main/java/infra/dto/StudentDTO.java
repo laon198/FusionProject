@@ -1,6 +1,7 @@
 package infra.dto;
 
 import domain.generic.LectureTime;
+import domain.model.Registering;
 import domain.model.Student;
 
 import java.time.LocalDate;
@@ -11,7 +12,7 @@ public class StudentDTO extends MemberDTO {
     private int credit;
     private int year;
     private String studentCode;
-    private List<Long> registeredLectureIDs;
+    private Set<RegisteringDTO> myRegisterings;
     private Set<LectureTimeDTO> timeTable;
 
     public static class Builder{
@@ -23,7 +24,7 @@ public class StudentDTO extends MemberDTO {
         private String department;
         private String studentCode;
         private String birthDate;
-        private List<Long> registeredLectureIDs = new ArrayList<>();
+        private Set<RegisteringDTO> myRegisterings = new HashSet<>();
         private Set<LectureTimeDTO> timeTable = new HashSet<>();
 
         public Builder id(long value){
@@ -66,8 +67,8 @@ public class StudentDTO extends MemberDTO {
             return this;
         }
 
-        public Builder registeredLectureIDs(List<Long> registeredLectureIDs){
-            registeredLectureIDs = new ArrayList<>(registeredLectureIDs);
+        public Builder myRegisterings(Set<RegisteringDTO> value){
+            myRegisterings = value;
             return this;
         }
 
@@ -89,7 +90,7 @@ public class StudentDTO extends MemberDTO {
             super(builder.id, builder.name,
                     builder.department, builder.birthDate);
             year = builder.year;
-            registeredLectureIDs = builder.registeredLectureIDs;
+            myRegisterings = builder.myRegisterings;
             timeTable = builder.timeTable;
             credit = builder.credit;
             maxCredit = builder.maxCredit;

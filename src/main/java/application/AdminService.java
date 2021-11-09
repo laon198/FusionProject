@@ -7,20 +7,18 @@ import domain.repository.CourseRepository;
 import domain.repository.LectureRepository;
 import domain.repository.ProfessorRepository;
 import domain.service.LectureManageService;
-import domain.service.RegisterService;
-import domain.service.RegisteringPeriod;
-
-import java.util.Set;
+import domain.service.Registrar;
+import domain.model.RegisteringPeriod;
 
 public class AdminService {
     LectureRepository lectureRepo;
-    RegisterService registrar;
+    Registrar registrar;
     LectureManageService lManagerService;
     ProfessorRepository profRepo;
     CourseRepository courseRepo;
 
     public AdminService(LectureRepository lectureRepo, CourseRepository courseRepo,
-                        RegisterService registrar, ProfessorRepository profRepo){
+                        Registrar registrar, ProfessorRepository profRepo){
         this.lectureRepo = lectureRepo;
         this.registrar = registrar;
         this.profRepo = profRepo;

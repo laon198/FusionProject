@@ -38,15 +38,11 @@ public class Lecture {
         id = lectureID;
         lecturerID = professorID;
         limit = limitPersonNum;
+        myRegisterings = new HashSet<>(); //TODO
         this.lectureTimes = lectureTimes;
         this.courseID = courseID;
         planner = new LecturePlanner();
     }
-
-
-
-
-
 
     public long getID(){return id;}
     public long getCourseID(){ return courseID;}
@@ -71,8 +67,8 @@ public class Lecture {
     }
 
 
-    public void cancel(long stdID) {
-        myRegisterings.remove(stdID);
+    public void cancel(Registering registering) {
+        myRegisterings.remove(registering);
     }
 
     public void writePlanner(String itemName, String content, String writerID) {

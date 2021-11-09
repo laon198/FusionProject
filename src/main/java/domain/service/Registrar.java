@@ -1,38 +1,29 @@
 package domain.service;
 
-import domain.model.Course;
-import domain.model.Lecture;
-import domain.model.Registering;
-import domain.model.Student;
+import domain.model.*;
 import domain.repository.CourseRepository;
 import domain.repository.LectureRepository;
 import domain.repository.RegisteringRepository;
 import domain.repository.StudentRepository;
 import infra.option.student.StudentCodeOption;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RegisterService {
+public class Registrar {
     private LectureRepository lectureRepo;
     private CourseRepository courseRepo;
-    private StudentRepository studentRepo;
-    private RegisteringRepository regRepo;
-    private Set<RegisteringPeriod> periodSet;
+    private Set<RegisteringPeriod> periodSet; //TODO : 의존성 주입필요
 
-    public RegisterService(LectureRepository lectureRepo, CourseRepository courseRepo,
-                            StudentRepository studentRepo, RegisteringRepository regRepo){
+    public Registrar(LectureRepository lectureRepo, CourseRepository courseRepo,
+                        Set<RegisteringPeriod> periodSet){
         this.lectureRepo = lectureRepo;
         this.courseRepo = courseRepo;
-        this.studentRepo = studentRepo;
-        this.regRepo = regRepo;
-        periodSet = new HashSet<>();
+        this.periodSet = periodSet;
     }
 
-    //TODO : 바로 객체 받을지 아이디로 받을지 생각
-    public void register(long lectureID, String studentCode){
-        Lecture lecture = lectureRepo.findByID(lectureID);
-        Student student = studentRepo.findByOption(new StudentCodeOption(studentCode)).get(0);
+    public Registering register(Lecture lecture, Student student){
         Course course = courseRepo.findByID(lecture.getCourseID());
 
         if(!isValidPeriodAbout(student)){
@@ -61,32 +52,27 @@ public class RegisterService {
         }
 
         Registering newReg = Registering.builder()
-                                .lectureID(lectureID)
-                                .studentCode(studentCode)
+                                .lectureID(lecture.getID())
+                                .studentCode(student.getStudentCode())
+                                .registeringTime(LocalDateTime.now().toString())
                                 .build();
 
         lecture.register(newReg);
         student.register(newReg, lecture.getLectureTimes(), course.getCredit());
 
-        regRepo.save(newReg);
+        return newReg;
     }
 
-    public void cancel(long lectureID, long studentID){
-        Lecture lecture = lectureRepo.findByID(lectureID);
-        Student student = studentRepo.findByID(studentID);
-        //TODO
-        //findByOption해서 수강신청객체 가져옴
-
+    public Registering cancel(Registering registering, Student student, Lecture lecture){
         if(!student.hasLecture(lecture.getID())){
             throw new IllegalArgumentException("수강하지 않는 강의 입니다.");
         }
         Course course = courseRepo.findByID(lecture.getCourseID());
 
-//        student.cancel(, lecture.getLectureTimes(), course.getCredit());
-        lecture.cancel(student.getID());
+        student.cancel(registering, lecture.getLectureTimes(), course.getCredit());
+        lecture.cancel(registering);
 
-        lectureRepo.save(lecture);
-        studentRepo.save(student);
+        return registering;
     }
 
     public boolean isValidPeriodAbout(Student std){

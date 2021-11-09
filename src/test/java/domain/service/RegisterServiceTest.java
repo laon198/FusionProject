@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +25,7 @@ public class RegisterServiceTest {
     public static LectureRepository lectureRepo;
     public static CourseRepository courseRepo;
     public static StudentRepository stdRepo;
-    public static RegisterService registerService;
+    public static Registrar registerService;
 
     @BeforeAll
     public static void setUp(){
@@ -37,7 +36,7 @@ public class RegisterServiceTest {
 
     @BeforeEach
     public void init() throws Exception {
-        registerService = new RegisterService(lectureRepo, courseRepo, stdRepo);
+        registerService = new Registrar(lectureRepo, courseRepo, stdRepo);
         Professor p1 = Professor.builder()
                 .id(1)
                 .name("kim")
