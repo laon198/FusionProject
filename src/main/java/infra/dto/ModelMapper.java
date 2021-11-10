@@ -13,6 +13,24 @@ import java.util.List;
 import java.util.Set;
 
 public class ModelMapper {
+
+    public static RegisteringPeriodDTO regPeriodToDTO(RegisteringPeriod regPeriod){
+        try{
+            long id = getLongField(regPeriod, "id");
+            PeriodDTO periodDTO = periodToDTO(getPeriod(regPeriod, "period"));
+            int year = getYearField(regPeriod, "allowedYear");
+            return RegisteringPeriodDTO.builder()
+                    .id(id)
+                    .period(periodDTO)
+                    .allowedYear(year)
+                    .build();
+
+        }catch(NoSuchFieldException | IllegalAccessException e){
+            e.getStackTrace();
+        }
+        return null;
+    }
+
     public static AccountDTO accountToDTO(Account account){
         try{
             long pk = getLongField(account, "pk");

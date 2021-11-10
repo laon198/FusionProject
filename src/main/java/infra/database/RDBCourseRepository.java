@@ -19,13 +19,14 @@ public class RDBCourseRepository implements CourseRepository {
         this.sqlSessionFactory = sqlSessionFactory;
     }
 
+    @Override
     public List<Course> findAll(){
         SqlSession session = null;
         List<Course> list = null;
 
         try {
             session = sqlSessionFactory.openSession();
-            session.selectList("mapper.CourseMapper.ReadAll");
+            list = session.selectList("mapper.CourseMapper.ReadAll");
             session.commit();
         }
         catch (Exception e){
@@ -69,7 +70,7 @@ public class RDBCourseRepository implements CourseRepository {
 
         try {
             session = sqlSessionFactory.openSession();
-            session.selectList("mapper.CourseMapper.FindByOption");
+            list = session.selectList("mapper.CourseMapper.FindByOption");
             session.commit();
         }
         catch (Exception e){
@@ -84,7 +85,20 @@ public class RDBCourseRepository implements CourseRepository {
 
     @Override
     public Course findByID(long id) {
-        return null;
+        SqlSession session = null;
+        Course course = null;
+        try {
+            session = sqlSessionFactory.openSession();
+            course = session.selectOne("mapper.CourseMapper.findByID", id);
+            session.commit();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            session.rollback();
+        }finally {
+            session.close();
+        }
+        return course;
     }
 
     @Override
@@ -93,7 +107,7 @@ public class RDBCourseRepository implements CourseRepository {
         List<Course> list = null;
         try {
             session = sqlSessionFactory.openSession();
-            session.selectList("mapper.CourseMapper.ReadTargetGrade",year);
+            list = session.selectList("mapper.CourseMapper.ReadTargetGrade",year);
             session.commit();
         }
         catch (Exception e){

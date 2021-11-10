@@ -27,6 +27,7 @@ public class Lecture {
         private Set<Registering> myRegisterings = new HashSet<>();
         private LecturePlanner planner = new LecturePlanner();
 
+
         public Builder id(long id) {
             this.id = id;
             return this;
@@ -139,7 +140,7 @@ public class Lecture {
     }
 
     public boolean validLimitNum() {
-        if (myRegisterings.size() > limit) {
+        if (myRegisterings.size() >= limit) {
             return false;
         }
         return true;

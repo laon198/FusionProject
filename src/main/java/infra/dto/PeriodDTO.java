@@ -33,4 +33,12 @@ public class PeriodDTO {
         beginTime = builder.beginTime;
         endTime = builder.endTime;
     }
+
+    public LocalDateTime getBeginTime() {
+        return beginTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
 }
