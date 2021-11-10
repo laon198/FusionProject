@@ -15,6 +15,7 @@ import infra.option.registering.StudentCodeOption;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import java.time.LocalDateTime;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -254,6 +255,7 @@ public class test {
 //        List<Registering> list = regRepo.findByOption(new StudentCodeOption("20180603"));
 //        for(Registering reg : list){
 //            System.out.println("reg = " + reg);
+
 //        }
 //
 //        r.cancel(6, 15, 2);

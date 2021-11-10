@@ -219,12 +219,41 @@ public class ModelMapper {
         return null;
     }
 
+//    public static LectureDTO lectureToDTO(Lecture lecture) {
+//        try {
+//            long id = getLongField(lecture, "id");
+//            long courseID = getLongField(lecture, "courseID");
+//            String lectureCode = getStringField(lecture,"lectureCode");
+//            String lecturerID = getStringField(lecture, "lecturerID");
+//            int limit = getIntField(lecture, "limit");
+//            Set<LectureTimeDTO> lectureTimes = getLectureTimeDTOTable(getTimeTable(lecture,"lectureTimes"));
+//            Set<RegisteringDTO> myRegisterings = getRegDTOSet(getRegisteringSet(lecture,"myRegisterings"));
+//            LecturePlannerDTO planner = plannerToDTO(getPlanner(lecture, "planner"));
+//
+//            return LectureDTO.builder()
+//                    .id(id)
+//                    .courseID(courseID)
+//                    .lectureCode(lectureCode)
+//                    .lecturerID(lecturerID)
+//                    .limit(limit)
+//                    .lectureTimes(lectureTimes)
+//                    .registerings(myRegisterings)
+//                    .planner(planner)
+//                    .build();
+//
+//        } catch (NoSuchFieldException | IllegalAccessException e) {
+//            e.getStackTrace();
+//        }
+//
+//        return null;
+//    }
+
     public static LectureDTO lectureToDTO(Lecture lecture) {
         try {
             long id = getLongField(lecture, "id");
             long courseID = getLongField(lecture, "courseID");
             String lectureCode = getStringField(lecture,"lectureCode");
-            String lecturerID = getStringField(lecture, "lectureID");
+            String lecturerID = getStringField(lecture, "lecturerID");
             int limit = getIntField(lecture, "limit");
             Set<LectureTimeDTO> lectureTimes = getLectureTimeDTOTable(getTimeTable(lecture,"lectureTimes"));
             Set<RegisteringDTO> myRegisterings = getRegDTOSet(getRegisteringSet(lecture,"myRegisterings"));
@@ -247,6 +276,7 @@ public class ModelMapper {
 
         return null;
     }
+
 
     private static Set<RegisteringDTO> getRegDTOSet(Set<Registering> myRegisterings) throws NoSuchFieldException, IllegalAccessException {
         Set<RegisteringDTO> regSet = new HashSet<>();
@@ -283,7 +313,7 @@ public class ModelMapper {
         for (LectureTime time : timeTable) {
             String room = getStringField(time, "room");
             LectureTime.DayOfWeek lectureDay = getLectureDay(time, "lectureDay");
-            LectureTime.LecturePeriod startTime = getLecturePeriod(time, "startPeriod");
+            LectureTime.LecturePeriod startTime = getLecturePeriod(time, "startTime");
             LectureTime.LecturePeriod endTime = getLecturePeriod(time, "endTime");
 
             dtoList.add(
