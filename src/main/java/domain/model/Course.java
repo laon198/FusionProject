@@ -81,9 +81,11 @@ public class Course {
     public long getId() {
         return id;
     }
-
     public int getCredit() {
         return credit;
+    }
+    public void setCourseName(String value){
+        courseName = value;
     }
 
     @Override
@@ -97,5 +99,18 @@ public class Course {
     @Override
     public int hashCode() {
         return Objects.hash(courseCode);
+    }
+
+    //TODO : 테스트용
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", courseCode='" + courseCode + '\'' +
+                ", courseName='" + courseName + '\'' +
+                ", department='" + department + '\'' +
+                ", targetYear=" + targetYear +
+                ", credit=" + credit +
+                '}';
     }
 }

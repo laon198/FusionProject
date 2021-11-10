@@ -2,7 +2,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.CourseMapper">
     <resultMap id="result" type="domain.model.Course">
-        <result property="id" column="course_SQ"/>
+        <result property="id" column="course_PK"/>
         <result property="courseCode" column="course_code"/>
         <result property="department" column="department"/>
         <result property="targetYear" column="target_year"/>
@@ -22,11 +22,16 @@
         </where>
     </select>
 
-
     <select id="ReadTargetGrade" resultMap="result" parameterType="_int">
         SELECT *
         FROM COURSES_TB
         WHERE target_year = #{year}
+    </select>
+
+    <select id="findByID" resultMap="result" parameterType="_long">
+        SELECT *
+        FROM COURSES_TB
+        WHERE course_PK = #{pk}
     </select>
 
     <update id="UpdateCourse">
@@ -36,11 +41,11 @@
             course_name=#{courseName},
             target_year=#{targetYear},
             credit=#{credit}
-        WHERE course_SQ = #{id}
+        WHERE course_PK= #{id}
     </update>
 
     <insert id="CreateCourse">
-        INSERT INTO COURSES_TB(course_SQ, course_code, department, course_name, target_year, credit)
+        INSERT INTO COURSES_TB(course_PK, course_code, department, course_name, target_year, credit)
         VALUES (#{id}, #{courseCode}, #{department}, #{courseName}, #{targetYear}, #{credit})
     </insert>
 

@@ -23,8 +23,8 @@ public class Lecture {
         private String lectureCode;
         private String lecturerID;
         private int limit;
-        private Set<LectureTime> lectureTimes;
-        private Set<Registering> myRegisterings;
+        private Set<LectureTime> lectureTimes = new HashSet<>();
+        private Set<Registering> myRegisterings = new HashSet<>();
         private LecturePlanner planner;
 
         public Builder id(long id) {
@@ -42,7 +42,7 @@ public class Lecture {
             return this;
         }
 
-        public Builder lectureID(String lecturerID) {
+        public Builder lecturerID(String lecturerID) {
             this.lecturerID = lecturerID;
             return this;
         }
@@ -72,7 +72,7 @@ public class Lecture {
         }
     }
 
-    public Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -139,7 +139,7 @@ public class Lecture {
     }
 
     public boolean validLimitNum() {
-        if (myRegisterings.size() > limit) {
+        if (myRegisterings.size() >= limit) {
             return false;
         }
         return true;

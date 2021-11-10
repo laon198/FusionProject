@@ -27,6 +27,11 @@ public class SimpleCourseRepository implements CourseRepository {
     }
 
     @Override
+    public List<Course> findAll() {
+        return null;
+    }
+
+    @Override
     public List<Course> findByYear(int year) {
         return null;
     }

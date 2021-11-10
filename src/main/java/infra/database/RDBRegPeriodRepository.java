@@ -38,7 +38,7 @@ public class RDBRegPeriodRepository implements RegPeriodRepository {
             }
         }
 
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class RDBRegPeriodRepository implements RegPeriodRepository {
         RegisteringPeriodDTO regPeriodDTO = ModelMapper.regPeriodToDTO(registeringPeriod);
         StringBuilder query = new StringBuilder()
                 .append("INSERT INTO registering_periods_tb (start_period, end_period, target_year) ")
-                .append("VALUES(?, ?, ?");
+                .append("VALUES(?, ?, ?) ");
 
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -100,7 +100,7 @@ public class RDBRegPeriodRepository implements RegPeriodRepository {
         List<RegisteringPeriod> list = new ArrayList<>();
 
         while(res.next()){
-            long id = res.getLong("registering_period");
+            long id = res.getLong("registering_period_PK");
             LocalDateTime beginTime = res.getTimestamp("start_period").toLocalDateTime();
             LocalDateTime endTime = res.getTimestamp("end_period").toLocalDateTime();
             int allowedYear = res.getInt("target_year");

@@ -44,6 +44,10 @@ public class RegisteringPeriodDTO {
         id = builder.id;
     }
 
+    public long getID() {
+        return id;
+    }
+
     public PeriodDTO getPeriodDTO() {
         return period;
     }

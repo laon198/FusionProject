@@ -5,6 +5,7 @@ import domain.repository.RegisteringRepository;
 import infra.PooledDataSource;
 import infra.dto.ModelMapper;
 import infra.dto.RegisteringDTO;
+import infra.option.registering.RegisteringOption;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -37,6 +38,45 @@ public class RDBRegisteringRepository implements RegisteringRepository {
     }
 
     @Override
+    public List<Registering> findByOption(RegisteringOption... options) {
+        String and = " AND ";
+        String where = " WHERE ";
+        StringBuilder query = new StringBuilder("SELECT * FROM registerings_tb AS r ");
+
+        for(int i=0; i<options.length; i++){
+            if(i==0){
+                query.append(where);
+            }
+
+            query.append(options[i].getQuery());
+
+            if(i!=options.length-1){
+                query.append(and);
+            }
+        }
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try{
+            conn = ds.getConnection();
+            pstmt = conn.prepareStatement(new String(query));
+            ResultSet res = pstmt.executeQuery();
+            return getRegFrom(res);
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }finally {
+            try{
+                pstmt.close();
+                conn.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     public void save(Registering registering) {
         RegisteringDTO regDTO = ModelMapper.registeringToDTO(registering);
         StringBuilder query = new StringBuilder(
@@ -45,9 +85,10 @@ public class RDBRegisteringRepository implements RegisteringRepository {
         );
 
         Connection conn = null;
+        PreparedStatement stmt = null;
         try{
             conn = ds.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(new String(query));
+            stmt = conn.prepareStatement(new String(query));
             stmt.setString(1, regDTO.getStudentCode());
             stmt.setLong(2, regDTO.getLectureID());
             stmt.setString(3, regDTO.getRegisteringTime());
@@ -56,7 +97,8 @@ public class RDBRegisteringRepository implements RegisteringRepository {
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
             try{
-                conn.rollback();
+                stmt.close();
+                conn.close();
             }catch (SQLException e){
                 e.printStackTrace();
             }
@@ -65,18 +107,23 @@ public class RDBRegisteringRepository implements RegisteringRepository {
 
     @Override
     public void remove(Registering registering) {
-        StringBuilder query = new StringBuilder(
-                "DELETE * FROM registerings_tb AS r " +
-                        "WHERE r.registering_PK=? "
-        );
+        StringBuilder query = new StringBuilder("DELETE FROM registerings_tb AS r ")
+                .append("WHERE r.registering_PK=? ");
         Connection conn = null;
+        PreparedStatement pstmt = null;
         try{
             conn = ds.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(new String(query));
+            pstmt = conn.prepareStatement(new String(query));
             pstmt.setLong(1, registering.getID());
             pstmt.execute();
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
+            try{
+                pstmt.close();
+                conn.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
         }
     }
 
