@@ -1,32 +1,48 @@
 
-import application.MemberAppService;
-import application.ProfessorRetrieveAppService;
-import application.StudentRetrieveAppService;
-import domain.model.Professor;
-import domain.model.Student;
-import domain.repository.AccountRepository;
-import domain.repository.AdminRepository;
-import domain.repository.ProfessorRepository;
-import domain.repository.StudentRepository;
-import infra.database.*;
-import infra.dto.ProfessorDTO;
+import domain.generic.LectureTime;
+import domain.model.Lecture;
+import infra.MyBatisConnectionFactory;
+import infra.database.RDBLectureRepository;
+import infra.dto.ModelMapper;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class test {
     public static void main(String[] args) throws Exception {
-        AdminRepository adminRepo = new RDBAdminRepository();
-        StudentRepository stdRepo = new RDBStudentRepository();
-        ProfessorRepository profRepo = new RDBProfessorRepository();
-        AccountRepository accRepo = new RDBAccountRepository();
-        MemberAppService m = new MemberAppService(
-                stdRepo,
-                accRepo,
-                profRepo,
-                adminRepo
-        );
-        StudentRetrieveAppService s = new StudentRetrieveAppService(stdRepo);
-        ProfessorRetrieveAppService p = new ProfessorRetrieveAppService(profRepo);
+//        AdminRepository adminRepo = new RDBAdminRepository();
+//        StudentRepository stdRepo = new RDBStudentRepository();
+//        ProfessorRepository profRepo = new RDBProfessorRepository();
+//        AccountRepository accRepo = new RDBAccountRepository();
+//        MemberAppService m = new MemberAppService(
+//                stdRepo,
+//                accRepo,
+//                profRepo,
+//                adminRepo
+//        );
+//        StudentRetrieveAppService s = new StudentRetrieveAppService(stdRepo);
+//        ProfessorRetrieveAppService p = new ProfessorRetrieveAppService(profRepo);
+
+        RDBLectureRepository rdbLectureRepository = new RDBLectureRepository(MyBatisConnectionFactory.getSqlSessionFactory());
+        List<Lecture> all = rdbLectureRepository.findAll();
+//        Set<LectureTime> lectureTimes = new HashSet<>();
+//        LectureTime lectureTime = LectureTime.builder()
+//                .lectureDay("MON")
+//                .startTime(1)
+//                .endTime(2)
+//                .room("D333")
+//                .build();
+//        lectureTimes.add(lectureTime);
+//        Lecture lecture = Lecture.builder()
+//                .id(14)
+//                .lecturerID("p333")
+//                .lectureCode("SE456")
+//                .lectureTimes(lectureTimes)
+//                .courseID(1)
+//                .limit(60)
+//                .build();
+//        rdbLectureRepository.insert(lecture);
 
         //insert test
 //        StudentDTO stdDTO = StudentDTO.builder()
@@ -71,13 +87,13 @@ public class test {
 //        m.updateProfessor(prof);
 //        Professor prof2 = p.findByID(53);
 //        System.out.println("prof = " + prof2);
-        
+
         //find all test
-        List<Student> list = s.findAll();
-        for(Student std : list){
-            System.out.println("std = " + std);
-        }
-        
+//        List<Student> list = s.findAll();
+//        for(Student std : list){
+//            System.out.println("std = " + std);
+//        }
+
 //        for(Professor prof : p.findAll()){
 //            System.out.println("prof = " + prof);
 //        }

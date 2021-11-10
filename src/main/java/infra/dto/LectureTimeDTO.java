@@ -1,7 +1,13 @@
 package infra.dto;
 
 import domain.generic.LectureTime;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@ToString
 public class LectureTimeDTO {
     private String lectureDay;
     private int startTime;
