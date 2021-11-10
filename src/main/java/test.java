@@ -5,12 +5,10 @@ import application.RegisterAppService;
 import application.StudentRetrieveAppService;
 import domain.model.*;
 import domain.repository.*;
+import domain.service.Registrar;
 import infra.MyBatisConnectionFactory;
 import infra.database.*;
-import infra.dto.AdminDTO;
-import infra.dto.PeriodDTO;
-import infra.dto.ProfessorDTO;
-import infra.dto.RegisteringPeriodDTO;
+import infra.dto.*;
 import infra.option.registering.StudentCodeOption;
 import org.apache.ibatis.session.SqlSessionFactory;
 
@@ -43,7 +41,7 @@ public class test {
         //회원 Create
         //create Admin
 //        AdminDTO adminDTO = AdminDTO.builder()
-//                .name("hana")
+//                .name("leehana")
 //                .birthDate("001020")
 //                .department("SE")
 //                .adminCode("F1234")
@@ -53,66 +51,66 @@ public class test {
 
         //create professor
 //        ProfessorDTO profDTO = ProfessorDTO.builder()
-//                .name("oh")
-//                .birthDate("601010")
+//                .name("kimsungryul")
+//                .birthDate("991020")
 //                .department("SE")
-//                .professorCode("PO82002")
+//                .professorCode("P1000")
 //                .telePhone("9000")
 //                .build();
 //
 //        m.createProfessor(profDTO);
-
-//        ProfessorDTO profDTO = ProfessorDTO.builder()
-//                .name("oh")
+//
+//        ProfessorDTO profDTO2 = ProfessorDTO.builder()
+//                .name("kimsunmyeong")
 //                .birthDate("601010")
 //                .department("SE")
-//                .professorCode("PO82002")
-//                .telePhone("9000")
+//                .professorCode("P2000")
+//                .telePhone("7000")
 //                .build();
 //
-//        m.createProfessor(profDTO);
+//        m.createProfessor(profDTO2);
         //end of professor create
 
         //create student
 //        StudentDTO stdDTO = StudentDTO.builder()
-//                .name("jinwoo")
+//                .name("kimjinwoo")
 //                .birthDate("990329")
 //                .department("SE")
-//                .studentCode("201812144")
+//                .studentCode("20180303")
 //                .year(2)
 //                .build();
 //
 //        m.createStudent(stdDTO);
-
-//        StudentDTO stdDTO = StudentDTO.builder()
-//                .name("jinwoo")
+//
+//        StudentDTO stdDTO2 = StudentDTO.builder()
+//                .name("parkhyeongjun")
 //                .birthDate("990329")
 //                .department("SE")
-//                .studentCode("201812144")
+//                .studentCode("20181111")
 //                .year(2)
 //                .build();
 //
-//        m.createStudent(stdDTO);
-
-//        StudentDTO stdDTO = StudentDTO.builder()
-//                .name("jinwoo")
-//                .birthDate("990329")
+//        m.createStudent(stdDTO2);
+//
+//        StudentDTO stdDTO3 = StudentDTO.builder()
+//                .name("leeeunbean")
+//                .birthDate("000312")
 //                .department("SE")
-//                .studentCode("201812144")
+//                .studentCode("20182222")
 //                .year(2)
 //                .build();
 //
-//        m.createStudent(stdDTO);
-
-//        StudentDTO stdDTO = StudentDTO.builder()
-//                .name("jinwoo")
-//                .birthDate("990329")
+//        m.createStudent(stdDTO3);
+//
+//        StudentDTO stdDTO4 = StudentDTO.builder()
+//                .name("yeongeomji")
+//                .birthDate("990429")
 //                .department("SE")
-//                .studentCode("201812144")
+//                .studentCode("20183333")
 //                .year(2)
 //                .build();
 //
-//        m.createStudent(stdDTO);
+//        m.createStudent(stdDTO4);
         //end of student create
 
         //retrieve all professor
@@ -128,6 +126,7 @@ public class test {
         //end of retrieve professor
 
         //update professor
+        //TODO : 아이디값 지정 필요
 //        Professor prof = p.findByID(53);
 //        System.out.println("prof = " + prof);
 //        prof.setTelePhone("8001");
@@ -137,6 +136,7 @@ public class test {
         //end of update professor
 
         //update student
+        //TODO : 아이디값 지정 필요
 //        Student std = s.findByID(44);
 //        System.out.println("std = " + std);
 //        std.setName("kimJinWoo");
@@ -234,25 +234,60 @@ public class test {
 //        courseRepo.save(updatingCourse);
         //end of update course name
 
+
         //수강신청 기간설정
-
-
-
+//        Student currentStd = stdRepo.findByID(61);
+//        //TODO : 아이디값 어떻게?
+//        for(Lecture lecture : lectureRepo.findAll()){
+//            Course curCourse = courseRepo.findByID(lecture.getCourseID());
+//            System.out.print("lecture = " + lecture);
+//            System.out.print(" targetYear = "+curCourse.getYear());
+//
+//            if(r.isValidPeriodAbout(currentStd, curCourse)){
+//                System.out.println(" : 수강신청 가능");
+//            }else{
+//                System.out.println(" : 수강신청 불가");
+//            }
+//        }
+//        System.out.println();
+//
 //        RegisteringPeriodDTO rPeriod = RegisteringPeriodDTO.builder()
-//                                        .period(
-//                                                PeriodDTO.builder()
-//                                                .beginTime(LocalDateTime.of(2021,11,10,00,00))
-//                                                .endTime(LocalDateTime.of(2021,12,10,00,00))
-//                                                .build())
-//                                        .allowedYear(2)
-//                                        .build();
-
+//                .period(
+//                        PeriodDTO.builder()
+//                                .beginTime(LocalDateTime.of(2021,11,10,00,00))
+//                                .endTime(LocalDateTime.of(2021,12,10,00,00))
+//                                .build())
+//                .allowedYear(2)
+//                .build();
+//
 //        r.addRegisteringPeriod(rPeriod);
+//
+//        for(Lecture lecture : lectureRepo.findAll()){
+//            Course curCourse = courseRepo.findByID(lecture.getCourseID());
+//            System.out.print("lecture = " + lecture);
+//            System.out.print(" targetYear = "+curCourse.getYear());
+//
+//            if(r.isValidPeriodAbout(currentStd, curCourse)){
+//                System.out.println(" : 수강신청 가능");
+//            }else{
+//                System.out.println(" : 수강신청 불가");
+//            }
+//        }
+
+        //수강신청 기간설정 끝
+
+        //수강신청
+        //TODO: 아이디값
+//        r.register(26, 61);
+//        List<Registering> list = regRepo.findByOption(new StudentCodeOption("20180303"));
+        r.cancel(1, 26, 61);
+
+        //수강신청 끝
+
 //        r.register(15, 2);
 //        Student std = stdRepo.findByID(2);
 //        System.out.println("std = " + std);
 
-//        List<Registering> list = regRepo.findByOption(new StudentCodeOption("20180603"));
 //        for(Registering reg : list){
 //            System.out.println("reg = " + reg);
 

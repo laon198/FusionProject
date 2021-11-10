@@ -33,28 +33,28 @@ public class RegisterAppService {
 
     public void register(long lectureID, long studentID){
 //        Lecture lecture = lectureRepo.findByID(lectureID);
-//        Set<LectureTime> times = new HashSet<>();
-//        times.add(LectureTime.builder().startTime(1).endTime(2).lectureDay("MON").build());
-//        times.add(LectureTime.builder().startTime(3).endTime(4).lectureDay("FRI").build());
-//        Lecture lecture = Lecture.builder()
-//                            .id(lectureID)
-//                            .limit(0)
-//                            .courseID(2)
-//                            .lecturerID("p222")
-//                            .lectureCode("SE222")
-//                            .lectureTimes(times)
-//                            .build();
         Set<LectureTime> times = new HashSet<>();
-        times.add(LectureTime.builder().startTime(1).endTime(2).lectureDay("TUE").build());
-        times.add(LectureTime.builder().startTime(4).endTime(5).lectureDay("FRI").build());
+        times.add(LectureTime.builder().startTime(1).endTime(2).lectureDay("MON").build());
+        times.add(LectureTime.builder().startTime(3).endTime(4).lectureDay("FRI").build());
         Lecture lecture = Lecture.builder()
-                .id(lectureID)
-                .limit(30)
-                .courseID(1)
-                .lecturerID("p333")
-                .lectureCode("SE555")
-                .lectureTimes(times)
-                .build();
+                            .id(lectureID)
+                            .limit(3)
+                            .courseID(21)
+                            .lecturerID("p1000")
+                            .lectureCode("SE222")
+                            .lectureTimes(times)
+                            .build();
+//        Set<LectureTime> times = new HashSet<>();
+//        times.add(LectureTime.builder().startTime(1).endTime(2).lectureDay("TUE").build());
+//        times.add(LectureTime.builder().startTime(4).endTime(5).lectureDay("FRI").build());
+//        Lecture lecture = Lecture.builder()
+//                .id(lectureID)
+//                .limit(30)
+//                .courseID(1)
+//                .lecturerID("p333")
+//                .lectureCode("SE555")
+//                .lectureTimes(times)
+//                .build();
 
         Student student = stdRepo.findByID(studentID);
         Set<RegisteringPeriod> pSet = new HashSet<>(periodRepo.findAll());
@@ -65,6 +65,13 @@ public class RegisterAppService {
         regRepo.save(reg);
     }
 
+    public boolean isValidPeriodAbout(Student std, Course course){
+        Set<RegisteringPeriod> pSet = new HashSet<>(periodRepo.findAll());
+        Registrar registrar = new Registrar(lectureRepo, courseRepo, pSet);
+
+        return registrar.isValidPeriodAbout(std, course);
+    }
+
     public void cancel(long regID, long lectureID, long studentID){
 //        Lecture lecture = lectureRepo.findByID(lectureID);
         Set<LectureTime> times = new HashSet<>();
@@ -73,11 +80,12 @@ public class RegisterAppService {
         Lecture lecture = Lecture.builder()
                 .id(lectureID)
                 .limit(30)
-                .courseID(1)
+                .courseID(21)
                 .lecturerID("p333")
                 .lectureCode("SE555")
                 .lectureTimes(times)
                 .build();
+
         Student student = stdRepo.findByID(studentID);
         Registering registering = regRepo.findByID(regID);
         Set<RegisteringPeriod> pSet = new HashSet<>(periodRepo.findAll());

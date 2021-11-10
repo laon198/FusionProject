@@ -10,6 +10,10 @@ public class Course {
     private int targetYear;
     private int credit;
 
+    public int getYear() {
+        return targetYear;
+    }
+
     public static class Builder {
         private long id;
         private String courseCode;

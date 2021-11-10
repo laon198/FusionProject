@@ -61,10 +61,10 @@ public class RegisteringPeriod {
         allowedYear = builder.allowedYear;
     }
 
-    public boolean isSatisfiedBy(Student std){
+    public boolean isSatisfiedBy(Student std, Course course){
         LocalDateTime nowTime = LocalDateTime.now();
 
-        if(!isAllowedYear(std.getYear())){
+        if(!isAllowedYear(std.getYear(), course.getYear())){
             return false;
         }
 
@@ -75,9 +75,18 @@ public class RegisteringPeriod {
         return true;
     }
 
-    private boolean isAllowedYear(Student.Year year){
+    private boolean isAllowedYear(Student.Year year, int courseYear){
         if(allowedYear==year){
-            return true;
+            switch (year){
+                case FRESHMAN:
+                    return courseYear==1;
+                case SOPHOMORE:
+                    return courseYear==2;
+                case JUNIOR:
+                    return courseYear==3;
+                case SENIOR:
+                    return courseYear==4;
+            }
         }
 
         return false;

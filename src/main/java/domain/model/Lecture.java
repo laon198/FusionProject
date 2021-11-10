@@ -192,4 +192,15 @@ public class Lecture {
         return Objects.hash(id);
     }
 
+    //TODO : 테스트용
+    @Override
+    public String toString() {
+        return "Lecture{" +
+                "id=" + id +
+                ", courseID=" + courseID +
+                ", lectureCode='" + lectureCode + '\'' +
+                ", lecturerID='" + lecturerID + '\'' +
+                ", limit=" + limit +
+                '}';
+    }
 }

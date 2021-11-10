@@ -26,7 +26,7 @@ public class Registrar {
     public Registering register(Lecture lecture, Student student){
         Course course = courseRepo.findByID(lecture.getCourseID());
 
-        if(!isValidPeriodAbout(student)){
+        if(!isValidPeriodAbout(student, course)){
             throw new IllegalStateException("해당학년 수강신청 기간이 아닙니다.");
         }
 
@@ -75,9 +75,9 @@ public class Registrar {
         return registering;
     }
 
-    public boolean isValidPeriodAbout(Student std){
+    public boolean isValidPeriodAbout(Student std, Course course){
         for(RegisteringPeriod period : periodSet){
-            if(period.isSatisfiedBy(std)){
+            if(period.isSatisfiedBy(std, course)){
                 return true;
             }
         }
