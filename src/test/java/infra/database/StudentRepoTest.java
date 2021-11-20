@@ -2,12 +2,10 @@ package infra.database;
 
 import domain.model.Student;
 import domain.repository.StudentRepository;
+import infra.database.repository.RDBStudentRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

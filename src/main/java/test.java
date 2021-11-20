@@ -1,48 +1,33 @@
 
-import application.MemberAppService;
-import application.ProfessorRetrieveAppService;
-import application.RegisterAppService;
-import application.StudentRetrieveAppService;
 import domain.generic.LectureTime;
 import domain.model.*;
 import domain.repository.*;
-import domain.service.Registrar;
-import infra.MyBatisConnectionFactory;
-import infra.database.*;
-import infra.dto.*;
-import infra.option.registering.StudentCodeOption;
-import org.apache.ibatis.session.SqlSessionFactory;
-import sun.util.resources.cldr.zh.CalendarData_zh_Hans_HK;
-
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
+import infra.database.repository.RDBLectureRepository;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class test {
     public static void main(String[] args){
         LectureRepository lectureRepo = new RDBLectureRepository();
-        Set<LectureTime> times = new HashSet<>();
-        times.add(
-                LectureTime.builder()
-                    .lectureDay("MON")
-                    .startTime(1)
-                    .endTime(2)
-                    .room("D330")
-                    .build()
-        );
-
-        Lecture l = Lecture.builder()
-                    .courseID(2)
-                    .lectureCode("SE1234")
-                    .lecturerID("P1000")
-                    .limit(3)
-                    .lectureTimes(times)
-                    .build();
-        lectureRepo.insert(l);
+//        Set<LectureTime> times = new HashSet<>();
+//        times.add(
+//                LectureTime.builder()
+//                    .lectureDay("MON")
+//                    .startTime(1)
+//                    .endTime(2)
+//                    .room("D330")
+//                    .build()
+//        );
+//
+//        Lecture l = Lecture.builder()
+//                    .courseID(2)
+//                    .lectureCode("SE1234")
+//                    .lecturerID("P1000")
+//                    .limit(3)
+//                    .lectureTimes(times)
+//                    .build();
+//        lectureRepo.insert(l);
 //        System.out.println("l = " + l);
 //        for(Lecture l : lectureRepo.findAll()){
 //            System.out.println("l = " + l);

@@ -1,7 +1,7 @@
 package domain.repository;
 
 import domain.model.Registering;
-import infra.option.registering.RegisteringOption;
+import infra.database.option.registering.RegisteringOption;
 
 import java.util.List;
 

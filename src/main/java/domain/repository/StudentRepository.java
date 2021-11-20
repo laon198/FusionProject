@@ -1,9 +1,8 @@
 package domain.repository;
 
 import domain.model.Student;
-import infra.option.student.StudentOption;
+import infra.database.option.student.StudentOption;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface StudentRepository {

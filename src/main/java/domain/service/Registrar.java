@@ -3,12 +3,8 @@ package domain.service;
 import domain.model.*;
 import domain.repository.CourseRepository;
 import domain.repository.LectureRepository;
-import domain.repository.RegisteringRepository;
-import domain.repository.StudentRepository;
-import infra.option.student.StudentCodeOption;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 public class Registrar {

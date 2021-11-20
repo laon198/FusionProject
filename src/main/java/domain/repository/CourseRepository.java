@@ -1,7 +1,7 @@
 package domain.repository;
 
 import domain.model.Course;
-import infra.option.course.CourseOption;
+import infra.database.option.course.CourseOption;
 
 import java.util.List;
 

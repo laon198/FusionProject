@@ -1,6 +1,7 @@
 package infra.database;
 
 import domain.model.Professor;
+import infra.database.repository.RDBProfessorRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
