@@ -3,6 +3,7 @@ import application.MemberAppService;
 import application.ProfessorRetrieveAppService;
 import application.RegisterAppService;
 import application.StudentRetrieveAppService;
+import domain.generic.LectureTime;
 import domain.model.*;
 import domain.repository.*;
 import domain.service.Registrar;
@@ -11,32 +12,58 @@ import infra.database.*;
 import infra.dto.*;
 import infra.option.registering.StudentCodeOption;
 import org.apache.ibatis.session.SqlSessionFactory;
+import sun.util.resources.cldr.zh.CalendarData_zh_Hans_HK;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class test {
     public static void main(String[] args){
-        AdminRepository adminRepo = new RDBAdminRepository();
-        LectureRepository lectureRepo = new RDBLectureRepository(MyBatisConnectionFactory.getSqlSessionFactory());
-        CourseRepository courseRepo = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
-        RegisteringRepository regRepo = new RDBRegisteringRepository();
-        RegPeriodRepository periodRepo = new RDBRegPeriodRepository();
-        StudentRepository stdRepo = new RDBStudentRepository();
-        ProfessorRepository profRepo = new RDBProfessorRepository();
-        AccountRepository accRepo = new RDBAccountRepository();
-        MemberAppService m = new MemberAppService(
-                stdRepo,
-                accRepo,
-                profRepo,
-                adminRepo
+        LectureRepository lectureRepo = new RDBLectureRepository();
+        Set<LectureTime> times = new HashSet<>();
+        times.add(
+                LectureTime.builder()
+                    .lectureDay("MON")
+                    .startTime(1)
+                    .endTime(2)
+                    .room("D330")
+                    .build()
         );
-        StudentRetrieveAppService s = new StudentRetrieveAppService(stdRepo);
-        ProfessorRetrieveAppService p = new ProfessorRetrieveAppService(profRepo);
-        RegisterAppService r = new RegisterAppService(lectureRepo, stdRepo, courseRepo, regRepo, periodRepo);
+
+        Lecture l = Lecture.builder()
+                    .courseID(2)
+                    .lectureCode("SE1234")
+                    .lecturerID("P1000")
+                    .limit(3)
+                    .lectureTimes(times)
+                    .build();
+        lectureRepo.insert(l);
+//        System.out.println("l = " + l);
+//        for(Lecture l : lectureRepo.findAll()){
+//            System.out.println("l = " + l);
+//        }
+//        AdminRepository adminRepo = new RDBAdminRepository();
+//        LectureRepository lectureRepo = new RDBLectureRepository(MyBatisConnectionFactory.getSqlSessionFactory());
+//        CourseRepository courseRepo = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
+//        RegisteringRepository regRepo = new RDBRegisteringRepository();
+//        RegPeriodRepository periodRepo = new RDBRegPeriodRepository();
+//        StudentRepository stdRepo = new RDBStudentRepository();
+//        ProfessorRepository profRepo = new RDBProfessorRepository();
+//        AccountRepository accRepo = new RDBAccountRepository();
+//        MemberAppService m = new MemberAppService(
+//                stdRepo,
+//                accRepo,
+//                profRepo,
+//                adminRepo
+//        );
+//        StudentRetrieveAppService s = new StudentRetrieveAppService(stdRepo);
+//        ProfessorRetrieveAppService p = new ProfessorRetrieveAppService(profRepo);
+//        RegisterAppService r = new RegisterAppService(lectureRepo, stdRepo, courseRepo, regRepo, periodRepo);
 
         //회원 Create
         //create Admin
@@ -280,7 +307,7 @@ public class test {
         //TODO: 아이디값
 //        r.register(26, 61);
 //        List<Registering> list = regRepo.findByOption(new StudentCodeOption("20180303"));
-        r.cancel(1, 26, 61);
+//        r.cancel(1, 26, 61);
 
         //수강신청 끝
 
@@ -294,5 +321,6 @@ public class test {
 //        }
 //
 //        r.cancel(6, 15, 2);
+
     }
 }

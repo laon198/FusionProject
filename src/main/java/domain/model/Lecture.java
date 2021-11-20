@@ -156,7 +156,7 @@ public class Lecture {
             throw new IllegalStateException("담당 교과목이 아닙니다.");
         }
 
-        planner.setItem(itemName, content);
+        planner.writeItem(itemName, content);
     }
 
     public void setPlannerWritingPeriod(Period period) {
@@ -201,6 +201,9 @@ public class Lecture {
                 ", lectureCode='" + lectureCode + '\'' +
                 ", lecturerID='" + lecturerID + '\'' +
                 ", limit=" + limit +
+                ", lectureTimes=" + lectureTimes +
+                ", myRegisterings=" + myRegisterings +
+                ", planner=" + planner +
                 '}';
     }
 }

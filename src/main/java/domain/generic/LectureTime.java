@@ -11,6 +11,7 @@ public class LectureTime {
         FIFTH, SIXTH, SEVENTH, EIGHTH, NINTH
     }
 
+    //TODO : 테스트용
     @Override
     public String toString() {
         return "LectureTime{" +

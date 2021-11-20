@@ -29,4 +29,9 @@ public class SimpleLectureRepository implements LectureRepository {
     public void remove(long lectureID) {
         repo.remove(lectureID);
     }
+
+    @Override
+    public void insert(Lecture lecture) {
+
+    }
 }

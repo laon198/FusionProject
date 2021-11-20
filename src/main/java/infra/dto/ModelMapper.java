@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class ModelMapper {
@@ -79,7 +80,7 @@ public class ModelMapper {
 
     public static LecturePlannerDTO plannerToDTO(LecturePlanner planner){
         try{
-            Set<LecturePlannerItemDTO> items = getPlannerItemDTOSet(getPlannerItemSet(planner, "items"));
+            Map<String, String> items = getPlannerItems(planner, "items");
             PeriodDTO writePeriod = periodToDTO(getPeriod(planner,"writePeriod"));
             return LecturePlannerDTO.builder()
                     .items(items)
@@ -89,6 +90,12 @@ public class ModelMapper {
             e.getStackTrace();
         }
         return null;
+    }
+
+    private static Map<String, String> getPlannerItems(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        Field f1 = obj.getClass().getDeclaredField(fieldName);
+        f1.setAccessible(true);
+        return (Map<String, String>) f1.get(obj);
     }
 
     public static Period getPeriod(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
@@ -104,37 +111,6 @@ public class ModelMapper {
                 .beginTime(beginTime)
                 .endTime(endTime)
                 .build();
-    }
-
-    public static Set<LecturePlannerItem> getPlannerItemSet(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        Field f1 = obj.getClass().getDeclaredField(fieldName);
-        f1.setAccessible(true);
-        return (Set<LecturePlannerItem>)f1.get(obj);
-    }
-
-    public static Set<LecturePlannerItemDTO> getPlannerItemDTOSet(Set<LecturePlannerItem> items){
-        Set<LecturePlannerItemDTO> dtoSet = new HashSet<>();
-        for(LecturePlannerItem item : items){
-            dtoSet.add(
-                    getPlannerItemToDTO(item)
-            );
-        }
-
-        return dtoSet;
-    }
-
-    public static LecturePlannerItemDTO getPlannerItemToDTO(LecturePlannerItem item){
-        try{
-            String name = getStringField(item, "name");
-            String content = getStringField(item, "content");
-            return LecturePlannerItemDTO.builder()
-                    .name(name)
-                    .content(content)
-                    .build();
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.getStackTrace();
-        }
-        return null;
     }
 
     public static AdminDTO adminToDTO(Admin admin) {

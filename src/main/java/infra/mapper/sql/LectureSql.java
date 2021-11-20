@@ -52,11 +52,11 @@ public class LectureSql {
         return sql.toString();
     }
 
-    public String selectPlanner(long id) {
+    public String selectPlanner() {
         SQL sql = new SQL() {{
-            SELECT("LECTURE_PK");
+            SELECT("*");
             FROM("LECTURE_PLANNERS_TB");
-            INNER_JOIN("LECTURES_TB ON LECTURE_PLANNERS_TB.lecture_PK = LECTURES_TB.lecture_PK");
+            INNER_JOIN("LECTURES_TB ON LECTURE_PLANNERS_TB.lecture_planner_PK = LECTURES_TB.lecture_PK");
             WHERE("LECTURES_TB.lecture_PK = #{id}");
         }};
         return sql.toString();
@@ -69,15 +69,19 @@ public class LectureSql {
         return sql.toString();
     }
 
-    public String insertLectureTimes() {
+    public String insertLectureTime() {
         SQL sql = new SQL() {{
             INSERT_INTO("LECTURE_TIMES_TB");
+            VALUES("lecture_PK", "#{lectureID}");
+            VALUES("start_period", "#{startTime}");
+            VALUES("end_period", "#{endTime}");
+            VALUES("day_of_week", "#{lectureDay}");
+            VALUES("lecture_room", "#{room}");
         }};
         return sql.toString();
     }
 
     public String insert() {
-
         SQL sql = new SQL() {{
             INSERT_INTO("LECTURES_TB");
             VALUES("course_PK", "#{courseID}");
@@ -85,6 +89,15 @@ public class LectureSql {
             VALUES("capacity", "#{limit}");
             VALUES("applicant_CNT", "#{applicant}");
             VALUES("professor_code", "#{lecturerID}");
+            VALUES("lecture_planner_PK", "#{plannerID}");
+        }};
+        return sql.toString();
+    }
+
+    public String insertPlanner() {
+        SQL sql = new SQL() {{
+            INSERT_INTO("lecture_planners_tb");
+            VALUES("lecture_goal", "#{goal}");
         }};
         return sql.toString();
     }

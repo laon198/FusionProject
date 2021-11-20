@@ -18,10 +18,11 @@ public class LectureDTO {
     private String lectureCode;
     private String lecturerID;
     private int limit;
+    private int applicant;
+    private int plannerID;
     private Set<LectureTimeDTO> lectureTimes;
     private Set<RegisteringDTO> myRegisterings;
     private LecturePlannerDTO planner;
-
 
     public static class Builder {
         private long id;
@@ -93,34 +94,7 @@ public class LectureDTO {
         planner = builder.planner;
     }
 
-//    public LectureDTO(long id, long courseID, long lectureCode, int limit, int applicantCount, long plannerID, long professorCode) {
-//        this.id = id;
-//        this.courseID = courseID;
-//        this.lectureCode = lectureCode;
-//        this.limit = limit;
-//        this.applicantCount = applicantCount;
-//        this.plannerID = plannerID;
-//        this.professorCode = professorCode;
-//    }
-
-    //TODO : 원래 있던 것
-
-//    private long id;
-//    private long courseID;
-//    private long lecturerID;
-//    private int limit;
-//    private Set<LectureTime> lectureTimes;
-//    private List<Long> registeredStudentIDs;
-//    private LecturePlanner planner;
-//
-//    public LectureDTO(long lectureID, long professorID, int limitPersonNum, long courseID,
-//                      Set<LectureTime> lectureTimes) {
-//        id = lectureID;
-//        lecturerID = professorID;
-//        limit = limitPersonNum;
-//        registeredStudentIDs = new ArrayList<>(limitPersonNum);
-//        this.lectureTimes = lectureTimes;
-//        this.courseID = courseID;
-//        planner = new LecturePlanner();
-//    }
+    public int getApplicant(){
+        return myRegisterings.size();
+    }
 }

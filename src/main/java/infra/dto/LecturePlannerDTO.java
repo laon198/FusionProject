@@ -2,17 +2,18 @@ package infra.dto;
 
 import domain.generic.Period;
 
+import java.util.Map;
 import java.util.Set;
 
 public class LecturePlannerDTO {
-    private Set<LecturePlannerItemDTO> items;
+    private Map<String, String> items;
     private static PeriodDTO writePeriod;
 
     public static class Builder{
-        private Set<LecturePlannerItemDTO> items;
+        private Map<String, String> items;
         private static PeriodDTO writePeriod;
 
-        public Builder items(Set<LecturePlannerItemDTO> value){
+        public Builder items(Map<String, String> value){
             items = value;
             return this;
         }
@@ -29,6 +30,10 @@ public class LecturePlannerDTO {
 
     public static Builder builder(){
         return new Builder();
+    }
+
+    public Map<String, String> getItems(){
+        return items;
     }
 
     private LecturePlannerDTO(Builder builder){
