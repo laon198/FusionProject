@@ -148,4 +148,20 @@ public class RDBCourseRepository implements CourseRepository {
             session.close();
         }
     }
+
+    @Override
+    public void remove(long id) {
+        Sqlsession session = null;
+        try{
+            session = sqlSessionFactory.openSession(true);
+            session.delete("mapper.CourseMapper.RemoveCourse", id);
+            session.commit();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            session.rollback();
+        }finally {
+            session.close();
+        }
+    }
 }
