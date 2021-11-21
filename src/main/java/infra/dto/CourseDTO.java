@@ -1,6 +1,7 @@
 package infra.dto;
 
 
+import domain.model.Course;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,6 +17,8 @@ public class CourseDTO {
     private String department;
     private String courseName;
 
+    private CourseDTO(){}
+
     public CourseDTO(long id, int targetYear, int credit,
                      String courseCode, String department, String courseName){
         this.id = id;
@@ -25,4 +28,5 @@ public class CourseDTO {
         this.department = department;
         this.courseName = courseName;
     }
+
 }

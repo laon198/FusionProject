@@ -3,13 +3,70 @@ import domain.generic.LectureTime;
 import domain.model.*;
 import domain.repository.*;
 import infra.database.repository.RDBLectureRepository;
+import infra.dto.CourseDTO;
+import infra.network.Deserializer;
+import infra.network.Serializer;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class test {
-    public static void main(String[] args){
-        LectureRepository lectureRepo = new RDBLectureRepository();
+    public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException {
+//        LectureRepository lectureRepo = new RDBLectureRepository();
+//        Course c = Course.builder()
+//                    .id(1)
+//                    .courseCode("222")
+//                .courseName("hello")
+//                .department("4r")
+//                    .targetYear(2)
+//                .credit(3)
+//                .build();
+        
+//        Refs r = new Refs('d', 5, new Refs2(2, 3));
+//        Derived c = new Derived(1, 2, 3, "4ff", r);
+//        byte[] a = Serializer.objectToBytes(c);
+//        Derived c2 = (Derived) Deserializer.bytesToObject(a);
+//        System.out.println("c2 = " + c2);
+        
+//        for(Field f : Serializer.getAllFields(ArrayList.class)){
+//            System.out.println("f = " + f);
+//        }
+
+//        Class clazz = Class.forName("infra.dto.CourseDTO");
+//
+//        Constructor c = clazz.getDeclaredConstructor();
+//        c.setAccessible(true);
+//        CourseDTO courseDTO = (CourseDTO) c.newInstance();
+//        Field f = clazz.getDeclaredField("id");
+//        f.setAccessible(true);
+//        f.setLong(courseDTO, 3);
+//        System.out.println("courseDTO = " + courseDTO);
+//        String n = Object.class.getName();
+//        System.out.println("n = " + n);
+//        List<Integer> a = new ArrayList<>();
+//        a.add(2); a.add(3);
+//
+//        int[] a = new int[3];
+//        a[0] = 1;
+
+
+
+//        Field f = Course.class.getDeclaredField("courseCode");
+//        f.setAccessible(true);
+//        String a = new String((String)f.get(c));
+//        System.out.println("a = " + a);
+//        System.out.println(f.getType().getSimpleName());
+//        System.out.println("name = " + name);
+//        for(Field f : Serializer.getAllFields(Student.class)){
+//            System.out.println("f = " + f.getType().getSimpleName().equals("int"));
+//        }
+
 //        Set<LectureTime> times = new HashSet<>();
 //        times.add(
 //                LectureTime.builder()

@@ -18,7 +18,6 @@ public class LectureDTO {
     private String lectureCode;
     private String lecturerID;
     private int limit;
-    private int applicant;
     private int plannerID;
     private Set<LectureTimeDTO> lectureTimes;
     private Set<RegisteringDTO> myRegisterings;
