@@ -183,4 +183,38 @@ public class RDBAdminRepository implements AdminRepository {
 
         return list;
     }
+
+    private void remove(Admin admin){
+        AdminDTO adminDTO = ModelMapper.adminToDTO(admin);
+        StringBuilder memberQuery = new StringBuilder(
+                "DELETE FROM members_tb " +
+                        "WHERE member_PK=? "
+        );
+        StringBuilder stdQuery = new StringBuilder(
+                "DELETE FROM admins_tb " +
+                        "WHERE member_PK=? "
+        );
+
+        Connection conn = null;
+        try{
+            conn = ds.getConnection();
+            PreparedStatement memberStmt = conn.prepareStatement(new String(memberQuery));
+            PreparedStatement stdStmt = conn.prepareStatement(new String(stdQuery));
+
+            memberStmt.setLong(1, adminDTO.getId());
+
+            stdStmt.setLong(1, adminDTO.getId());
+
+            memberStmt.execute();
+            stdStmt.execute();
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+//            try{
+//                conn.rollback();
+//            }catch (SQLException e){
+//                e.printStackTrace();
+//            }
+        }
+
+    }
 }

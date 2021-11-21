@@ -49,4 +49,8 @@
         VALUES (#{id}, #{courseCode}, #{department}, #{courseName}, #{targetYear}, #{credit})
     </insert>
 
+    <delete id="RemoveCourse" parameterType="long" >
+        DELETE FROM COURSES_TB
+        WHERE course_PK = #{pk}
+    </delete>
 </mapper>
