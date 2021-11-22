@@ -35,15 +35,15 @@ public class ModelMapper {
     public static AccountDTO accountToDTO(Account account){
         try{
             long pk = getLongField(account, "pk");
-            long memberID = getLongField(account, "memberID");
             String id = getStringField(account, "id");
             String password = getStringField(account, "password");
+            long memberID = getLongField(account, "memberID");
 
             return AccountDTO.builder()
                         .pk(pk)
                         .id(id)
-                        .password(password)
                         .memberID(memberID)
+                        .password(password)
                         .build();
 
         }catch(NoSuchFieldException | IllegalAccessException e){
@@ -318,19 +318,28 @@ public class ModelMapper {
         return (LectureTime.LecturePeriod) f1.get(obj);
     }
 
-    public static CourseDTO courseToDTO(Course course) throws NoSuchFieldException, IllegalAccessException {
-        long id = getLongField(course, "id");
-        int credit = getIntField(course, "credit");
-        int targetYear = getIntField(course, "targetYear");
-        String courseCode = getStringField(course, "courseCode");
-        String department = getStringField(course, "department");
-        String courseName = getStringField(course, "courseName");
+    public static CourseDTO courseToDTO(Course course){
+        try{
+            long id = getLongField(course, "id");
+            int credit = getIntField(course, "credit");
+            int targetYear = getIntField(course, "targetYear");
+            String courseCode = getStringField(course, "courseCode");
+            String department = getStringField(course, "department");
+            String courseName = getStringField(course, "courseName");
 
+            return CourseDTO.builder()
+                    .id(id)
+                    .courseCode(courseCode)
+                    .targetYear(targetYear)
+                    .credit(credit)
+                    .department(department)
+                    .courseName(courseName)
+                    .build();
+        }catch(NoSuchFieldException | IllegalAccessException e){
+            e.getStackTrace();
+        }
 
-        return new CourseDTO(
-                id, targetYear, credit,
-                courseCode, department, courseName
-        );
+        return null;
     }
 
     private static String getSuperStringField(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {

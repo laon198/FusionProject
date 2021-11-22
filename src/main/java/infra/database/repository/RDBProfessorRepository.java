@@ -261,31 +261,23 @@ public class RDBProfessorRepository implements ProfessorRepository {
         return profList;
     }
 
-    private void remove(Professor prof){
+    @Override
+    public void remove(Professor prof){
         ProfessorDTO profDTO = ModelMapper.professorToDTO(prof);
         StringBuilder memberQuery = new StringBuilder(
                 "DELETE FROM members_tb " +
                         "WHERE member_PK=? "
         );
-        StringBuilder profQuery = new StringBuilder(
-                "DELETE FROM professors_tb " +
-                        "WHERE member_PK=? "
-        );
 
         Connection conn = null;
         PreparedStatement memberStmt = null;
-        PreparedStatement stdStmt = null;
         try{
             conn = ds.getConnection();
             memberStmt = conn.prepareStatement(new String(memberQuery));
-            stdStmt = conn.prepareStatement(new String(profQuery));
 
             memberStmt.setLong(1, profDTO.getId());
 
-            stdStmt.setLong(1, profDTO.getId());
-
             memberStmt.execute();
-            stdStmt.execute();
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
 //            try{

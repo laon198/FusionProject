@@ -7,10 +7,7 @@ import infra.dto.AccountDTO;
 import infra.dto.ModelMapper;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,12 +34,13 @@ public class RDBAccountRepository implements AccountRepository {
     }
 
     @Override
-    public void save(Account account) {
+    public long save(Account account) {
         AccountDTO accountDTO = ModelMapper.accountToDTO(account);
         if(accountDTO.getPk()==-1){
-            add(accountDTO);
+            return add(accountDTO);
         }else{
             update(accountDTO);
+            return accountDTO.getPk();
         }
     }
 
@@ -74,22 +72,31 @@ public class RDBAccountRepository implements AccountRepository {
         }
     }
 
-    private void add(AccountDTO accDTO){
+    private long add(AccountDTO accDTO){
         StringBuilder query = new StringBuilder(
-                "INSERT INTO accounts_tb (member_PK, account_ID, account_PW) " +
+                "INSERT INTO accounts_tb (account_ID, account_PW, member_PK) " +
                         "VALUES(?, ?, ?) "
         );
 
         Connection conn = null;
+        long id = -1;
         try{
             conn = ds.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(new String(query));
+            PreparedStatement pstmt = conn.prepareStatement(
+                    new String(query),
+                    Statement.RETURN_GENERATED_KEYS
+            );
 
-            pstmt.setLong(1, accDTO.getMemberID());
-            pstmt.setString(2, accDTO.getId());
-            pstmt.setString(3, accDTO.getPassword());
+            pstmt.setString(1, accDTO.getId());
+            pstmt.setString(2, accDTO.getPassword());
+            pstmt.setLong(3, accDTO.getMemberID());
 
-            pstmt.execute();
+            pstmt.executeUpdate();
+            ResultSet res = pstmt.getGeneratedKeys();
+            while(res.next()){
+                id = res.getLong(1);
+            }
+
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
 //            try{
@@ -98,7 +105,7 @@ public class RDBAccountRepository implements AccountRepository {
 //                e.printStackTrace();
 //            }
         }
-
+        return id;
     }
 
     private List<Account> getAccFrom(ResultSet res) throws SQLException {
@@ -106,20 +113,17 @@ public class RDBAccountRepository implements AccountRepository {
         long pk;
         String id;
         String password;
-        long memberID;
 
         while(res.next()){
             pk = res.getLong("account_pk");
             id = res.getString("account_ID");
             password = res.getString("account_PW");
-            memberID = res.getLong("member_PK");
 
             list.add(
                     Account.builder()
                         .pk(pk)
                         .id(id)
                         .password(password)
-                        .memberID(memberID)
                         .build()
             );
         }

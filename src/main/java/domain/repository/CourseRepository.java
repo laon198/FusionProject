@@ -11,5 +11,5 @@ public interface CourseRepository {
     public List<Course> findAll();
     public List<Course> findByYear(int year);
     public void save(Course Course);
-    public void insert(Course course);
+    public void remove(Course Course);
 }

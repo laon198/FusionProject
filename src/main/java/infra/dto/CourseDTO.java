@@ -17,16 +17,60 @@ public class CourseDTO {
     private String department;
     private String courseName;
 
-    private CourseDTO(){}
+    public static class Builder {
+        private long id=-1;
+        private String courseCode;
+        private String courseName;
+        private String department;
+        private int targetYear;
+        private int credit;
 
-    public CourseDTO(long id, int targetYear, int credit,
-                     String courseCode, String department, String courseName){
-        this.id = id;
-        this.targetYear = targetYear;
-        this.credit = credit;
-        this.courseCode = courseCode;
-        this.department = department;
-        this.courseName = courseName;
+        public Builder id(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder courseCode(String courseCode) {
+            this.courseCode = courseCode;
+            return this;
+        }
+
+        public Builder courseName(String courseName) {
+            this.courseName = courseName;
+            return this;
+        }
+
+        public Builder department(String department) {
+            this.department = department;
+            return this;
+        }
+
+        public Builder targetYear(int targetYear) {
+            this.targetYear = targetYear;
+            return this;
+        }
+
+        public Builder credit(int credit) {
+            this.credit = credit;
+            return this;
+        }
+
+        public CourseDTO build() {
+            return new CourseDTO(this);
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    private CourseDTO(Builder builder) {
+        id = builder.id;
+        courseCode = builder.courseCode;
+        courseName = builder.courseName;
+        department = builder.department;
+        targetYear = builder.targetYear;
+        credit = builder.credit;
     }
 
 }

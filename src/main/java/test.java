@@ -1,20 +1,17 @@
 
-import domain.generic.LectureTime;
-import domain.model.*;
+import application.AdminAppService;
+import application.CourseAppService;
+import application.ProfessorAppService;
+import application.StudentAppService;
+import domain.model.Course;
 import domain.repository.*;
-import infra.database.repository.RDBLectureRepository;
+import infra.database.MyBatisConnectionFactory;
+import infra.database.repository.*;
+import infra.dto.AdminDTO;
 import infra.dto.CourseDTO;
-import infra.network.Deserializer;
-import infra.network.Serializer;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class test {
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException {
@@ -89,20 +86,31 @@ public class test {
 //        for(Lecture l : lectureRepo.findAll()){
 //            System.out.println("l = " + l);
 //        }
-//        AdminRepository adminRepo = new RDBAdminRepository();
-//        LectureRepository lectureRepo = new RDBLectureRepository(MyBatisConnectionFactory.getSqlSessionFactory());
-//        CourseRepository courseRepo = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
-//        RegisteringRepository regRepo = new RDBRegisteringRepository();
-//        RegPeriodRepository periodRepo = new RDBRegPeriodRepository();
-//        StudentRepository stdRepo = new RDBStudentRepository();
-//        ProfessorRepository profRepo = new RDBProfessorRepository();
-//        AccountRepository accRepo = new RDBAccountRepository();
-//        MemberAppService m = new MemberAppService(
-//                stdRepo,
-//                accRepo,
-//                profRepo,
-//                adminRepo
-//        );
+
+        AdminRepository adminRepo = new RDBAdminRepository();
+        LectureRepository lectureRepo = new RDBLectureRepository();
+        CourseRepository courseRepo = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
+        RegisteringRepository regRepo = new RDBRegisteringRepository();
+        RegPeriodRepository periodRepo = new RDBRegPeriodRepository();
+        StudentRepository stdRepo = new RDBStudentRepository();
+        ProfessorRepository profRepo = new RDBProfessorRepository();
+        AccountRepository accRepo = new RDBAccountRepository();
+        StudentAppService stdService = new StudentAppService(
+                stdRepo, accRepo
+        );
+
+        ProfessorAppService profService = new ProfessorAppService(
+                profRepo, accRepo
+        );
+
+        AdminAppService adminService = new AdminAppService(
+                adminRepo, accRepo
+        );
+
+        CourseAppService courseService = new CourseAppService(
+                courseRepo
+        );
+
 //        StudentRetrieveAppService s = new StudentRetrieveAppService(stdRepo);
 //        ProfessorRetrieveAppService p = new ProfessorRetrieveAppService(profRepo);
 //        RegisterAppService r = new RegisterAppService(lectureRepo, stdRepo, courseRepo, regRepo, periodRepo);
@@ -110,13 +118,14 @@ public class test {
         //회원 Create
         //create Admin
 //        AdminDTO adminDTO = AdminDTO.builder()
-//                .name("leehana")
+//                .name("leehana4")
 //                .birthDate("001020")
 //                .department("SE")
 //                .adminCode("F1234")
 //                .build();
-//        m.createAdmin(adminDTO);
+//        adminService.create(adminDTO);
         //end of admin create
+
 
         //create professor
 //        ProfessorDTO profDTO = ProfessorDTO.builder()
@@ -127,17 +136,18 @@ public class test {
 //                .telePhone("9000")
 //                .build();
 //
-//        m.createProfessor(profDTO);
+//        profService.create(profDTO);
 //
 //        ProfessorDTO profDTO2 = ProfessorDTO.builder()
+//                .id(85)
 //                .name("kimsunmyeong")
 //                .birthDate("601010")
-//                .department("SE")
+//                .department("AE")
 //                .professorCode("P2000")
 //                .telePhone("7000")
 //                .build();
 //
-//        m.createProfessor(profDTO2);
+//        profService.create(profDTO2);
         //end of professor create
 
         //create student
@@ -149,7 +159,24 @@ public class test {
 //                .year(2)
 //                .build();
 //
-//        m.createStudent(stdDTO);
+//        stdService.create(stdDTO);
+
+//        StudentDTO l = StudentDTO.builder().id(77).build();
+//        stdService.delete(l);
+        
+//        StudentDTO std = stdService.retrieveByID(78);
+//        System.out.println("std = " + std);
+        
+//        List<StudentDTO> list = stdService.retrieveAll();
+//        for(StudentDTO std : list){
+//            System.out.println("std = " + std);
+//        }
+
+//        List<StudentDTO> list = stdService.retrieveByOption(new StudentYearOption("3"));
+//        for(StudentDTO std : list){
+//            System.out.println("std = " + std);
+//        }
+
 //
 //        StudentDTO stdDTO2 = StudentDTO.builder()
 //                .name("parkhyeongjun")
@@ -159,7 +186,7 @@ public class test {
 //                .year(2)
 //                .build();
 //
-//        m.createStudent(stdDTO2);
+//        stdService.create(stdDTO2);
 //
 //        StudentDTO stdDTO3 = StudentDTO.builder()
 //                .name("leeeunbean")
@@ -169,17 +196,17 @@ public class test {
 //                .year(2)
 //                .build();
 //
-//        m.createStudent(stdDTO3);
+//        stdService.create(stdDTO3);
 //
 //        StudentDTO stdDTO4 = StudentDTO.builder()
 //                .name("yeongeomji")
 //                .birthDate("990429")
 //                .department("SE")
 //                .studentCode("20183333")
-//                .year(2)
+//                .year(3)
 //                .build();
 //
-//        m.createStudent(stdDTO4);
+//        stdService.create(stdDTO4);
         //end of student create
 
         //retrieve all professor
@@ -216,13 +243,15 @@ public class test {
 
         //교과목 생성 테스트
         //2학년 2학기 과목
-//        Course c1 = Course.builder()
+//        CourseDTO c1 = CourseDTO.builder()
+//                .id(10)
 //                .courseName("C++프로그래밍")
 //                .courseCode("CS0077")
 //                .department("SE")
 //                .targetYear(2)
 //                .credit(3)
 //                .build();
+//        courseService.create(c1);
 //
 //        Course c2 = Course.builder()
 //                .courseName("운영체제")
@@ -291,9 +320,8 @@ public class test {
         //end of course create
         
         //find all course
-//        for(Course course : courseRepo.findAll()){
-//            System.out.println("course = " + course);
-//        }
+//        CourseDTO c = courseService.RetrieveByID(2);
+//        System.out.println("c = " + c);
         //end of find all course
 
         //update course name

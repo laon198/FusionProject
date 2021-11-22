@@ -344,14 +344,11 @@ public class RDBStudentRepository implements StudentRepository {
         return stdList;
     }
 
-    private void remove(Student student){
+    @Override
+    public void remove(Student student){
         StudentDTO stdDTO = ModelMapper.studentToDTO(student);
         StringBuilder memberQuery = new StringBuilder(
                 "DELETE FROM members_tb " +
-                        "WHERE member_PK=? "
-        );
-        StringBuilder stdQuery = new StringBuilder(
-                "DELETE FROM students_tb " +
                         "WHERE member_PK=? "
         );
 
@@ -362,14 +359,10 @@ public class RDBStudentRepository implements StudentRepository {
             conn = ds.getConnection();
             conn.setAutoCommit(true);
             memberStmt = conn.prepareStatement(new String(memberQuery));
-            stdStmt = conn.prepareStatement(new String(stdQuery));
 
             memberStmt.setLong(1, stdDTO.getId());
 
-            stdStmt.setLong(1, stdDTO.getId());
-
             memberStmt.execute();
-            stdStmt.execute();
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
 //            try{
@@ -380,7 +373,6 @@ public class RDBStudentRepository implements StudentRepository {
         }finally {
             try{
                 memberStmt.close();
-                stdStmt.close();
                 conn.close();
             }catch (SQLException e){
                 e.printStackTrace();

@@ -1,8 +1,6 @@
 package domain.model;
 
 
-//import com.sun.media.jfxmedia.events.BufferListener;
-
 public class Account {
     private long pk;
     private String id;
@@ -20,6 +18,11 @@ public class Account {
             return this;
         }
 
+        public Builder memberID(long value){
+            memberID = value;
+            return this;
+        }
+
         public Builder id(String value){
             id = value;
             return this;
@@ -27,11 +30,6 @@ public class Account {
 
         public Builder password(String value){
             password = value;
-            return this;
-        }
-
-        public Builder memberID(long value){
-            memberID = value;
             return this;
         }
 

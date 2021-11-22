@@ -10,4 +10,5 @@ public interface StudentRepository {
     public Student findByID(long id);
     public List<Student> findAll();
     public long save(Student student);
+    public void remove(Student student);
 }
