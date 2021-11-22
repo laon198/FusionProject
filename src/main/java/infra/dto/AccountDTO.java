@@ -6,6 +6,7 @@ public class AccountDTO {
     private String password;
     private long memberID;
 
+
     public static class Builder{
         private long pk;
         private String id;
@@ -17,6 +18,11 @@ public class AccountDTO {
             return this;
         }
 
+        public Builder memberID(long value){
+            memberID = value;
+            return this;
+        }
+
         public Builder id(String value){
             id = value;
             return this;
@@ -24,11 +30,6 @@ public class AccountDTO {
 
         public Builder password(String value){
             password = value;
-            return this;
-        }
-
-        public Builder memberID(long value){
-            memberID = value;
             return this;
         }
 

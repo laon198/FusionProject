@@ -8,7 +8,7 @@ public class ProfessorDTO extends MemberDTO {
     private Set<LectureTimeDTO> timeTable;
 
     public static class Builder{
-        private Long id=-1L;
+        private long id=-1L;
         private String name;
         private String department;
         private String birthDate;
@@ -76,4 +76,18 @@ public class ProfessorDTO extends MemberDTO {
         return telePhone;
     }
 
+    //TODO : 테스트용
+
+    @Override
+    public String toString() {
+        return "ProfessorDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", department='" + department + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                ", professorCode='" + professorCode + '\'' +
+                ", telePhone='" + telePhone + '\'' +
+                ", timeTable=" + timeTable +
+                '}';
+    }
 }

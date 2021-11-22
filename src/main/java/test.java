@@ -1,57 +1,118 @@
 
-import domain.generic.LectureTime;
-import domain.model.Lecture;
-import domain.model.LecturePlanner;
-import domain.repository.LectureRepository;
-import infra.database.repository.RDBLectureRepository;
+import application.AdminAppService;
+import application.CourseAppService;
+import application.ProfessorAppService;
+import application.StudentAppService;
+import domain.model.Course;
+import domain.repository.*;
+import infra.database.MyBatisConnectionFactory;
+import infra.database.repository.*;
+import infra.dto.AdminDTO;
 
-import java.util.HashSet;
-import java.util.Set;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 public class test {
-    public static void main(String[] args) {
-        LectureRepository lectureRepo = new RDBLectureRepository();
-        Set<LectureTime> times = new HashSet<>();
-        LecturePlanner planner = new LecturePlanner();
-        planner.writeItem("goal","씨발");
-        times.add(
-                LectureTime.builder()
-                        .id(101)
-                        .lectureDay("MON")
-                        .startTime(2)
-                        .endTime(3)
-                        .room("D330")
-                        .build()
-        );
 
-        Lecture l = Lecture.builder()
-                .id(21)
-                .courseID(2)
-                .lectureCode("SE1234")
-                .lecturerID("P1000")
-                .limit(3)
-                .lectureTimes(times)
-                .planner(planner)
-                .build();
-        lectureRepo.save(l);
+    public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException {
+//        LectureRepository lectureRepo = new RDBLectureRepository();
+//        Course c = Course.builder()
+//                    .id(1)
+//                    .courseCode("222")
+//                .courseName("hello")
+//                .department("4r")
+//                    .targetYear(2)
+//                .credit(3)
+//                .build();
+        
+//        Refs r = new Refs('d', 5, new Refs2(2, 3));
+//        Derived c = new Derived(1, 2, 3, "4ff", r);
+//        byte[] a = Serializer.objectToBytes(c);
+//        Derived c2 = (Derived) Deserializer.bytesToObject(a);
+//        System.out.println("c2 = " + c2);
+        
+//        for(Field f : Serializer.getAllFields(ArrayList.class)){
+//            System.out.println("f = " + f);
+//        }
+
+//        Class clazz = Class.forName("infra.dto.CourseDTO");
+//
+//        Constructor c = clazz.getDeclaredConstructor();
+//        c.setAccessible(true);
+//        CourseDTO courseDTO = (CourseDTO) c.newInstance();
+//        Field f = clazz.getDeclaredField("id");
+//        f.setAccessible(true);
+//        f.setLong(courseDTO, 3);
+//        System.out.println("courseDTO = " + courseDTO);
+//        String n = Object.class.getName();
+//        System.out.println("n = " + n);
+//        List<Integer> a = new ArrayList<>();
+//        a.add(2); a.add(3);
+//
+//        int[] a = new int[3];
+//        a[0] = 1;
+
+
+
+//        Field f = Course.class.getDeclaredField("courseCode");
+//        f.setAccessible(true);
+//        String a = new String((String)f.get(c));
+//        System.out.println("a = " + a);
+//        System.out.println(f.getType().getSimpleName());
+//        System.out.println("name = " + name);
+//        for(Field f : Serializer.getAllFields(Student.class)){
+//            System.out.println("f = " + f.getType().getSimpleName().equals("int"));
+//        }
+
+//        Set<LectureTime> times = new HashSet<>();
+//        times.add(
+//                LectureTime.builder()
+//                    .lectureDay("MON")
+//                    .startTime(1)
+//                    .endTime(2)
+//                    .room("D330")
+//                    .build()
+//        );
+//
+//        Lecture l = Lecture.builder()
+//                    .courseID(2)
+//                    .lectureCode("SE1234")
+//                    .lecturerID("P1000")
+//                    .limit(3)
+//                    .lectureTimes(times)
+//                    .build();
+//        lectureRepo.insert(l);
+
 //        System.out.println("l = " + l);
 //        for(Lecture l : lectureRepo.findAll()){
 //            System.out.println("l = " + l);
 //        }
-//        AdminRepository adminRepo = new RDBAdminRepository();
-//        LectureRepository lectureRepo = new RDBLectureRepository(MyBatisConnectionFactory.getSqlSessionFactory());
-//        CourseRepository courseRepo = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
-//        RegisteringRepository regRepo = new RDBRegisteringRepository();
-//        RegPeriodRepository periodRepo = new RDBRegPeriodRepository();
-//        StudentRepository stdRepo = new RDBStudentRepository();
-//        ProfessorRepository profRepo = new RDBProfessorRepository();
-//        AccountRepository accRepo = new RDBAccountRepository();
-//        MemberAppService m = new MemberAppService(
-//                stdRepo,
-//                accRepo,
-//                profRepo,
-//                adminRepo
-//        );
+
+        AdminRepository adminRepo = new RDBAdminRepository();
+        LectureRepository lectureRepo = new RDBLectureRepository();
+        CourseRepository courseRepo = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
+        RegisteringRepository regRepo = new RDBRegisteringRepository();
+        RegPeriodRepository periodRepo = new RDBRegPeriodRepository();
+        StudentRepository stdRepo = new RDBStudentRepository();
+        ProfessorRepository profRepo = new RDBProfessorRepository();
+        AccountRepository accRepo = new RDBAccountRepository();
+        StudentAppService stdService = new StudentAppService(
+                stdRepo, accRepo
+        );
+
+        ProfessorAppService profService = new ProfessorAppService(
+                profRepo, accRepo
+        );
+
+        AdminAppService adminService = new AdminAppService(
+                adminRepo, accRepo
+        );
+
+        CourseAppService courseService = new CourseAppService(
+                courseRepo
+        );
+
 //        StudentRetrieveAppService s = new StudentRetrieveAppService(stdRepo);
 //        ProfessorRetrieveAppService p = new ProfessorRetrieveAppService(profRepo);
 //        RegisterAppService r = new RegisterAppService(lectureRepo, stdRepo, courseRepo, regRepo, periodRepo);
@@ -59,13 +120,14 @@ public class test {
         //회원 Create
         //create Admin
 //        AdminDTO adminDTO = AdminDTO.builder()
-//                .name("leehana")
+//                .name("leehana4")
 //                .birthDate("001020")
 //                .department("SE")
 //                .adminCode("F1234")
 //                .build();
-//        m.createAdmin(adminDTO);
+//        adminService.create(adminDTO);
         //end of admin create
+
 
         //create professor
 //        ProfessorDTO profDTO = ProfessorDTO.builder()
@@ -76,17 +138,18 @@ public class test {
 //                .telePhone("9000")
 //                .build();
 //
-//        m.createProfessor(profDTO);
+//        profService.create(profDTO);
 //
 //        ProfessorDTO profDTO2 = ProfessorDTO.builder()
+//                .id(85)
 //                .name("kimsunmyeong")
 //                .birthDate("601010")
-//                .department("SE")
+//                .department("AE")
 //                .professorCode("P2000")
 //                .telePhone("7000")
 //                .build();
 //
-//        m.createProfessor(profDTO2);
+//        profService.create(profDTO2);
         //end of professor create
 
         //create student
@@ -98,7 +161,24 @@ public class test {
 //                .year(2)
 //                .build();
 //
-//        m.createStudent(stdDTO);
+//        stdService.create(stdDTO);
+
+//        StudentDTO l = StudentDTO.builder().id(77).build();
+//        stdService.delete(l);
+        
+//        StudentDTO std = stdService.retrieveByID(78);
+//        System.out.println("std = " + std);
+        
+//        List<StudentDTO> list = stdService.retrieveAll();
+//        for(StudentDTO std : list){
+//            System.out.println("std = " + std);
+//        }
+
+//        List<StudentDTO> list = stdService.retrieveByOption(new StudentYearOption("3"));
+//        for(StudentDTO std : list){
+//            System.out.println("std = " + std);
+//        }
+
 //
 //        StudentDTO stdDTO2 = StudentDTO.builder()
 //                .name("parkhyeongjun")
@@ -108,7 +188,7 @@ public class test {
 //                .year(2)
 //                .build();
 //
-//        m.createStudent(stdDTO2);
+//        stdService.create(stdDTO2);
 //
 //        StudentDTO stdDTO3 = StudentDTO.builder()
 //                .name("leeeunbean")
@@ -118,17 +198,17 @@ public class test {
 //                .year(2)
 //                .build();
 //
-//        m.createStudent(stdDTO3);
+//        stdService.create(stdDTO3);
 //
 //        StudentDTO stdDTO4 = StudentDTO.builder()
 //                .name("yeongeomji")
 //                .birthDate("990429")
 //                .department("SE")
 //                .studentCode("20183333")
-//                .year(2)
+//                .year(3)
 //                .build();
 //
-//        m.createStudent(stdDTO4);
+//        stdService.create(stdDTO4);
         //end of student create
 
         //retrieve all professor
@@ -165,13 +245,15 @@ public class test {
 
         //교과목 생성 테스트
         //2학년 2학기 과목
-//        Course c1 = Course.builder()
+//        CourseDTO c1 = CourseDTO.builder()
+//                .id(10)
 //                .courseName("C++프로그래밍")
 //                .courseCode("CS0077")
 //                .department("SE")
 //                .targetYear(2)
 //                .credit(3)
 //                .build();
+//        courseService.create(c1);
 //
 //        Course c2 = Course.builder()
 //                .courseName("운영체제")
@@ -240,9 +322,8 @@ public class test {
         //end of course create
 
         //find all course
-//        for(Course course : courseRepo.findAll()){
-//            System.out.println("course = " + course);
-//        }
+//        CourseDTO c = courseService.RetrieveByID(2);
+//        System.out.println("c = " + c);
         //end of find all course
 
         //update course name

@@ -45,8 +45,12 @@
     </update>
 
     <insert id="CreateCourse">
-        INSERT INTO COURSES_TB(course_PK, course_code, department, course_name, target_year, credit)
-        VALUES (#{id}, #{courseCode}, #{department}, #{courseName}, #{targetYear}, #{credit})
+        INSERT INTO COURSES_TB(course_code, department, course_name, target_year, credit)
+        VALUES (#{courseCode}, #{department}, #{courseName}, #{targetYear}, #{credit})
     </insert>
 
+    <delete id="RemoveCourse" parameterType="long" >
+        DELETE FROM COURSES_TB
+        WHERE course_PK = #{pk}
+    </delete>
 </mapper>

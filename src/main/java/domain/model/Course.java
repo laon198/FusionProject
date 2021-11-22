@@ -15,7 +15,7 @@ public class Course {
     }
 
     public static class Builder {
-        private long id;
+        private long id=-1;
         private String courseCode;
         private String courseName;
         private String department;
@@ -70,9 +70,7 @@ public class Course {
         credit = builder.credit;
     }
 
-    public Course() {
-    }
-
+    public Course(){}
     public Course(long id, String courseCode, String courseName, String department, int targetYear, int credit) {
         this.id = id;
         this.courseCode = courseCode;
@@ -87,9 +85,6 @@ public class Course {
     }
     public int getCredit() {
         return credit;
-    }
-    public void setCourseName(String value){
-        courseName = value;
     }
 
     @Override

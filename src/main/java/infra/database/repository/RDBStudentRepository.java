@@ -343,4 +343,40 @@ public class RDBStudentRepository implements StudentRepository {
 
         return stdList;
     }
+
+    @Override
+    public void remove(Student student){
+        StudentDTO stdDTO = ModelMapper.studentToDTO(student);
+        StringBuilder memberQuery = new StringBuilder(
+                "DELETE FROM members_tb " +
+                        "WHERE member_PK=? "
+        );
+
+        Connection conn = null;
+        PreparedStatement memberStmt = null;
+        PreparedStatement stdStmt = null;
+        try{
+            conn = ds.getConnection();
+            conn.setAutoCommit(true);
+            memberStmt = conn.prepareStatement(new String(memberQuery));
+
+            memberStmt.setLong(1, stdDTO.getId());
+
+            memberStmt.execute();
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+//            try{
+//                conn.rollback();
+//            }catch (SQLException e){
+//                e.printStackTrace();
+//            }
+        }finally {
+            try{
+                memberStmt.close();
+                conn.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+    }
 }

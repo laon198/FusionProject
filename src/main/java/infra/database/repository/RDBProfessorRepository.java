@@ -261,4 +261,37 @@ public class RDBProfessorRepository implements ProfessorRepository {
         return profList;
     }
 
+    @Override
+    public void remove(Professor prof){
+        ProfessorDTO profDTO = ModelMapper.professorToDTO(prof);
+        StringBuilder memberQuery = new StringBuilder(
+                "DELETE FROM members_tb " +
+                        "WHERE member_PK=? "
+        );
+
+        Connection conn = null;
+        PreparedStatement memberStmt = null;
+        try{
+            conn = ds.getConnection();
+            memberStmt = conn.prepareStatement(new String(memberQuery));
+
+            memberStmt.setLong(1, profDTO.getId());
+
+            memberStmt.execute();
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+//            try{
+//                conn.rollback();
+//            }catch (SQLException e){
+//                e.printStackTrace();
+//            }
+        }finally {
+            try{
+                conn.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+
+    }
 }

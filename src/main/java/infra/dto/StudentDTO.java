@@ -112,4 +112,23 @@ public class StudentDTO extends MemberDTO {
     public int getMaxCredit() {
         return maxCredit;
     }
+
+    //TODO : 테스트용
+
+    @Override
+    public String toString() {
+        return "StudentDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", department='" + department + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                ", maxCredit=" + maxCredit +
+                ", credit=" + credit +
+                ", year=" + year +
+                ", studentCode='" + studentCode + '\'' +
+                ", myRegisterings=" + myRegisterings +
+                ", timeTable=" + timeTable +
+                '}';
+    }
 }
+

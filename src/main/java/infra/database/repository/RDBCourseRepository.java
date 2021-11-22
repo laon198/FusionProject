@@ -36,25 +36,6 @@ public class RDBCourseRepository implements CourseRepository {
         return list;
     }
 
-//    public List<Course> findAll() {
-//        SqlSession session = null;
-//        List<Course> list = null;
-//        try {
-//            session = sqlSessionFactory.openSession();
-//            session.selectList("mapper.CourseMapper.ReadAll");
-//            session.commit();
-//        }
-//        catch (Exception e){
-//            e.printStackTrace();
-//            session.rollback();
-//        }finally {
-//            session.close();
-//        }
-//        return list;
-//    }
-
-
-
     @Override
     public List<Course> findByOption(CourseOption... options) {
         SqlSession session = null;
@@ -119,6 +100,14 @@ public class RDBCourseRepository implements CourseRepository {
 
     @Override
     public void save(Course course) {
+        if(course.getId()==-1){
+            insert(course);
+        }else{
+            update(course);
+        }
+    }
+
+    private void update(Course course){
         SqlSession session = null;
         try {
             session = sqlSessionFactory.openSession();
@@ -133,12 +122,28 @@ public class RDBCourseRepository implements CourseRepository {
         }
     }
 
-    @Override
-    public void insert(Course course) {
+    private void insert(Course course) {
         SqlSession session = null;
         try {
             session = sqlSessionFactory.openSession();
             session.insert("mapper.CourseMapper.CreateCourse", course);
+            session.commit();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            session.rollback();
+        }finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public void remove(Course course) {
+        SqlSession session = null;
+
+        try{
+            session = sqlSessionFactory.openSession();
+            session.delete("mapper.CourseMapper.RemoveCourse", course.getId());
             session.commit();
         }
         catch (Exception e){

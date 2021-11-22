@@ -19,7 +19,7 @@ public class RDBAdminRepository implements AdminRepository {
         StringBuilder query = new StringBuilder(
                 "SELECT * FROM admins_tb AS a " +
                         "JOIN members_tb AS m " +
-                        "ON a.admins_PK = m.member_PK "+
+                        "ON a.member_PK = m.member_PK "+
                         "WHERE m.member_PK = ? "
         );
         Connection conn = null;
@@ -40,7 +40,7 @@ public class RDBAdminRepository implements AdminRepository {
         StringBuilder query = new StringBuilder(
                 "SELECT * FROM admins_tb AS a " +
                         "JOIN members_tb AS m " +
-                        "ON a.admins_PK = m.member_PK "
+                        "ON a.member_PK = m.member_PK "
         );
         Connection conn = null;
         try{
@@ -124,7 +124,7 @@ public class RDBAdminRepository implements AdminRepository {
         );
         StringBuilder stdQuery = new StringBuilder(
                 "UPDATE admins_tb " +
-                        "SET admin_code=?, " +
+                        "SET admin_code=? " +
                         "WHERE member_PK=? "
         );
 
@@ -182,5 +182,31 @@ public class RDBAdminRepository implements AdminRepository {
         }
 
         return list;
+    }
+
+    public void remove(Admin admin){
+        AdminDTO adminDTO = ModelMapper.adminToDTO(admin);
+        StringBuilder memberQuery = new StringBuilder(
+                "DELETE FROM members_tb " +
+                        "WHERE member_PK=? "
+        );
+
+        Connection conn = null;
+        try{
+            conn = ds.getConnection();
+            PreparedStatement memberStmt = conn.prepareStatement(new String(memberQuery));
+
+            memberStmt.setLong(1, adminDTO.getId());
+
+            memberStmt.execute();
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+//            try{
+//                conn.rollback();
+//            }catch (SQLException e){
+//                e.printStackTrace();
+//            }
+        }
+
     }
 }
