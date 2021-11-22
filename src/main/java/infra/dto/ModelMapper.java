@@ -287,6 +287,7 @@ public class ModelMapper {
         Set<LectureTimeDTO> dtoList = new HashSet<>();
 
         for (LectureTime time : timeTable) {
+            long id = getLongField(time,"id");
             String room = getStringField(time, "room");
             LectureTime.DayOfWeek lectureDay = getLectureDay(time, "lectureDay");
             LectureTime.LecturePeriod startTime = getLecturePeriod(time, "startTime");
@@ -294,6 +295,7 @@ public class ModelMapper {
 
             dtoList.add(
                     LectureTimeDTO.builder()
+                            .id(id)
                             .room(room)
                             .lectureDay(lectureDay)
                             .startTime(startTime)

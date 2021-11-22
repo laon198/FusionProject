@@ -22,12 +22,14 @@ public class LectureTime {
                 '}';
     }
 
+    private  long id;
     private DayOfWeek lectureDay;
     private LecturePeriod startTime;
     private LecturePeriod endTime;
     private String room;
 
     public static class Builder{
+        private long id;
         private DayOfWeek lectureDay;
         private LecturePeriod startTime;
         private LecturePeriod endTime;
@@ -53,6 +55,11 @@ public class LectureTime {
                 default:
                     throw new IllegalArgumentException("잘못된 요일입니다");
             }
+            return this;
+        }
+
+        public Builder id(long value){
+            id = value;
             return this;
         }
 
@@ -137,13 +144,15 @@ public class LectureTime {
     }
 
     private LectureTime(Builder builder){
+        id = builder.id;
         lectureDay = builder.lectureDay;
         startTime = builder.startTime;
         endTime = builder.endTime;
         room = builder.room;
     }
 
-    public LectureTime(DayOfWeek dayOfWeek, LecturePeriod startTime, LecturePeriod endTime, String room){
+    public LectureTime(long id, DayOfWeek dayOfWeek, LecturePeriod startTime, LecturePeriod endTime, String room){
+        this.id = id;
         isValidTime(startTime, endTime);
         lectureDay = dayOfWeek;
         this.startTime = startTime;
@@ -169,6 +178,7 @@ public class LectureTime {
 
     public LectureTime setRoom(String room) {
         return new LectureTime(
+                this.id,
                 this.lectureDay,
                 this.startTime,
                 this.endTime,

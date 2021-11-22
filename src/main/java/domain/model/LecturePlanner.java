@@ -14,7 +14,6 @@ public class LecturePlanner {
     {
         categories.add("goal");
     }
-
     public LecturePlanner(){
         items = new HashMap<>();
 

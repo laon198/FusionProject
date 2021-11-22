@@ -6,10 +6,11 @@ import domain.model.LecturePlanner;
 import domain.model.Registering;
 import domain.repository.LectureRepository;
 import infra.database.MyBatisConnectionFactory;
+import infra.database.mapper.LectureMapper;
+import infra.database.option.lecture.LectureOption;
 import infra.dto.LectureDTO;
 import infra.dto.LectureTimeDTO;
 import infra.dto.ModelMapper;
-import infra.database.mapper.LectureMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
@@ -18,7 +19,36 @@ import java.util.*;
 public class RDBLectureRepository implements LectureRepository {
     private SqlSessionFactory sqlSessionFactory = MyBatisConnectionFactory.getSqlSessionFactory();
 
-    public RDBLectureRepository() {}
+    public RDBLectureRepository() {
+    }
+
+
+    public List<Lecture> findByOption(LectureOption ...lectureOption) {
+        List<Lecture> list = new ArrayList<>();
+        SqlSession session = sqlSessionFactory.openSession();
+        LectureMapper mapper = session.getMapper(LectureMapper.class);
+        try {
+            mapper.findByOption(lectureOption);
+            session.commit();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.rollback();
+        } finally {
+            session.close();
+        }
+
+        return list;
+    }
+
+
+
+
+
+
+
+
+
 
     @Override
     public Lecture findByID(long id) {
@@ -56,8 +86,30 @@ public class RDBLectureRepository implements LectureRepository {
     public void save(Lecture lecture) {
         SqlSession session = sqlSessionFactory.openSession();
         LectureMapper mapper = session.getMapper(LectureMapper.class);
+        LectureDTO lectureDTO = ModelMapper.lectureToDTO(lecture);
+        Set<LectureTimeDTO> lectureTimes = lectureDTO.getLectureTimes();
+
         try {
-            mapper.updateLecture();
+            Map<String, String> items = new HashMap<>(lectureDTO.getPlanner().getItems());
+            items.put("id", Long.toString(lectureDTO.getId()));
+            mapper.updateLecturePlanner(items);
+            mapper.updateLecture(lectureDTO);
+
+            for (LectureTimeDTO lectureTimeDTO : lectureTimes) {
+                if (lectureTimeDTO.getId() == -1) {
+                    mapper.insertLectureTime(lectureDTO.getId(), lectureTimeDTO.getLectureDay(),
+                            lectureTimeDTO.getRoom(), lectureTimeDTO.getStartTime(),
+                            lectureTimeDTO.getEndTime());
+                } else {
+                    mapper.updateLectureTime(
+                            lectureTimeDTO.getId(),
+                            lectureTimeDTO.getLectureDay(),
+                            lectureTimeDTO.getRoom(), lectureTimeDTO.getStartTime(),
+                            lectureTimeDTO.getEndTime()
+                    );
+                }
+            }
+
             session.commit();
 
         } catch (Exception e) {
@@ -68,20 +120,20 @@ public class RDBLectureRepository implements LectureRepository {
         }
     }
 
+
     public void insert(Lecture lecture) {
         SqlSession session = sqlSessionFactory.openSession();
         LectureMapper mapper = session.getMapper(LectureMapper.class);
         LectureDTO lectureDTO = ModelMapper.lectureToDTO(lecture);
         Set<LectureTimeDTO> lectureTimes = lectureDTO.getLectureTimes();
         try {
-            Map<String, String> items = new HashMap<>(lectureDTO.getPlanner().getItems());
-            items.put("id","");
-            mapper.insertLecturePlanner(items);
-            lectureDTO.setPlannerID(Integer.parseInt(items.get("id")));
-
             mapper.insert(lectureDTO);
+            Map<String, String> items = new HashMap<>(lectureDTO.getPlanner().getItems());
+            items.put("id", "");
+            items.put("lecturePK", Long.toString(lectureDTO.getId()));
+            mapper.insertLecturePlanner(items);
 
-            for(LectureTimeDTO lectureTimeDTO : lectureTimes){
+            for (LectureTimeDTO lectureTimeDTO : lectureTimes) {
                 mapper.insertLectureTime(
                         lectureDTO.getId(), lectureTimeDTO.getLectureDay(),
                         lectureTimeDTO.getRoom(), lectureTimeDTO.getStartTime(),
@@ -100,8 +152,20 @@ public class RDBLectureRepository implements LectureRepository {
     }
 
     @Override
-    public void remove(long lectureID) {
-
+    public void remove(Lecture lecture) {
+        SqlSession session = sqlSessionFactory.openSession();
+        LectureMapper mapper = session.getMapper(LectureMapper.class);
+        LectureDTO lectureDTO = ModelMapper.lectureToDTO(lecture);
+        long lectureID = lectureDTO.getId();
+        try {
+            mapper.deleteLecture(lectureID);
+            session.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.rollback();
+        } finally {
+            session.close();
+        }
     }
 
     @Override
@@ -115,7 +179,7 @@ public class RDBLectureRepository implements LectureRepository {
 
             //각 개설교과목에 해당하는 강의시간 객채만들어서 할당
             for (Map map : lectureList) {
-                long id = (long)map.get("lecture_PK");
+                long id = (long) map.get("lecture_PK");
 
                 // registerings 에 registering 추가
                 Set<Registering> registerings = getRegSetFrom(
@@ -149,15 +213,15 @@ public class RDBLectureRepository implements LectureRepository {
         return list;
     }
 
-    private Set<Registering> getRegSetFrom(List<Map<String, Object>> regs){
+    private Set<Registering> getRegSetFrom(List<Map<String, Object>> regs) {
         Set<Registering> registerings = new HashSet<>();
         for (Map<String, Object> reg : regs) {
             registerings.add(
                     Registering.builder()
-                            .id((long)reg.get("registering_PK"))
+                            .id((long) reg.get("registering_PK"))
                             .studentCode(reg.get("student_code").toString())
                             .registeringTime(reg.get("register_date").toString())
-                            .lectureID((long)reg.get("lecture_PK"))
+                            .lectureID((long) reg.get("lecture_PK"))
                             .build()
             );
         }
@@ -165,7 +229,7 @@ public class RDBLectureRepository implements LectureRepository {
         return registerings;
     }
 
-    private Set<LectureTime> getLtimeFrom(List<Map<String, Object>> times){
+    private Set<LectureTime> getLtimeFrom(List<Map<String, Object>> times) {
         Set<LectureTime> lectureTimes = new HashSet<>();
         for (Map time : times) {
             lectureTimes.add(
@@ -181,13 +245,13 @@ public class RDBLectureRepository implements LectureRepository {
     }
 
     private Lecture mapToLecture(Map<String, Object> lectureMap, Set<LectureTime> times,
-                                    Set<Registering> regs, LecturePlanner planner){
+                                 Set<Registering> regs, LecturePlanner planner) {
         return Lecture.builder()
-                .id((long)lectureMap.get("lecture_PK"))
-                .courseID((long)lectureMap.get("course_PK"))
+                .id((long) lectureMap.get("lecture_PK"))
+                .courseID((long) lectureMap.get("course_PK"))
                 .lecturerID(lectureMap.get("lecture_code").toString())
                 .lectureCode(lectureMap.get("professor_code").toString())
-                .limit((int)lectureMap.get("capacity"))
+                .limit((int) lectureMap.get("capacity"))
                 .registerings(regs)
                 .lectureTimes(times)
                 .planner(planner)

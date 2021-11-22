@@ -8,12 +8,13 @@ import domain.repository.*;
 import infra.database.MyBatisConnectionFactory;
 import infra.database.repository.*;
 import infra.dto.AdminDTO;
-import infra.dto.CourseDTO;
+
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class test {
+
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException {
 //        LectureRepository lectureRepo = new RDBLectureRepository();
 //        Course c = Course.builder()
@@ -82,6 +83,7 @@ public class test {
 //                    .lectureTimes(times)
 //                    .build();
 //        lectureRepo.insert(l);
+
 //        System.out.println("l = " + l);
 //        for(Lecture l : lectureRepo.findAll()){
 //            System.out.println("l = " + l);
@@ -318,7 +320,7 @@ public class test {
 //        courseRepo.insert(c7);
 //        courseRepo.insert(c8);
         //end of course create
-        
+
         //find all course
 //        CourseDTO c = courseService.RetrieveByID(2);
 //        System.out.println("c = " + c);

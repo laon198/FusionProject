@@ -19,6 +19,7 @@ public class LectureDTO {
     private String lecturerID;
     private int limit;
     private int plannerID;
+
     private Set<LectureTimeDTO> lectureTimes;
     private Set<RegisteringDTO> myRegisterings;
     private LecturePlannerDTO planner;
