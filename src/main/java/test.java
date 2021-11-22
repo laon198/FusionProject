@@ -1,33 +1,39 @@
 
 import domain.generic.LectureTime;
-import domain.model.*;
-import domain.repository.*;
+import domain.model.Lecture;
+import domain.model.LecturePlanner;
+import domain.repository.LectureRepository;
 import infra.database.repository.RDBLectureRepository;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class test {
-    public static void main(String[] args){
+    public static void main(String[] args) {
         LectureRepository lectureRepo = new RDBLectureRepository();
-//        Set<LectureTime> times = new HashSet<>();
-//        times.add(
-//                LectureTime.builder()
-//                    .lectureDay("MON")
-//                    .startTime(1)
-//                    .endTime(2)
-//                    .room("D330")
-//                    .build()
-//        );
-//
-//        Lecture l = Lecture.builder()
-//                    .courseID(2)
-//                    .lectureCode("SE1234")
-//                    .lecturerID("P1000")
-//                    .limit(3)
-//                    .lectureTimes(times)
-//                    .build();
-//        lectureRepo.insert(l);
+        Set<LectureTime> times = new HashSet<>();
+        LecturePlanner planner = new LecturePlanner();
+        planner.writeItem("goal","씨발");
+        times.add(
+                LectureTime.builder()
+                        .id(101)
+                        .lectureDay("MON")
+                        .startTime(2)
+                        .endTime(3)
+                        .room("D330")
+                        .build()
+        );
+
+        Lecture l = Lecture.builder()
+                .id(21)
+                .courseID(2)
+                .lectureCode("SE1234")
+                .lecturerID("P1000")
+                .limit(3)
+                .lectureTimes(times)
+                .planner(planner)
+                .build();
+        lectureRepo.save(l);
 //        System.out.println("l = " + l);
 //        for(Lecture l : lectureRepo.findAll()){
 //            System.out.println("l = " + l);
@@ -232,7 +238,7 @@ public class test {
 //        courseRepo.insert(c7);
 //        courseRepo.insert(c8);
         //end of course create
-        
+
         //find all course
 //        for(Course course : courseRepo.findAll()){
 //            System.out.println("course = " + course);

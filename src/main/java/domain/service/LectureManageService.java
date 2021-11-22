@@ -56,8 +56,8 @@ public class LectureManageService {
 
     //TODO : 굳이 여기서 할필요가 있나? 디비에서 처리가능한거 아닌가?
     //TODO : cascade하는 로직은 디비에서?
-    public void removeLecture(long lectureID){
-        lectureRepo.remove(lectureID);
+    public void removeLecture(Lecture lecture){
+        lectureRepo.remove(lecture);
     }
 
     //TODO : 교수와 학생의 강의시간 의존 문제

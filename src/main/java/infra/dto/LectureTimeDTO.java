@@ -9,16 +9,23 @@ import lombok.ToString;
 @Setter
 @ToString
 public class LectureTimeDTO {
+    private long id;
     private String lectureDay;
     private int startTime;
     private int endTime;
     private String room;
 
     public static class Builder{
+        private long id;
         private String lectureDay;
         private int startTime;
         private int endTime;
         private String room;
+
+        public Builder id(long value){
+            id = value;
+            return this;
+        }
 
         public Builder room(String value){
             room = value;
@@ -123,6 +130,7 @@ public class LectureTimeDTO {
     }
 
     private LectureTimeDTO(Builder builder){
+        id = builder.id;
         lectureDay = builder.lectureDay;
         startTime = builder.startTime;
         endTime = builder.endTime;

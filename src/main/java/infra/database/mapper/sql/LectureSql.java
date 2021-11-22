@@ -4,6 +4,8 @@ import org.apache.ibatis.jdbc.SQL;
 
 public class LectureSql {
 
+    // <SELECT>-------------------------------------------------------------------------------------------
+
     public String findAll() {
         SQL sql = new SQL() {{
             SELECT("*");
@@ -56,18 +58,16 @@ public class LectureSql {
         SQL sql = new SQL() {{
             SELECT("*");
             FROM("LECTURE_PLANNERS_TB");
-            INNER_JOIN("LECTURES_TB ON LECTURE_PLANNERS_TB.lecture_planner_PK = LECTURES_TB.lecture_PK");
+            INNER_JOIN("LECTURES_TB ON LECTURE_PLANNERS_TB.lecture_PK = LECTURES_TB.lecture_PK");
             WHERE("LECTURES_TB.lecture_PK = #{id}");
         }};
         return sql.toString();
     }
 
 
-    public String findByOption() {
-        SQL sql = new SQL() {{
-        }};
-        return sql.toString();
-    }
+    // </SELECT>-------------------------------------------------------------------------------------------
+
+    // <INSERT>-------------------------------------------------------------------------------------------
 
     public String insertLectureTime() {
         SQL sql = new SQL() {{
@@ -89,7 +89,6 @@ public class LectureSql {
             VALUES("capacity", "#{limit}");
             VALUES("applicant_CNT", "#{applicant}");
             VALUES("professor_code", "#{lecturerID}");
-            VALUES("lecture_planner_PK", "#{plannerID}");
         }};
         return sql.toString();
     }
@@ -98,22 +97,65 @@ public class LectureSql {
         SQL sql = new SQL() {{
             INSERT_INTO("lecture_planners_tb");
             VALUES("lecture_goal", "#{goal}");
+            VALUES("lecture_PK" , "#{lecturePK}");
         }};
         return sql.toString();
     }
 
-    public String update() {
+    // </INSERT>-------------------------------------------------------------------------------------------
+
+
+    // <UPDATE>-------------------------------------------------------------------------------------------
+
+    public String updateLectureTime() {
+        SQL sql = new SQL() {{
+            UPDATE("LECTURE_TIMES_TB");
+            SET("start_period = #{startTime}");
+            SET("end_period = #{endTime}");
+            SET("day_of_week = #{lectureDay}");
+            SET("lecture_room = #{room}");
+            WHERE("lecture_time_PK = #{id}");
+
+        }};
+        return sql.toString();
+    }
+
+    public String updatePlanner() {
+        SQL sql = new SQL() {{
+            UPDATE("lecture_planners_tb");
+            SET("lecture_goal = #{goal}");
+            WHERE("lecture_PK = #{id}");
+        }};
+        return sql.toString();
+    }
+
+
+    public String updateLecture() {
         SQL sql = new SQL() {{
             UPDATE("LECTURES_TB");
-            SET("course_SQ = 1");
-            SET("lecture_code =SE0004");
-            SET("capacity = 60");
-            SET("applicant_CNT = 1");
-            SET("lecture_planner_SQ = 1");
-            SET("professor_code = 11");
-            WHERE("lecture_SQ = 12");
+            SET("course_PK = #{courseID}");
+            SET("lecture_code = #{lectureCode}");
+            SET("capacity = #{limit}");
+            SET("applicant_CNT = #{applicant}");
+            SET("professor_code = #{lecturerID}");
+            WHERE("lecture_PK = #{id}");
+
         }};
         return sql.toString();
     }
 
+    // <UPDATE>-------------------------------------------------------------------------------------------
+
+    // <DELETE>-------------------------------------------------------------------------------------------
+
+    //TODO lecture 삭제시, 연결된 lecture, lecture_time, registering, lecture_planner 삭제
+    public String delete() {
+        SQL sql = new SQL() {{
+            DELETE_FROM("LECTURES_TB");
+            WHERE("lecture_PK = #{lectureID}");
+        }};
+        return sql.toString();
+    }
+
+    // </DELETE>-------------------------------------------------------------------------------------------
 }
