@@ -9,8 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Deserializer {
-    //TODO : 예외처리필요
-    public static Object bytesToObject(byte[] bytes) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public static Object bytesToObjectArr(byte[] bytes) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         String className = new String(
                 bytes, 4, 32
         ).trim();
@@ -42,6 +41,29 @@ public class Deserializer {
         return objectArr;
     }
 
+    //TODO : 예외처리필요
+    public static Object bytesToObject(byte[] bytes) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        String className = new String(
+                bytes, 4, 32
+        ).trim();
+
+
+        Class clazz = Class.forName(className);
+        Constructor constructor = clazz.getDeclaredConstructor(); //TODO : 각객체는 빈생성자 가져야함
+
+        int cursor = 36;
+        Object obj = constructor.newInstance();
+
+        for(Field f : getAllFields(clazz)){
+            int length = bytesToInt(bytes, cursor);
+            cursor += 4;
+            setData(obj, f, bytes, cursor, length);
+            cursor += length;
+        }
+
+        return obj;
+    }
+
     private static List<Field> getAllFields(Class clazz){
         if(clazz==Object.class){
             return Collections.emptyList();
@@ -63,6 +85,10 @@ public class Deserializer {
         String typeName = f.getType().getSimpleName();
         f.setAccessible(true);
 
+        if(typeName.contains("[")){
+            typeName = "array";
+        }
+
         //TODO : primitive 타입 추가필요
         switch(typeName){
             case "byte":
@@ -83,13 +109,18 @@ public class Deserializer {
             case "String":
                 f.set(obj, new String(bytes, cursor, length));
                 return;
-            default:
+            case "array":{
                 byte[] a = new byte[length];
                 System.arraycopy(bytes, cursor, a, 0, length);
-//                Object[] objs = bytesToObject(a);
-//                System.out.println("objs = " + objs);
+                f.set(obj, bytesToObjectArr(a));
+                return;
+            }
+            default:{
+                byte[] a = new byte[length];
+                System.arraycopy(bytes, cursor, a, 0, length);
                 f.set(obj, bytesToObject(a));
                 return;
+            }
         }
     }
 

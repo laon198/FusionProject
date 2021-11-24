@@ -70,24 +70,6 @@ public class test {
 //            System.out.println("e = " + e);
 //        }
 
-        try{
-            Base b = new Base( 1, 7);
-            Base b2 = new Base(2, 10);
-
-//            Base[] arr = new Base[]{ b, b2 };
-            List<Base> arr = new ArrayList<>();
-            arr.add(b);
-            arr.add(b2);
-
-            byte[] packets = Serializer.objectToBytes(arr);
-            Object[] arr2 = (Object[])Deserializer.bytesToObject(packets);
-            List<Base> arr3 = (List<Base>)arr2[0];
-            for(Object b1 : arr3){
-                System.out.println("(Base)b1 = " + b1);
-            }
-        }catch(Exception e){
-            System.out.println("e = " + e);
-        }
 
 //        for(java.lang.reflect.Field f : Base.class.getDeclaredFields()){
 //            System.out.println("f.getName() = " + f.getType());

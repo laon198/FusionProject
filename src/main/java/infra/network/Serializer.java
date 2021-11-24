@@ -21,10 +21,6 @@ public class Serializer {
         int allLength = 32;
         int count = 0;
 
-        if(className.contains("[L")){
-            objs = (Object[]) objs[0];
-        }
-
         try{
             for(Object obj : objs){
                 List<byte[]> tempByteList = new LinkedList<>();
@@ -32,6 +28,9 @@ public class Serializer {
 
                 for(Field f : getAllFields(obj.getClass())){
                     byte[] fieldBytes = getBytesFrom(obj, f);
+//                    System.out.println("name = " + f.getName());
+//                    System.out.println("simpleType = " + f.getType());
+//                    System.out.println("genericType = " + f.getGenericType());
                     byte[] fieldLength = intToBytes(fieldBytes.length);
 
                     tempByteList.add(fieldLength);
@@ -67,11 +66,11 @@ public class Serializer {
         return result;
     }
 
-    public static byte[] objectToBytes(Object... objs) throws IllegalAccessException {
+    public static byte[] objectToBytes(Object obj) throws IllegalAccessException {
         List<byte[]> byteList = new LinkedList<>();
 
         byte[] classNameBytes = new byte[32];
-        String className = objs[0].getClass().getName().replace(";","");
+        String className = obj.getClass().getName().replace(";","");
         System.arraycopy(
                 className.getBytes(StandardCharsets.UTF_8), 0,
                 classNameBytes, 0, className.getBytes(StandardCharsets.UTF_8).length
@@ -79,45 +78,24 @@ public class Serializer {
         byteList.add(classNameBytes);
 
         int allLength = 32;
-        int count = 0;
-
-        if(className.contains("[L")){
-            objs = (Object[]) objs[0];
-        }
 
         try{
-            for(Object obj : objs){
-                List<byte[]> tempByteList = new LinkedList<>();
-                int objLength = 0;
+            for(Field f : getAllFields(obj.getClass())){
+                byte[] fieldBytes = getBytesFrom(obj, f);
+                byte[] fieldLength = intToBytes(fieldBytes.length);
 
-                for(Field f : getAllFields(obj.getClass())){
-                    byte[] fieldBytes = getBytesFrom(obj, f);
-                    byte[] fieldLength = intToBytes(fieldBytes.length);
-
-                    tempByteList.add(fieldLength);
-                    tempByteList.add(fieldBytes);
-                    objLength+=fieldBytes.length+4;
-                }
-//            tempByteList.add(0, intToBytes(objLength+4));
-
-                byte[] objBytes = new byte[objLength];
-                int cursor = 0;
-                for(byte[] b : tempByteList){
-                    System.arraycopy(b, 0, objBytes, cursor, b.length);
-                    cursor+=b.length;
-                }
-
-                count++;
-                allLength+=objLength;
-                byteList.add(objBytes);
+                byteList.add(fieldLength);
+                byteList.add(fieldBytes);
+                allLength+=fieldBytes.length+4;
             }
+
         }catch(NullPointerException e){
         }
 
+        allLength += 4;
         byteList.add(0, intToBytes(allLength));
-        byteList.add(2, intToBytes(count));
 
-        byte[] result = new byte[allLength+8];
+        byte[] result = new byte[allLength];
         int cursor = 0;
         for(byte[] b : byteList){
             System.arraycopy(b, 0, result, cursor, b.length);
@@ -148,6 +126,10 @@ public class Serializer {
         String typeName = f.getType().getSimpleName();
         f.setAccessible(true);
 
+        if(typeName.contains("[")){
+            typeName = "array";
+        }
+
         //TODO : primitive 타입 추가필요
         switch(typeName){
             case "byte":
@@ -158,13 +140,17 @@ public class Serializer {
                 return shortToBytes(f.getShort(obj));
             case "int":
                 return intToBytes(f.getInt(obj));
-            case "int[]":
-                return objectToBytes((int[])f.get(obj));
             case "long":
                 return longToBytes(f.getLong(obj));
             case "String":
                 try{
                     return new String((String)f.get(obj)).getBytes(StandardCharsets.UTF_8);
+                }catch(NullPointerException e){
+                    return new byte[0];
+                }
+            case "array":
+                try{
+                    return objectArrToBytes((Object[])f.get(obj));
                 }catch(NullPointerException e){
                     return new byte[0];
                 }
