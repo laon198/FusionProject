@@ -58,9 +58,9 @@ public class test {
 //
 //        try{
 //            //서버
-//            byte[] packets = Serializer.objectToBytes((Object[])courses);
+//            byte[] packets = Serializer.objectArrToBytes(courses);
 //            //클라이언트
-//            Object[] c2 =  Deserializer.bytesToObject(packets);
+//            Course[] c2 =  (Course[]) Deserializer.bytesToObjectArr(packets);
 //
 //            for(Object c : c2){
 //                System.out.println("c = " + (Course)c);
@@ -69,6 +69,8 @@ public class test {
 //            System.out.println("e.getStackTrace() = " + e.getStackTrace());
 //            System.out.println("e = " + e);
 //        }
+
+
 
 
 //        for(java.lang.reflect.Field f : Base.class.getDeclaredFields()){
@@ -180,6 +182,26 @@ public class test {
 //                .build();
 //        adminService.create(adminDTO);
         //end of admin create
+
+        List<Professor> profList = profRepo.findAll();
+//        List<ProfessorDTO> dtoList = new ArrayList<>();
+        ProfessorDTO[] dtos = new ProfessorDTO[profList.size()];
+        int cnt = 0;
+        for(Professor p : profList){
+            dtos[cnt++] = ModelMapper.professorToDTO(p);
+        }
+
+        
+        try{
+            byte[] packets = Serializer.objectArrToBytes(dtos);
+            ProfessorDTO[] p = (ProfessorDTO[]) Deserializer.bytesToObjectArr(packets);
+
+            for(ProfessorDTO p2 : p){
+                System.out.println("p2 = " + p2);
+            }
+        }catch (Exception e){
+            System.out.println("e.getMessage() = " + e.getMessage());
+        }
 
 
         //create professor

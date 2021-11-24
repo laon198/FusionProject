@@ -129,6 +129,7 @@ public class LectureTimeDTO {
         return new Builder();
     }
 
+    public LectureTimeDTO(){}
     private LectureTimeDTO(Builder builder){
         id = builder.id;
         lectureDay = builder.lectureDay;

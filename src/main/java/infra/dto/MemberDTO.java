@@ -1,12 +1,16 @@
 package infra.dto;
 
+import domain.model.Member;
+
 import java.time.LocalDate;
 
 public class MemberDTO {
-    protected Long id;
+    protected long id;
     protected String name;
     protected String department;
     protected String birthDate;
+
+    public MemberDTO(){}
 
     protected MemberDTO(Long id, String name, String dep, String birthDate){
         this.id = id;

@@ -5,7 +5,7 @@ import java.util.*;
 public class ProfessorDTO extends MemberDTO {
     private String professorCode;
     private String telePhone;
-    private Set<LectureTimeDTO> timeTable;
+    private LectureTimeDTO[] timeTable;
 
     public static class Builder{
         private long id=-1L;
@@ -14,7 +14,7 @@ public class ProfessorDTO extends MemberDTO {
         private String birthDate;
         private String professorCode;
         private String telePhone;
-        private Set<LectureTimeDTO> timeTable = new HashSet<>();
+        private LectureTimeDTO[] timeTable;
 
         public Builder id(long value){
             id = value;
@@ -47,7 +47,7 @@ public class ProfessorDTO extends MemberDTO {
         }
 
         public Builder timeTable(Set<LectureTimeDTO> value){
-            timeTable = new HashSet(Arrays.asList(value));
+            timeTable = value.toArray(new LectureTimeDTO[value.size()]);
             return this;
         }
 
@@ -60,6 +60,7 @@ public class ProfessorDTO extends MemberDTO {
         return new Builder();
     }
 
+    public ProfessorDTO(){}
     private ProfessorDTO(Builder builder){
         super(builder.id, builder.name,
                 builder.department, builder.birthDate);
@@ -78,6 +79,7 @@ public class ProfessorDTO extends MemberDTO {
 
     //TODO : 테스트용
 
+
     @Override
     public String toString() {
         return "ProfessorDTO{" +
@@ -87,7 +89,8 @@ public class ProfessorDTO extends MemberDTO {
                 ", birthDate='" + birthDate + '\'' +
                 ", professorCode='" + professorCode + '\'' +
                 ", telePhone='" + telePhone + '\'' +
-                ", timeTable=" + timeTable +
+                ", timeTable=" + Arrays.toString(timeTable) +
                 '}';
     }
 }
+
