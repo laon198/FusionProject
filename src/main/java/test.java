@@ -1,30 +1,98 @@
 
-import application.AdminAppService;
-import application.CourseAppService;
-import application.ProfessorAppService;
-import application.StudentAppService;
-import domain.model.Course;
+import application.*;
+import domain.generic.LectureTime;
+import domain.model.*;
 import domain.repository.*;
 import infra.database.MyBatisConnectionFactory;
+import infra.database.option.account.AccountIDOption;
+import infra.database.option.lecture.LectureCodeOption;
+import infra.database.option.lecture.LectureDepartmentOption;
+import infra.database.option.lecture.LectureOption;
+import infra.database.option.lecture.ProfessorCodeOption;
 import infra.database.repository.*;
-import infra.dto.AdminDTO;
+import infra.dto.*;
+import infra.network.Deserializer;
+import infra.network.Serializer;
 
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import static domain.generic.LectureTime.DayOfWeek.FRI;
+import static domain.generic.LectureTime.DayOfWeek.WED;
 
 public class test {
 
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException {
-//        LectureRepository lectureRepo = new RDBLectureRepository();
-//        Course c = Course.builder()
+        LectureRepository lectureRepo = new RDBLectureRepository();
+//        Course[] courses = new Course[3];
+//        courses[0] = Course.builder()
 //                    .id(1)
-//                    .courseCode("222")
-//                .courseName("hello")
-//                .department("4r")
-//                    .targetYear(2)
+//                    .courseCode("111")
+//                .courseName("hello1")
+//                .department("4r1")
+//                    .targetYear(21)
+//                .credit(31)
+//                .build();
+//        courses[1] = Course.builder()
+//                .id(2)
+//                .courseCode("2222")
+//                .courseName("hello2")
+//                .department("4r2")
+//                .targetYear(22)
+//                .credit(33)
+//                .build();
+//        courses[2] = Course.builder()
+//                .id(3)
+//                .courseCode("3333")
+//                .courseName("3323")
+//                .department("333")
+//                .targetYear(2)
 //                .credit(3)
 //                .build();
+//
+//        try{
+//            //서버
+//            byte[] packets = Serializer.objectToBytes((Object[])courses);
+//            //클라이언트
+//            Object[] c2 =  Deserializer.bytesToObject(packets);
+//
+//            for(Object c : c2){
+//                System.out.println("c = " + (Course)c);
+//            }
+//        }catch(Exception e){
+//            System.out.println("e.getStackTrace() = " + e.getStackTrace());
+//            System.out.println("e = " + e);
+//        }
+
+        try{
+            Base b = new Base( 1, 7);
+            Base b2 = new Base(2, 10);
+
+//            Base[] arr = new Base[]{ b, b2 };
+            List<Base> arr = new ArrayList<>();
+            arr.add(b);
+            arr.add(b2);
+
+            byte[] packets = Serializer.objectToBytes(arr);
+            Object[] arr2 = (Object[])Deserializer.bytesToObject(packets);
+            List<Base> arr3 = (List<Base>)arr2[0];
+            for(Object b1 : arr3){
+                System.out.println("(Base)b1 = " + b1);
+            }
+        }catch(Exception e){
+            System.out.println("e = " + e);
+        }
+
+//        for(java.lang.reflect.Field f : Base.class.getDeclaredFields()){
+//            System.out.println("f.getName() = " + f.getType());
+//        }
+        
         
 //        Refs r = new Refs('d', 5, new Refs2(2, 3));
 //        Derived c = new Derived(1, 2, 3, "4ff", r);
@@ -64,33 +132,38 @@ public class test {
 //        for(Field f : Serializer.getAllFields(Student.class)){
 //            System.out.println("f = " + f.getType().getSimpleName().equals("int"));
 //        }
-
-//        Set<LectureTime> times = new HashSet<>();
+//
+//        Set<LectureTimeDTO> times = new HashSet<>();
 //        times.add(
-//                LectureTime.builder()
-//                    .lectureDay("MON")
-//                    .startTime(1)
-//                    .endTime(2)
-//                    .room("D330")
+//                LectureTimeDTO.builder()
+//                    .lectureDay(WED)
+//                    .startTime(LectureTime.LecturePeriod.FIRST)
+//                    .endTime(LectureTime.LecturePeriod.SECOND)
+//                    .room("D331")
 //                    .build()
 //        );
 //
-//        Lecture l = Lecture.builder()
-//                    .courseID(2)
-//                    .lectureCode("SE1234")
+//        LectureAppService a = new LectureAppService(lectureRepo);
+
+//        LectureDTO l = LectureDTO.builder()
+//                    .id(26)
+//                    .courseID(5)
+//                    .lectureCode("SE1244")
 //                    .lecturerID("P1000")
-//                    .limit(3)
+//                    .limit(10)
 //                    .lectureTimes(times)
 //                    .build();
+//        a.delete(l);
 //        lectureRepo.insert(l);
 
+//        Lecture l = lectureRepo.findByID(23);
 //        System.out.println("l = " + l);
 //        for(Lecture l : lectureRepo.findAll()){
 //            System.out.println("l = " + l);
 //        }
 
         AdminRepository adminRepo = new RDBAdminRepository();
-        LectureRepository lectureRepo = new RDBLectureRepository();
+//        LectureRepository lectureRepo = new RDBLectureRepository();
         CourseRepository courseRepo = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
         RegisteringRepository regRepo = new RDBRegisteringRepository();
         RegPeriodRepository periodRepo = new RDBRegPeriodRepository();
@@ -113,9 +186,7 @@ public class test {
                 courseRepo
         );
 
-//        StudentRetrieveAppService s = new StudentRetrieveAppService(stdRepo);
-//        ProfessorRetrieveAppService p = new ProfessorRetrieveAppService(profRepo);
-//        RegisterAppService r = new RegisterAppService(lectureRepo, stdRepo, courseRepo, regRepo, periodRepo);
+        RegisterAppService r = new RegisterAppService(lectureRepo, stdRepo, courseRepo, regRepo, periodRepo);
 
         //회원 Create
         //create Admin
@@ -333,9 +404,19 @@ public class test {
 //        courseRepo.save(updatingCourse);
         //end of update course name
 
+//        RegisteringPeriodDTO rPeriod = RegisteringPeriodDTO.builder()
+//                .period(
+//                        PeriodDTO.builder()
+//                                .beginTime(LocalDateTime.of(2021,11,10,00,00))
+//                                .endTime(LocalDateTime.of(2021,12,10,00,00))
+//                                .build())
+//                .allowedYear(2)
+//                .build();
+//
+//        r.addRegisteringPeriod(rPeriod);
 
         //수강신청 기간설정
-//        Student currentStd = stdRepo.findByID(61);
+//        Student currentStd = stdRepo.findByID(78);
 //        //TODO : 아이디값 어떻게?
 //        for(Lecture lecture : lectureRepo.findAll()){
 //            Course curCourse = courseRepo.findByID(lecture.getCourseID());
@@ -350,16 +431,6 @@ public class test {
 //        }
 //        System.out.println();
 //
-//        RegisteringPeriodDTO rPeriod = RegisteringPeriodDTO.builder()
-//                .period(
-//                        PeriodDTO.builder()
-//                                .beginTime(LocalDateTime.of(2021,11,10,00,00))
-//                                .endTime(LocalDateTime.of(2021,12,10,00,00))
-//                                .build())
-//                .allowedYear(2)
-//                .build();
-//
-//        r.addRegisteringPeriod(rPeriod);
 //
 //        for(Lecture lecture : lectureRepo.findAll()){
 //            Course curCourse = courseRepo.findByID(lecture.getCourseID());
@@ -375,6 +446,7 @@ public class test {
 
         //수강신청 기간설정 끝
 
+
         //수강신청
         //TODO: 아이디값
 //        r.register(26, 61);
@@ -382,6 +454,34 @@ public class test {
 //        r.cancel(1, 26, 61);
 
         //수강신청 끝
+
+//        try{
+//            r.cancel(11, 25 ,"20180303");
+//            r.register(23, "20180303");
+//            r.cancel(15, 23,  "20180303");
+//            r.register(25, "20182222");
+//        }catch(IllegalArgumentException | IllegalStateException e){
+//            System.out.println(e.getMessage());
+//        }
+
+//        try{
+//            AccountAppService accService = new AccountAppService(accRepo);
+//            AccountDTO accDTO = AccountDTO.builder().id("20180303").password("1234").build();
+//            accService.changePassword(accDTO);
+//        }catch(IllegalArgumentException e){
+//            System.out.println(e.getMessage());
+//        }
+
+//        List<Lecture> le = lectureRepo.findByOption(
+//                new LectureOption[]{
+//                        new ProfessorCodeOption("P1000"),
+//                        new LectureCodeOption("SE1235")
+//                }
+//        );
+//        for(Lecture la : le){
+//            System.out.println("la = " + la);
+//        }
+//        lectureRepo.findByID(23);
 
 //        r.register(15, 2);
 //        Student std = stdRepo.findByID(2);
@@ -393,6 +493,5 @@ public class test {
 //        }
 //
 //        r.cancel(6, 15, 2);
-
     }
 }

@@ -146,13 +146,12 @@ public class Lecture {
         return true;
     }
 
-
     public void cancel(Registering registering) {
         myRegisterings.remove(registering);
     }
 
     public void writePlanner(String itemName, String content, String writerID) {
-        if (writerID != lecturerID) {
+        if (writerID.equals(lecturerID)) {
             throw new IllegalStateException("담당 교과목이 아닙니다.");
         }
 
@@ -165,18 +164,6 @@ public class Lecture {
 
     public boolean isEqualCourse(Lecture lecture) {
         return lecture.courseID == courseID;
-    }
-
-    public boolean hasLectureTime(LectureTime lTime) {
-        return lectureTimes.contains(lTime);
-    }
-
-    public void removeTime(LectureTime time) {
-        lectureTimes.remove(time);
-    }
-
-    public void addTime(LectureTime time) {
-        lectureTimes.add(time);
     }
 
     @Override

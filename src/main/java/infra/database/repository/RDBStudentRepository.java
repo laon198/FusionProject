@@ -286,6 +286,8 @@ public class RDBStudentRepository implements StudentRepository {
         List<Student> stdList = new ArrayList<>();
         long resID = 0;
         int year = 0;
+        int credit = 0;
+        int maxCredit = 0;
         String name;
         String birthDate;
         String department;
@@ -300,6 +302,8 @@ public class RDBStudentRepository implements StudentRepository {
             department = resSet.getString("department");
             birthDate = resSet.getString("birthDay");
             studentCode = resSet.getString("student_code");
+            credit = resSet.getInt("credit");
+            maxCredit = resSet.getInt("max_credit");
             timeTable = new HashSet<>();
             myRegisterings = new HashSet<>();
 
@@ -335,6 +339,8 @@ public class RDBStudentRepository implements StudentRepository {
                             .birthDate(birthDate)
                             .department(department)
                             .studentCode(studentCode)
+                            .credit(credit)
+                            .maxCredit(maxCredit)
                             .timeTable(timeTable)
                             .myRegisterings(myRegisterings)
                             .build()

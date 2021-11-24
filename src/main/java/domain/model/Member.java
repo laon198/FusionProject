@@ -2,7 +2,7 @@ package domain.model;
 
 import java.time.LocalDate;
 
-public abstract class Member{
+public abstract class Member implements Permission{
     protected long id;
     protected String name;
     protected String department;

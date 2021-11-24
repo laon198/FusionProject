@@ -11,7 +11,6 @@ public class Student extends Member{
     private String studentCode;
     private final Set<Registering> myRegisterings;
     private final Set<LectureTime> timeTable;
-
     public enum Year {
         FRESHMAN(1), SOPHOMORE(2), JUNIOR(3), SENIOR(4);
         private final int year;
@@ -178,6 +177,22 @@ public class Student extends Member{
     public void setName(String value){
         name = value;
     }
+
+    @Override
+    public boolean isAdminPermission() {
+        return false;
+    }
+
+    @Override
+    public boolean isProfessorPermission() {
+        return false;
+    }
+
+    @Override
+    public boolean isStudentPermission() {
+        return true;
+    }
+
 
     //TODO : 테스트용
     @Override

@@ -1,5 +1,7 @@
 package infra.database.mapper.sql;
 
+import domain.model.Lecture;
+import infra.database.option.lecture.LectureOption;
 import org.apache.ibatis.jdbc.SQL;
 
 public class LectureSql {
@@ -23,6 +25,19 @@ public class LectureSql {
             FROM("lECTURES_TB");
             WHERE("lecture_PK = #{id}");
         }};
+        return sql.toString();
+    }
+
+    public String findByOption(LectureOption... options){
+        SQL sql = new SQL(){{
+            SELECT("*");
+            FROM("LECTURES_TB");
+        }};
+
+        for(LectureOption option : options){
+            sql.WHERE(option.getQuery());
+        }
+
         return sql.toString();
     }
 

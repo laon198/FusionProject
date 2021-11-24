@@ -1,9 +1,8 @@
 package infra.network;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
+import domain.model.Course;
+
+import java.lang.reflect.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,56 +15,31 @@ public class Deserializer {
                 bytes, 4, 32
         ).trim();
 
-        //class의 전체 필드정보를 가져온다
-        //빈생성자를 통해 객체를 만든다
-        //class의 변수들을 순회하면서 byte에서 값을 변형시킨다(타입에맞게)
-        //생성된 객체에 값을 세팅한다.
-
-        //class의 전체 필드정보를 가져온다 / 해당클래스의 변수 개수를 가져온다
-        //해당클래스의 변수개수만큼 Object배열을생성한ㄷ.
-        //Object배열에 바이트배열에서 가져온 필드를 집어넣는다.
-        //object배열로 인스턴스를 생성한다.
+        int count = bytesToInt(bytes, 36);
 
         //TODO : prefix설정 필요
+
+        className = className.replace("[L","");
         Class clazz = Class.forName(className);
-        Constructor constructor = clazz.getDeclaredConstructors()[0]; //TODO : 각객체는 빈생성자 가져야함
+        Constructor constructor = clazz.getDeclaredConstructor(); //TODO : 각객체는 빈생성자 가져야함
 
-        Object obj;
-        if(constructor.getParameterCount()>0){
-            Object[] params = new Object[constructor.getParameterCount()];
-            int cursor = 0;
-            for(Class c : constructor.getParameterTypes()){
-                String typeName = c.getSimpleName();
-                switch (typeName){
-                    case "byte":
-                    case "char":
-                    case "short":
-                    case "int":
-                    case "long":
-                        params[cursor++]=0;
-                        break;
-                    case "boolean":
-                        params[cursor++]=false;
-                        break;
-                    default:
-                        params[cursor++]=new Object();
-                        break;
-                }
+        Object objectArr = Array.newInstance(clazz, count);
+
+        int cursor = 40;
+        for(int i=0; i<count; i++){
+            Object obj = constructor.newInstance();
+
+            for(Field f : getAllFields(clazz)){
+                int length = bytesToInt(bytes, cursor);
+                cursor += 4;
+                setData(obj, f, bytes, cursor, length);
+                cursor += length;
             }
-            obj = constructor.newInstance(params);
-        }else{
-            obj = constructor.newInstance();
+
+            Array.set(objectArr, i, obj);
         }
 
-        int cursor = 36;
-        for(Field f : getAllFields(clazz)){
-            int length = bytesToInt(bytes, cursor);
-            cursor += 4;
-            setData(obj, f, bytes, cursor, length);
-            cursor += length;
-        }
-
-        return obj;
+        return objectArr;
     }
 
     private static List<Field> getAllFields(Class clazz){
@@ -112,6 +86,8 @@ public class Deserializer {
             default:
                 byte[] a = new byte[length];
                 System.arraycopy(bytes, cursor, a, 0, length);
+//                Object[] objs = bytesToObject(a);
+//                System.out.println("objs = " + objs);
                 f.set(obj, bytesToObject(a));
                 return;
         }

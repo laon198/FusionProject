@@ -95,6 +95,20 @@ public class Professor extends Member{
         telePhone = value;
     }
 
+    @Override
+    public boolean isAdminPermission() {
+        return false;
+    }
+
+    @Override
+    public boolean isProfessorPermission() {
+        return true;
+    }
+
+    @Override
+    public boolean isStudentPermission() {
+        return false;
+    }
     //TODO : 테스트용
 
     @Override

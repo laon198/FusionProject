@@ -64,6 +64,8 @@ public class CourseDTO {
         return new Builder();
     }
 
+    public CourseDTO(){}
+
     private CourseDTO(Builder builder) {
         id = builder.id;
         courseCode = builder.courseCode;

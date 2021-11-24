@@ -5,6 +5,8 @@ import domain.generic.Period;
 import domain.model.*;
 import domain.repository.*;
 import domain.service.Registrar;
+import infra.database.option.student.StudentCodeOption;
+import infra.dto.RegisteringDTO;
 import infra.dto.RegisteringPeriodDTO;
 
 import java.util.HashSet;
@@ -31,38 +33,16 @@ public class RegisterAppService {
         this.periodRepo = periodRepo;
     }
 
-    public void register(long lectureID, long studentID){
-//        Lecture lecture = lectureRepo.findByID(lectureID);
-        Set<LectureTime> times = new HashSet<>();
-        times.add(LectureTime.builder().startTime(1).endTime(2).lectureDay("MON").build());
-        times.add(LectureTime.builder().startTime(3).endTime(4).lectureDay("FRI").build());
-        Lecture lecture = Lecture.builder()
-                            .id(lectureID)
-                            .limit(3)
-                            .courseID(21)
-                            .lecturerID("p1000")
-                            .lectureCode("SE222")
-                            .lectureTimes(times)
-                            .build();
-//        Set<LectureTime> times = new HashSet<>();
-//        times.add(LectureTime.builder().startTime(1).endTime(2).lectureDay("TUE").build());
-//        times.add(LectureTime.builder().startTime(4).endTime(5).lectureDay("FRI").build());
-//        Lecture lecture = Lecture.builder()
-//                .id(lectureID)
-//                .limit(30)
-//                .courseID(1)
-//                .lecturerID("p333")
-//                .lectureCode("SE555")
-//                .lectureTimes(times)
-//                .build();
+    public void register(RegisteringDTO regDTO) throws IllegalStateException, IllegalArgumentException{
+        Lecture lecture = lectureRepo.findByID(regDTO.getLectureID());
+        Student student = stdRepo.findByOption(new StudentCodeOption(regDTO.getStudentCode())).get(0);
+        Set<RegisteringPeriod> periodSet = new HashSet<>(periodRepo.findAll());
 
-        Student student = stdRepo.findByID(studentID);
-        Set<RegisteringPeriod> pSet = new HashSet<>(periodRepo.findAll());
-
-        Registrar registrar = new Registrar(lectureRepo, courseRepo, pSet);
+        Registrar registrar = new Registrar(lectureRepo, courseRepo, periodSet);
         Registering reg =  registrar.register(lecture, student);
 
         regRepo.save(reg);
+        stdRepo.save(student);
     }
 
     public boolean isValidPeriodAbout(Student std, Course course){
@@ -72,31 +52,21 @@ public class RegisterAppService {
         return registrar.isValidPeriodAbout(std, course);
     }
 
-    public void cancel(long regID, long lectureID, long studentID){
-//        Lecture lecture = lectureRepo.findByID(lectureID);
-        Set<LectureTime> times = new HashSet<>();
-        times.add(LectureTime.builder().startTime(1).endTime(2).lectureDay("TUE").build());
-        times.add(LectureTime.builder().startTime(4).endTime(5).lectureDay("FRI").build());
-        Lecture lecture = Lecture.builder()
-                .id(lectureID)
-                .limit(30)
-                .courseID(21)
-                .lecturerID("p333")
-                .lectureCode("SE555")
-                .lectureTimes(times)
-                .build();
+    public void cancel(RegisteringDTO regDTO) throws IllegalArgumentException{
+        Lecture lecture = lectureRepo.findByID(regDTO.getLectureID());
 
-        Student student = stdRepo.findByID(studentID);
-        Registering registering = regRepo.findByID(regID);
-        Set<RegisteringPeriod> pSet = new HashSet<>(periodRepo.findAll());
+        Student student = stdRepo.findByOption(
+                new StudentCodeOption(regDTO.getStudentCode())).get(0);
+        Registering registering = regRepo.findByID(regDTO.getId());
+        Set<RegisteringPeriod> periodSet = new HashSet<>(periodRepo.findAll());
 
-        Registrar registrar = new Registrar(lectureRepo, courseRepo, pSet);
-        Registering reg =  registrar.cancel(registering, student, lecture);
+        Registrar registrar = new Registrar(lectureRepo, courseRepo, periodSet);
+        registrar.cancel(registering, student, lecture);
 
-        regRepo.remove(reg);
+        regRepo.remove(registering);
+        stdRepo.save(student);
     }
 
-    //TODO : 겹치는 시간 처리? 좀더 잘처리
     public void addRegisteringPeriod(RegisteringPeriodDTO rPeriodDTO){
         RegisteringPeriod newPeriod = RegisteringPeriod.builder()
                                     .period(

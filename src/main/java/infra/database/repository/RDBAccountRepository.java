@@ -3,6 +3,7 @@ package infra.database.repository;
 import domain.model.Account;
 import domain.repository.AccountRepository;
 import infra.database.PooledDataSource;
+import infra.database.option.account.AccountOption;
 import infra.dto.AccountDTO;
 import infra.dto.ModelMapper;
 
@@ -31,6 +32,38 @@ public class RDBAccountRepository implements AccountRepository {
             sqlException.printStackTrace();
             throw new IllegalArgumentException("잘못된 id값입니다.");
         }
+    }
+
+    @Override
+    public List<Account> findByOption(AccountOption... options){
+        String and = " AND ";
+        String where = " WHERE ";
+        StringBuilder query = new StringBuilder(
+                "SELECT * FROM accounts_tb AS a "
+        );
+
+        for(int i=0; i<options.length; i++){
+            if(i==0){
+                query.append(where);
+            }
+
+            query.append(options[i].getQuery());
+
+            if(i!=options.length-1){
+                query.append(and);
+            }
+        }
+
+        Connection conn = null;
+        try{
+            conn = ds.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(new String(query));
+            ResultSet res = pstmt.executeQuery();
+            return getAccFrom(res);
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }
+        return null;
     }
 
     @Override

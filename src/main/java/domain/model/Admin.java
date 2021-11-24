@@ -2,6 +2,7 @@ package domain.model;
 
 public class Admin extends Member {
     private String adminCode;
+
     public static class Builder{
         private long id=-1L;
         private String name;
@@ -47,4 +48,20 @@ public class Admin extends Member {
         super(builder.id, builder.name, builder.department, builder.birthDate);
         adminCode=builder.adminCode;
     }
+
+    @Override
+    public boolean isAdminPermission() {
+        return true;
+    }
+
+    @Override
+    public boolean isProfessorPermission() {
+        return false;
+    }
+
+    @Override
+    public boolean isStudentPermission() {
+        return false;
+    }
+
 }

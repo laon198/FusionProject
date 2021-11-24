@@ -19,18 +19,41 @@ import java.util.*;
 public class RDBLectureRepository implements LectureRepository {
     private SqlSessionFactory sqlSessionFactory = MyBatisConnectionFactory.getSqlSessionFactory();
 
-    public RDBLectureRepository() {
-    }
+    public RDBLectureRepository() {}
 
-
-    public List<Lecture> findByOption(LectureOption ...lectureOption) {
+    public List<Lecture> findByOption(LectureOption ...lectureOptions) {
         List<Lecture> list = new ArrayList<>();
         SqlSession session = sqlSessionFactory.openSession();
         LectureMapper mapper = session.getMapper(LectureMapper.class);
         try {
-            mapper.findByOption(lectureOption);
-            session.commit();
+            List<Map<String, Object>> lectureList = mapper.findByOption(lectureOptions);
 
+            //각 개설교과목에 해당하는 강의시간 객채만들어서 할당
+            for (Map<String, Object> map : lectureList) {
+                long id = (long) map.get("lecture_PK");
+
+                // registerings 에 registering 추가
+                Set<Registering> registerings = getRegSetFrom(
+                        mapper.selectRegisterings((long) map.get("lecture_PK"))
+                );
+
+                //lectureTimes 에 lectureTime 추가
+                Set<LectureTime> lectureTimes = getLtimeFrom(
+                        mapper.selectLectureTimes((long) map.get("lecture_PK"))
+                );
+
+                Map<String, Object> plannerInfo = mapper.selectPlanner(id);
+                LecturePlanner planner = new LecturePlanner();
+                //TODO : 해당 카테고리가 비었을때 예외남 처리필요
+                planner.writeItem("goal", plannerInfo.get("lecture_goal").toString());
+
+                // Lecture 생성해서 리턴할 List에 추가
+                list.add(
+                        mapToLecture(map, lectureTimes, registerings, planner)
+                );
+            }
+
+            session.commit();
         } catch (Exception e) {
             e.printStackTrace();
             session.rollback();
@@ -41,15 +64,6 @@ public class RDBLectureRepository implements LectureRepository {
         return list;
     }
 
-
-
-
-
-
-
-
-
-
     @Override
     public Lecture findByID(long id) {
         Lecture lecture = null;
@@ -58,7 +72,6 @@ public class RDBLectureRepository implements LectureRepository {
         try {
 
             Set<Registering> registerings = getRegSetFrom(mapper.selectRegisterings(id));
-
             Set<LectureTime> lectureTimes = getLtimeFrom(mapper.selectLectureTimes(id));
 
             //TODO : 강의계획서 어떤거 들어갈지?

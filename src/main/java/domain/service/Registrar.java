@@ -19,7 +19,7 @@ public class Registrar {
         this.periodSet = periodSet;
     }
 
-    public Registering register(Lecture lecture, Student student){
+    public Registering register(Lecture lecture, Student student) throws  IllegalStateException, IllegalArgumentException{
         Course course = courseRepo.findByID(lecture.getCourseID());
 
         if(!isValidPeriodAbout(student, course)){
@@ -59,7 +59,7 @@ public class Registrar {
         return newReg;
     }
 
-    public Registering cancel(Registering registering, Student student, Lecture lecture){
+    public void cancel(Registering registering, Student student, Lecture lecture){
         if(!student.hasLecture(lecture.getID())){
             throw new IllegalArgumentException("수강하지 않는 강의 입니다.");
         }
@@ -67,8 +67,6 @@ public class Registrar {
 
         student.cancel(registering, lecture.getLectureTimes(), course.getCredit());
         lecture.cancel(registering);
-
-        return registering;
     }
 
     public boolean isValidPeriodAbout(Student std, Course course){

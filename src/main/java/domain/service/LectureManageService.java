@@ -9,86 +9,54 @@ import domain.repository.ProfessorRepository;
 import java.util.Set;
 
 public class LectureManageService {
-    private CourseRepository courseRepo;
-    private ProfessorRepository professorRepo;
     private LectureRepository lectureRepo;
 
-    public LectureManageService(CourseRepository courseRepo,
-                                    ProfessorRepository professorRepo,
-                                        LectureRepository lectureRepo){
-        this.courseRepo = courseRepo;
-        this.professorRepo = professorRepo;
+    public LectureManageService(LectureRepository lectureRepo){
         this.lectureRepo = lectureRepo;
     }
 
-//    public void addLecture(long lectureID, long courseID, long professorID,
-//                           int limit, Set<LectureTime> lectureTimes){
-//        //TODO : lectureID확인 로직 필요
-//        courseRepo.findByID(courseID); //TODO : 존재하지않을때 예외 로직필요
+    public Lecture create( long courseID, String lectureCode, String professorCode,
+            int limit, Set<LectureTime> lectureTimes){
+        //TODO : lectureID확인 로직 필요
 //        Professor p = professorRepo.findByID(professorID); //TODO : 존재하지않을때 예외 로직필요
-//
-//        //TODO : 더 좋은방법?
-//        //TODO : 강의를 다가져오기에는 부하가 너무 크지않나?
-//        for(Lecture existingLecture : lectureRepo.findAll()){
-//            for(LectureTime existingTime : existingLecture.getLectureTimes()){
-//                for(LectureTime newTime : lectureTimes){
-//                    if(existingTime.isSameRoom(newTime) &&
-//                        existingTime.isOverlappedTime(newTime)){
-//                        throw new IllegalArgumentException("이미 존재하는 시간입니다.");
-//                    }
-//                }
-//            }
-//        }
-//
-//        //TODO : 다른방식으로 생성?
-//        Lecture newLecture = new Lecture(
-//                lectureID,
-//                professorID,
-//                limit,
-//                courseID,
-//                lectureTimes
-//        );
-//
-//        p.addTimeTable(lectureTimes);
-//
-//        lectureRepo.save(newLecture);
-//    }
 
-    //TODO : 굳이 여기서 할필요가 있나? 디비에서 처리가능한거 아닌가?
-    //TODO : cascade하는 로직은 디비에서?
-    public void removeLecture(Lecture lecture){
-        lectureRepo.remove(lecture);
-    }
-
-    //TODO : 교수와 학생의 강의시간 의존 문제
-    public void updateAboutRoom(long lectureID,
-                                    LectureTime targetLectureTime, String room){
-        Lecture targetLecture = lectureRepo.findByID(lectureID);
-
-        if(!targetLecture.hasLectureTime(targetLectureTime)){
-            throw new IllegalArgumentException("시간과 강의실이 잘못되었습니다.");
+        //TODO : 더 좋은방법?
+        //TODO : 강의를 다가져오기에는 부하가 너무 크지않나?
+        if(isExistingTimes(lectureTimes)){
+            throw new IllegalArgumentException("유효하지않은 시간입니다.");
         }
 
-        LectureTime updatedTime = targetLectureTime.setRoom(room);
+        //TODO : 다른방식으로 생성?
+        return Lecture.builder()
+                .courseID(courseID)
+                .lectureCode(lectureCode)
+                .lecturerID(professorCode)
+                .limit(limit)
+                .lectureTimes(lectureTimes)
+                .build();
+    }
 
+
+    //TODO : 교수와 학생의 강의시간 의존 문제
+    public Lecture update(Lecture lecture){
+        if(isExistingTimes(lecture.getLectureTimes())){
+            throw new IllegalArgumentException("유효하지않은 시간입니다.");
+        }
+
+        return lecture;
+    }
+
+    private boolean isExistingTimes(Set<LectureTime> times){
         for(Lecture existingLecture : lectureRepo.findAll()){
             for(LectureTime existingTime : existingLecture.getLectureTimes()){
-                if(existingTime.isSameRoom(updatedTime) &&
-                        existingTime.isOverlappedTime(updatedTime)){
-                    throw new IllegalArgumentException("이미 해당시간에 강의실이 사용중 입니다.");
+                for(LectureTime newTime : times){
+                    if(existingTime.isSameRoom(newTime) &&
+                            existingTime.isOverlappedTime(newTime)){
+                        return true;
+                    }
                 }
             }
         }
-
-        targetLecture.removeTime(targetLectureTime);
-        targetLecture.addTime(updatedTime);
-
-        lectureRepo.save(targetLecture);
-    }
-
-    public void updateAboutMaxStd(long lectureID, int max){
-        Lecture targetLecture = lectureRepo.findByID(lectureID);
-        targetLecture.setLimit(max);
-        lectureRepo.save(targetLecture);
+        return false;
     }
 }
