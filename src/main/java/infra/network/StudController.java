@@ -19,7 +19,7 @@ public class StudController
         return sendPt;
     }
 
-    public void handler(Protocol recvPt) throws IOException
+    public void handler(Protocol recvPt) throws Exception
     {
         sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
@@ -44,7 +44,7 @@ public class StudController
     }
 
     // 생성 요청
-    private void createReq (Protocol recvPt) throws IOException
+    private void createReq (Protocol recvPt) throws Exception
     {
         switch (recvPt.getEntity())
         {
@@ -58,7 +58,7 @@ public class StudController
     }
 
     // 조회 요청
-    private void readReq (Protocol recvPt) throws IOException
+    private void readReq (Protocol recvPt) throws Exception
     {
         switch (recvPt.getEntity())
         {
@@ -87,7 +87,7 @@ public class StudController
     }
 
     // 변경 요청
-    private void updateReq (Protocol recvPt) throws IOException
+    private void updateReq (Protocol recvPt) throws Exception
     {
         switch (recvPt.getEntity())
         {
@@ -101,7 +101,7 @@ public class StudController
     }
 
     // 삭제 요청
-    private void deleteReq (Protocol recvPt) throws IOException
+    private void deleteReq (Protocol recvPt) throws Exception
     {
         switch (recvPt.getEntity())
         {
@@ -121,9 +121,9 @@ public class StudController
      - 학생이 수강신청할 개설교과목 선택(수강신청기간에 해당하는 교과목만 출력 및 선택 가능)
      - 수강신청 요청 메시지 전송
      */
-    private void createRegistration(Protocol recvPt) throws IOException
+    private void createRegistration(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getBody();
+        Object data = recvPt.getObject();
         // 수강신청 기능 수행
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
 
@@ -134,12 +134,12 @@ public class StudController
     /*
     < 개인정보 조회 >
      */
-    private void readAccount() throws IOException
+    private void readAccount() throws Exception
     {
         // 개인정보 조회 기능 수행
         Object sndData = null;
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-        sendPt.setBody(sndData);
+        sendPt.setObject(sndData);
 
         //sendPt.setCode(Protocol.T2_CODE_FAIL);
     }
@@ -147,13 +147,13 @@ public class StudController
     /*
     < 교과목 조회 (전체) >
      */
-    private void readCourse() throws IOException
+    private void readCourse() throws Exception
     {
         // 교과목 전체 조회 기능 수행
-        Object data = null;
+        Object[] sndData = null;
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-        sendPt.setBody(data);
-        
+        sendPt.setObjectArray(sndData);
+
         // 교과목 조회 실패 - 존재하는 교과목 없음
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
     }
@@ -161,12 +161,12 @@ public class StudController
     /*
     < 개설교과목 조회 (전학년) >
      */
-    private void readLecture() throws IOException
+    private void readLecture() throws Exception
     {
         // 개설교과목 전체 조회 기능 수행
-        Object data = null;
+        Object[] sndData = null;
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-        sendPt.setBody(data);
+        sendPt.setObjectArray(sndData);
         // 개설교과목 조회 실패 - 존재하는 개설교과목 없음
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
     }
@@ -176,7 +176,7 @@ public class StudController
     createRegistration 할 때 필요
     수강신청기간을 보내주는 것이 아니라 현재 날짜가 수강신청 가능한 날짜인지 yes(success)/no(fail)로 답변
      */
-    private void readRegisteringPeriod() throws IOException
+    private void readRegisteringPeriod() throws Exception
     {
         // 수강신청 기간 조회 기능 수행
 
@@ -186,21 +186,21 @@ public class StudController
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
     }
 
-     /*
-     < 강의계획서 조회 >
-     클라이언트
-     - 개설교과목 조회 -> 사용자가 개설교과목 선택 -> 개설교과목 pk 전송
-     */
-    private void readLecturePlanner(Protocol recvPt) throws IOException
+    /*
+    < 강의계획서 조회 >
+    클라이언트
+    - 개설교과목 조회 -> 사용자가 개설교과목 선택 -> 개설교과목 pk 전송
+    */
+    private void readLecturePlanner(Protocol recvPt) throws Exception
     {
-        // 받은 packet body에 담긴 data -> lecture_pk
-        long lecture_pk = (long) recvPt.getBody();
+        Object data = recvPt.getObject();
+
         // pk로 강의계획서 조회 기능 수행
 
         // if (강의계획서 등록O)
         Object sndData = null;
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-        sendPt.setBody(sndData);
+        sendPt.setObject(sndData);
         // else (강의계획서 등록X)
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
 
@@ -209,12 +209,12 @@ public class StudController
     /*
      < 학생 시간표 조회 >
      */
-    private void readStudTimetable(Protocol recvPt) throws IOException
+    private void readStudTimetable(Protocol recvPt) throws Exception
     {
         // 시간표 조회 기능 수행
-        Object sndData = null;
+        Object[] sndData = null;
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-        sendPt.setBody(sndData);
+        sendPt.setObjectArray(sndData);
         //시간표 조회 실패 - 수강신청 기록 없음
         //sendPt.setCode(Protocol.T2_CODE_FAIL);
     }
@@ -224,7 +224,7 @@ public class StudController
     /*
      < 개인정보(전화번호) 수정 및 비밀번호 수정 >
      */
-    private void updateAccount(Protocol recvPt) throws IOException
+    private void updateAccount(Protocol recvPt) throws Exception
     {
         /*
          받은 body 형식
@@ -234,7 +234,7 @@ public class StudController
             : 2 currentPassword newPassword
          */
 
-        Object data = recvPt.getBody();
+        Object data = recvPt.getObject();
 
         // if (전화번호 수정)
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
@@ -253,9 +253,9 @@ public class StudController
      클라이언트
       - 학생의 시간표 조회 -> 수강하는 교과목 목록 중 선택 -> 개설교과목 pk 전송
      */
-    private void deleteRegistration(Protocol recvPt) throws IOException {
+    private void deleteRegistration(Protocol recvPt) throws Exception {
 
-        Object data = recvPt.getBody();
+        Object data = recvPt.getObject();
         // 수강신청 취소 기능 수행
 
         try {

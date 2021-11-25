@@ -59,14 +59,14 @@ public class Client {
         int readSize;
 
         is.read(header, 0, Protocol.LEN_HEADER);
-        pt.setPacketHeader(header);
+        pt.setHeader(header);
 
         byte[] buf = new byte[pt.getBodyLength()];
         while (totalReceived < pt.getBodyLength()) {
             readSize = is.read(buf, totalReceived, pt.getBodyLength() - totalReceived);
             totalReceived += readSize;
         }
-        pt.setPacketBody(buf);
+        pt.setBody(buf);
         return pt;
     }
 }

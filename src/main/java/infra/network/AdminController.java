@@ -1,5 +1,4 @@
 package infra.network;
-
 import java.io.IOException;
 
 public class AdminController
@@ -19,7 +18,7 @@ public class AdminController
         return sendPt;
     }
 
-    public void handler(Protocol recvPt) throws IOException
+    public void handler(Protocol recvPt) throws Exception
     {
         sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
@@ -44,7 +43,7 @@ public class AdminController
     }
 
     // 생성 요청 받았을 때 수행할 일
-    private void createReq (Protocol recvPt) throws IOException
+    private void createReq (Protocol recvPt) throws Exception
     {
         switch (recvPt.getEntity())
         {
@@ -70,7 +69,7 @@ public class AdminController
     }
 
     // 조회 요청
-    private void readReq (Protocol recvPt) throws IOException
+    private void readReq (Protocol recvPt) throws Exception
     {
         switch (recvPt.getEntity())
         {
@@ -90,7 +89,7 @@ public class AdminController
     }
 
     // 변경 요청
-    private void updateReq (Protocol recvPt) throws IOException
+    private void updateReq (Protocol recvPt) throws Exception
     {
         switch (recvPt.getEntity())
         {
@@ -110,7 +109,7 @@ public class AdminController
     }
 
     // 삭제 요청
-    private void deleteReq (Protocol recvPt) throws IOException
+    private void deleteReq (Protocol recvPt) throws Exception
     {
         switch (recvPt.getEntity())
         {
@@ -129,9 +128,9 @@ public class AdminController
     /*
      < 계정 생성 >
      */
-    private void createAccount(Protocol recvPt) throws IOException
+    private void createAccount(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getBody();
+        Object data = recvPt.getObject();
         /*
          Account 생성하는 기능 수행
          */
@@ -143,9 +142,9 @@ public class AdminController
     /*
     < 교과목 생성 >
      */
-    private void createCourse(Protocol recvPt) throws IOException
+    private void createCourse(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getBody();
+        Object data = recvPt.getObject();
         /*
         교과목 생성하는 기능 수행
          */
@@ -162,9 +161,9 @@ public class AdminController
     - 관리자가 교과목 목록 조회 (readCourse)
     - 개설할 교과목 선택 & 개설교과목 정보 입력 -> course_pk 및 정보 전송
      */
-    private void createLecture(Protocol recvPt) throws IOException
+    private void createLecture(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getBody();
+        Object data = recvPt.getObject();
         /*
          lecture 생성하는 기능 수행
          */
@@ -176,9 +175,9 @@ public class AdminController
     /*
     < 수강신청기간 생성 >
      */
-    private void createRegisteringPeriod(Protocol recvPt) throws IOException
+    private void createRegisteringPeriod(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getBody();
+        Object data = recvPt.getObject();
         /*
          수강신청 기간 생성하는 기능 수행
          */
@@ -190,9 +189,9 @@ public class AdminController
     /*
     < 강의계획서 입력 기간 설정 >
      */
-    private void createPlannerPeriod(Protocol recvPt) throws IOException
+    private void createPlannerPeriod(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getBody();
+        Object data = recvPt.getObject();
         /*
          강의계획서 입력 기간 생성하는 기능 수행
          */
@@ -205,16 +204,16 @@ public class AdminController
     /*
     < 교수/학생 정보 조회 >
      */
-    private void readAccount(Protocol recvPt) throws IOException
+    private void readAccount(Protocol recvPt) throws Exception
     {
-        String code = (String) recvPt.getBody(); // 학생/교수 code
+        Object data = recvPt.getObject();
         /*
         개인 정보 조회하는 기능 수행
          */
         Object sndData = null;
 
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-        sendPt.setBody(sndData);
+        sendPt.setObject(sndData);
 
         //실패 - 존재하지 않는 code
         //sendPt.setCode(Protocol.T2_CODE_FAIL);
@@ -224,17 +223,17 @@ public class AdminController
     < 교과목 조회 (전체) >
     - createLecture 할 때 필요
      */
-    private void readCourse(Protocol recvPt) throws IOException
+    private void readCourse(Protocol recvPt) throws Exception
     {
-        long pk = (long) recvPt.getBody(); // course_pk
+        Object data = recvPt.getObject();
         /*
         교과목 목록 조회하는 기능 수행
          */
-        Object sndData = null;
+        Object[] sndData = null;
         if (sndData != null)
         {
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-            sendPt.setBody(sndData);
+            sendPt.setObjectArray(sndData);
         }
         else // 실패 - 교과목 없는 경우
             sendPt.setCode(Protocol.T2_CODE_FAIL);
@@ -243,19 +242,19 @@ public class AdminController
     /*
     < 개설 교과목 정보 조회 >
      */
-    private void readLecture(Protocol recvPt) throws IOException
+    private void readLecture(Protocol recvPt) throws Exception
     {
-        Object option = recvPt.getBody();  // 학년,학과,교수 option
+        Object data = recvPt.getObject();  // 학년,학과,교수 option
         /*
         개설 교과목 정보 조회하는 기능 수행
          */
         //if 옵션 잘못됨
         //sendPt.setCode(Protocol.T2_CODE_FAIL);
-        Object sndData = null;
+        Object[] sndData = null;
         if (sndData != null)
         {
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-            sendPt.setBody(sndData);
+            sendPt.setObjectArray(sndData);
         }
         else // 실패 - 개설 교과목 없는 경우
             sendPt.setCode(Protocol.T2_CODE_FAIL);
@@ -264,7 +263,7 @@ public class AdminController
     /*
      < 개인정보(전화번호) 수정 및 비밀번호 수정 >
      */
-    private void updateAccount(Protocol recvPt) throws IOException
+    private void updateAccount(Protocol recvPt) throws Exception
     {
         /*
          받은 body 형식
@@ -274,7 +273,7 @@ public class AdminController
             : 2 currentPassword newPassword
          */
 
-        Object data = recvPt.getBody();
+        Object data = recvPt.getObject();
 
         // if (전화번호 수정)
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
@@ -294,9 +293,9 @@ public class AdminController
       - 교과목 조회 (readCourse)
       - 관리자가 교과목 선택 -> 교과목 pk 및 변경할 내용을 담은 패킷 전송
      */
-    private void updateCourse(Protocol recvPt) throws IOException
+    private void updateCourse(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getBody();
+        Object data = recvPt.getObject();
         // 교과목 정보 수정하는 기능 수행
 
         // if (변경 성공)
@@ -312,9 +311,9 @@ public class AdminController
      - 개설교과목 조회 (readLecture)
      - 관리자가 개설교과목 선택 -> 개설교과목 pk 및 변경할 내용을 담은 패킷 전송
     */
-    private void updateLecture(Protocol recvPt) throws IOException
+    private void updateLecture(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getBody();
+        Object data = recvPt.getObject();
         // 개설교과목 정보 수정하는 기능 수행
 
         // if (변경 성공)
@@ -329,9 +328,9 @@ public class AdminController
     - 교과목 목록 조회 (readCourse)
     - 관리자가 교과목 선택 -> 교과목 pk 전송
     */
-    private void deleteCourse(Protocol recvPt) throws IOException
+    private void deleteCourse(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getBody();
+        Object data = recvPt.getObject();
         // 교과목 삭제하는 기능 수행
 
         // if (삭제 성공)
@@ -347,9 +346,9 @@ public class AdminController
      - 개설교과목 목록 조회 (readLecture)
      - 관리자가 개설교과목 선택 -> 교과목 pk 전송
     */
-    private void deleteLecture(Protocol recvPt) throws IOException
+    private void deleteLecture(Protocol recvPt) throws Exception
     {
-        Object o = recvPt.getBody();
+        Object data = recvPt.getObject();
         // 개설교과목 삭제하는 기능 수행
 
         // if (삭제 성공)

@@ -1,9 +1,11 @@
 package infra.network;
 
-import javax.naming.ldap.SortKey;
+import jdk.jshell.spi.ExecutionControlProvider;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 
 public class ServerThread extends Thread {
@@ -41,7 +43,10 @@ public class ServerThread extends Thread {
                 protocol = read();
                 handler(protocol);
             } catch (IOException e) {
-                System.err.println(e);
+                System.out.println("ServerTh.run() -> IOException");
+                this.interrupt();
+            } catch (Exception e) {
+                System.out.println("Exception");
             }
         }
     }
@@ -54,7 +59,7 @@ public class ServerThread extends Thread {
     private void send(Protocol pt) throws IOException {
         os.write(pt.getPacket());
         //os.flush();
-        System.out.println("클라이언트에게 전송");
+        System.out.println("Send to Client");
     }
 
     // 프토토콜 수신
@@ -65,79 +70,79 @@ public class ServerThread extends Thread {
         int readSize;
 
         is.read(header, 0, Protocol.LEN_HEADER);
-        pt.setPacketHeader(header);
+        pt.setHeader(header);
 
         byte[] buf = new byte[pt.getBodyLength()];
         while (totalReceived < pt.getBodyLength()) {
             readSize = is.read(buf, totalReceived, pt.getBodyLength() - totalReceived);
             totalReceived += readSize;
         }
-        pt.setPacketBody(buf);
+        pt.setBody(buf);
         return pt;
     }
 
-    private void handler(Protocol recvPt) throws IOException {
+    private void handler(Protocol recvPt) throws Exception {
         if (recvPt.getType() != 1) {
             Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
             sendPt.setCode(Protocol.T2_CODE_FAIL);
             send(sendPt);
         }
-
-        switch (recvPt.getCode()) {
-            case Protocol.T1_CODE_LOGIN:   // 로그인
-                loginReq(recvPt);
-                break;
-            case Protocol.T1_CODE_LOGOUT:  // 로그아웃
-                logoutReq();
-                break;
-            case Protocol.T1_CODE_EXIT:    // 종료
-                exitReq();
-                break;
-            default : // 사용자 종류별 전용 Controller
-                if (user == USER_STUDENT) {
-                    stud.handler(recvPt);
-                    send(stud.getSendPt());
-                } else if (user == USER_ADMIN) {
-                    admin.handler(recvPt);
-                    send(admin.getSendPt());
-                } else if (user == USER_PROFESSOR) {
-                    prof.handler(recvPt);
-                    send(prof.getSendPt());
-                } else {
-                    Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
-                    sendPt.setCode(Protocol.T2_CODE_FAIL);
-                    send(sendPt);
-                }
+        try {
+            switch (recvPt.getCode()) {
+                case Protocol.T1_CODE_LOGIN:   // 로그인
+                    loginReq(recvPt);
+                    break;
+                case Protocol.T1_CODE_LOGOUT:  // 로그아웃
+                    logoutReq();
+                    break;
+                case Protocol.T1_CODE_EXIT:    // 종료
+                    exitReq();
+                    break;
+                default : // 사용자 종류별 전용 Controller
+                    if (user == USER_STUDENT) {
+                        stud.handler(recvPt);
+                        send(stud.getSendPt());
+                    } else if (user == USER_ADMIN) {
+                        admin.handler(recvPt);
+                        send(admin.getSendPt());
+                    } else if (user == USER_PROFESSOR) {
+                        prof.handler(recvPt);
+                        send(prof.getSendPt());
+                    } else {
+                        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+                        sendPt.setCode(Protocol.T2_CODE_FAIL);
+                        send(sendPt);
+                    }
+            }
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
-    private void loginReq(Protocol recvPt) throws IOException
-    {
+    private void loginReq(Protocol recvPt) throws Exception{
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
-        Object o = recvPt.getBody();
-        try {
-            // < DB >
-            // 로그인 성공
+        Object data = recvPt.getObject();
 
-            sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-            send(sendPt);
+        // < DB >
+        // 로그인 성공
 
-            String str = "학생"; // test용
-            if (str.equals("학생")) {
-                user = USER_STUDENT;
-                stud = new StudController();
-            } else if (str.equals("관리자")) {
-                user = USER_ADMIN;
-                admin = new AdminController();
-            } else if (str.equals("교수")) {
-                user = USER_PROFESSOR;
-                prof = new ProfController();
-            }
-        } catch (IllegalArgumentException e) {
-            // 로그인 실패
-            sendPt.setCode(Protocol.T2_CODE_FAIL);
-            send(sendPt);
+        sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+        send(sendPt);
+
+        String str = "학생"; // test용
+        if (str.equals("학생")) {
+            user = USER_STUDENT;
+            stud = new StudController();
+        } else if (str.equals("관리자")) {
+            user = USER_ADMIN;
+            admin = new AdminController();
+        } else if (str.equals("교수")) {
+            user = USER_PROFESSOR;
+            prof = new ProfController();
         }
+//            // 로그인 실패
+//            sendPt.setCode(Protocol.T2_CODE_FAIL);
+//            send(sendPt);
 
     }
 

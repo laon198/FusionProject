@@ -27,11 +27,14 @@ public class Server {
 
     // 구동
     public void run() throws Exception {
+        System.out.println("Server running ...");
         while (serverSocket != null) {
             // 소켓연결
             Socket socket = serverSocket.accept();
+            System.out.println("Success socket connection");
             // 스레드 생성
             addThread(socket);
+            System.out.println("Create thread");
         }
     }
 
@@ -39,7 +42,9 @@ public class Server {
         if (clientCount < clients.length) {
             clients[clientCount] = new ServerThread(socket);
             clients[clientCount].start();
+            System.out.println("client Port : " + clients[clientCount].getClientID()    );
             clientCount++;
+            System.out.print("clientCount : " + clientCount);
         } else {
             System.out.println("Client refused: maximum " + clients.length + " reached.");
         }
