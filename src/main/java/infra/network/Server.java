@@ -42,7 +42,7 @@ public class Server {
         if (clientCount < clients.length) {
             clients[clientCount] = new ServerThread(socket);
             clients[clientCount].start();
-            System.out.println("client Port : " + clients[clientCount].getClientID()    );
+            System.out.println("client Port : " + clients[clientCount].getClientID());
             clientCount++;
             System.out.println("clientCount : " + clientCount);
         } else {
