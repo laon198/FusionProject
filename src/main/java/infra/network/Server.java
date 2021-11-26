@@ -1,12 +1,14 @@
 package infra.network;
 
 import controller.MainController;
+import org.apache.log4j.chainsaw.Main;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
+
     private static ServerSocket serverSocket;
     private static MainController clients[];
     private static int clientCount;
@@ -26,17 +28,16 @@ public class Server {
             System.out.println("Success socket connection");
             // 스레드 생성
             addThread(socket);
-            System.out.println("Create thread");
         }
     }
 
     public synchronized void addThread(Socket socket) throws Exception {
         if (clientCount < clients.length) {
-            clients[clientCount] = new MainController(socket);
+            MainController st = new MainController(socket);
+            clients[clientCount++] = st;
+            System.out.println("Create thread > clientCount = " + clientCount);
             clients[clientCount].start();
-            System.out.println("client Port : " + clients[clientCount].getClientID()    );
-            clientCount++;
-            System.out.print("clientCount : " + clientCount);
+//            System.out.println("client Port : " + clients[clientCount].getClientID()    );
         } else {
             System.out.println("Client refused: maximum " + clients.length + " reached.");
         }
@@ -59,6 +60,7 @@ public class Server {
                     clients[i - 1] = clients[i];
             clientCount--;
             System.out.print("clientCount : " + clientCount);
+           // st.close();
             st.interrupt();
         }
     }

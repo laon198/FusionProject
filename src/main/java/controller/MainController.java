@@ -29,7 +29,6 @@ public class MainController extends Thread {
     private Socket socket;
     private InputStream is;
     private OutputStream os;
-
     private Controller myController;
 
     // 스레드 생성자
@@ -61,7 +60,7 @@ public class MainController extends Thread {
         return clientID;
     }
 
-    public void handler(Protocol pt){
+    public void handler(Protocol pt) throws Exception {
         switch(userType){
             case USER_UNDEFINED:
                 Controller loginController = new LoginController(
@@ -81,13 +80,13 @@ public class MainController extends Thread {
     private void setMyController() {
         switch (userType){
             case STUD_TYPE:
-                myController = new StudentController();
+                myController = new StudentController(is, os);
                 break;
             case PROF_TYPE:
-                myController = new ProfessorController();
+                myController = new ProfessorController(is, os);
                 break;
             case ADMIN_TYPE:
-                myController = new AdminController();
+                myController = new AdminController(is, os);
                 break;
         }
     }

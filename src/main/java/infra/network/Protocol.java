@@ -31,7 +31,6 @@ public class Protocol {
     public static final int ENTITY_PROF_TIMETABLE = 8;
     public static final int ENTITY_LECTURE_STUD_LIST = 9;
     public static final int ENTITY_STUD_TIMETABLE = 10;
-
     // LENGTH
     public static final int LEN_HEADER = 7;
     public static final int LEN_TYPE = 1;
@@ -102,9 +101,10 @@ public class Protocol {
         packet[0] = type;          // 타입 담기
         packet[LEN_TYPE] = code;   // 코드 담기
         packet[LEN_TYPE + LEN_CODE] = entity; // 엔티티 담기
-        System.arraycopy(intToByte(bodyLength), 0, packet, LEN_TYPE + LEN_CODE + LEN_ENTITY, LEN_BODYLENGTH); // 데이터 길이 담기
-        if (bodyLength > 0)
-            System.arraycopy(body, LEN_BODYLENGTH, packet, LEN_HEADER, getBodyLength());  // 바디 담기
+        // 데이터 길이 담기
+        System.arraycopy(intToByte(bodyLength), 0, packet, LEN_TYPE + LEN_CODE + LEN_ENTITY, LEN_BODYLENGTH);
+        if (bodyLength > 0) // 바디 담기
+            System.arraycopy(body, LEN_BODYLENGTH, packet, LEN_HEADER, getBodyLength());
         return packet;
     }
 
