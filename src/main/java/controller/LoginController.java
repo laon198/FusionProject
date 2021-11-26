@@ -31,9 +31,6 @@ public class LoginController implements Controller {
                 case Protocol.T1_CODE_LOGOUT:  // 로그아웃
                     logoutReq();
                     break;
-                case Protocol.T1_CODE_EXIT:    // 종료
-                    exitReq();
-                    break;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -66,9 +63,6 @@ public class LoginController implements Controller {
         sendPt.send(os);
     }
 
-    private void exitReq() throws IOException {
-        socket.close();
-        Server.removeThread(clientID);
-    }
+
 }
 

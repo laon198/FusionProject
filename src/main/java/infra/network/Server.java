@@ -20,24 +20,29 @@ public class Server {
     }
 
     // 구동
-    public void run() throws Exception {
+    public void run() {
         System.out.println("Server running ...");
         while (serverSocket != null) {
-            // 소켓연결
-            Socket socket = serverSocket.accept();
-            System.out.println("Success socket connection");
-            // 스레드 생성
-            addThread(socket);
+            try {
+                // 소켓연결
+                Socket socket = serverSocket.accept();
+                System.out.println("Success socket connection");
+                // 스레드 생성
+                addThread(socket);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public synchronized void addThread(Socket socket) throws Exception {
+    public synchronized void addThread(Socket socket) throws IOException {
         if (clientCount < clients.length) {
-            MainController st = new MainController(socket);
-            clients[clientCount++] = st;
+            MainController thread = new MainController(socket);
+            clients[clientCount++] = thread;
             System.out.println("Create thread > clientCount = " + clientCount);
-            clients[clientCount].start();
-//            System.out.println("client Port : " + clients[clientCount].getClientID()    );
+            System.out.println("client Port : " + clients[clientCount].getClientID());
+            clients[clientCount++].start();
+            System.out.println("clientCount : " + clientCount);
         } else {
             System.out.println("Client refused: maximum " + clients.length + " reached.");
         }
@@ -54,14 +59,13 @@ public class Server {
     public synchronized static void removeThread(int ID) throws IOException {
         int pos = findClient(ID);
         if (pos >= 0) {
-            MainController st = clients[pos];
+            MainController thread = clients[pos];
             if (pos < clientCount - 1)
                 for (int i = pos + 1; i < clientCount; i++)
                     clients[i - 1] = clients[i];
             clientCount--;
             System.out.print("clientCount : " + clientCount);
-           // st.close();
-            st.interrupt();
+            thread.socketClose();
         }
     }
 
