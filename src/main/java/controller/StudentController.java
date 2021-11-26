@@ -1,29 +1,24 @@
-package infra.network;
+package controller;
 
-import java.io.IOException;
+import infra.network.Protocol;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-public class StudController
-{
-    private Protocol sendPt;
+public class StudentController implements Controller {
 
-    public StudController()
-    {}
+    private InputStream is;
+    private OutputStream os;
 
-    public void setSendPt(Protocol pt)
+    public StudentController(InputStream is, OutputStream os)
     {
-        sendPt = pt;
+        this.is = is;
+        this.os = os;
     }
 
-    public Protocol getSendPt()
+    @Override
+    public int handler(Protocol recvPt)throws Exception
     {
-        return sendPt;
-    }
-
-    public void handler(Protocol recvPt) throws Exception
-    {
-        sendPt = new Protocol(Protocol.TYPE_RESPONSE);
-
-        switch (recvPt.getEntity())
+        switch (recvPt.getCode())
         {
             case Protocol.T1_CODE_CREATE: // 등록
                 createReq(recvPt);
@@ -38,10 +33,10 @@ public class StudController
                 deleteReq(recvPt);
                 break;
             default:
-                sendPt.setCode(Protocol.T2_CODE_FAIL);
-                setSendPt(sendPt);
         }
+        return 0;
     }
+
 
     // 생성 요청
     private void createReq (Protocol recvPt) throws Exception
@@ -52,8 +47,6 @@ public class StudController
                 createRegistration(recvPt);
                 break;
             default:
-                sendPt.setCode(Protocol.T2_CODE_FAIL);
-                setSendPt(sendPt);
         }
     }
 
@@ -81,8 +74,6 @@ public class StudController
                 readStudTimetable(recvPt);
                 break;
             default:
-                sendPt.setCode(Protocol.T2_CODE_FAIL);
-                setSendPt(sendPt);
         }
     }
 
@@ -95,8 +86,6 @@ public class StudController
                 updateAccount(recvPt);
                 break;
             default:
-                sendPt.setCode(Protocol.T2_CODE_FAIL);
-                setSendPt(sendPt);
         }
     }
 
@@ -109,8 +98,6 @@ public class StudController
                 deleteRegistration(recvPt);
                 break;
             default:
-                sendPt.setCode(Protocol.T2_CODE_FAIL);
-                setSendPt(sendPt);
         }
     }
 
@@ -123,12 +110,16 @@ public class StudController
      */
     private void createRegistration(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getObject();
+//        Object data = recvPt.getObject();
         // 수강신청 기능 수행
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
 
         // 실패 - 수강신청인원초과 or 시간표중복
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
+
     }
 
     /*
@@ -138,10 +129,13 @@ public class StudController
     {
         // 개인정보 조회 기능 수행
         Object sndData = null;
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         sendPt.setObject(sndData);
 
         //sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
+
     }
 
     /*
@@ -151,11 +145,14 @@ public class StudController
     {
         // 교과목 전체 조회 기능 수행
         Object[] sndData = null;
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         sendPt.setObjectArray(sndData);
 
         // 교과목 조회 실패 - 존재하는 교과목 없음
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
+
     }
 
     /*
@@ -165,10 +162,13 @@ public class StudController
     {
         // 개설교과목 전체 조회 기능 수행
         Object[] sndData = null;
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         sendPt.setObjectArray(sndData);
         // 개설교과목 조회 실패 - 존재하는 개설교과목 없음
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
+
     }
 
     /*
@@ -179,11 +179,13 @@ public class StudController
     private void readRegisteringPeriod() throws Exception
     {
         // 수강신청 기간 조회 기능 수행
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         // if (수강신청기간임)
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         // else
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
     }
 
     /*
@@ -193,9 +195,10 @@ public class StudController
     */
     private void readLecturePlanner(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getObject();
+//        Object data = recvPt.getObject();
 
         // pk로 강의계획서 조회 기능 수행
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         // if (강의계획서 등록O)
         Object sndData = null;
@@ -203,6 +206,7 @@ public class StudController
         sendPt.setObject(sndData);
         // else (강의계획서 등록X)
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
 
     }
 
@@ -213,10 +217,12 @@ public class StudController
     {
         // 시간표 조회 기능 수행
         Object[] sndData = null;
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         sendPt.setObjectArray(sndData);
         //시간표 조회 실패 - 수강신청 기록 없음
         //sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
     }
 
 
@@ -234,7 +240,8 @@ public class StudController
             : 2 currentPassword newPassword
          */
 
-        Object data = recvPt.getObject();
+//        Object data = recvPt.getObject();
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         // if (전화번호 수정)
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
@@ -243,8 +250,12 @@ public class StudController
             // 현재 비밀번호 일치하는지 확인
             // 비밀번호 수정 기능 수행
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+            sendPt.send(os);
+
         } catch (IllegalArgumentException e) { // 현재 비밀번호 불일치
             sendPt.setCode(Protocol.T2_CODE_FAIL);
+            sendPt.send(os);
+
         }
     }
 
@@ -255,13 +266,17 @@ public class StudController
      */
     private void deleteRegistration(Protocol recvPt) throws Exception {
 
-        Object data = recvPt.getObject();
+//        Object data = recvPt.getObject();
         // 수강신청 취소 기능 수행
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         try {
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+            sendPt.send(os);
+
         } catch (IllegalArgumentException e) { // 삭제 실패 (존재하지 않는 pk) - 이런 경우가 있을진 모르겠음
             sendPt.setCode(Protocol.T2_CODE_FAIL);
+            sendPt.send(os);
         }
     }
 
