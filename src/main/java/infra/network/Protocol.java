@@ -159,4 +159,26 @@ public class Protocol {
     private int byteToInt(byte[] b) {
         return ByteBuffer.wrap(b).getInt();
     }
+
+    public void send(OutputStream os) throws IOException {
+        os.write(getPacket());
+        System.out.println("Send to Client");
+    }
+
+    public Protocol read(InputStream is) throws IOException {
+        byte[] header = new byte[Protocol.LEN_HEADER];
+        int totalReceived = 0;
+        int readSize;
+
+        is.read(header, 0, Protocol.LEN_HEADER);
+        setHeader(header);
+
+        byte[] buf = new byte[getBodyLength()];
+        while (totalReceived < getBodyLength()) {
+            readSize = is.read(buf, totalReceived, getBodyLength() - totalReceived);
+            totalReceived += readSize;
+        }
+        setBody(buf);
+        return this;
+    }
 }

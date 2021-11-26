@@ -2,6 +2,7 @@ package infra.database.repository;
 
 import domain.model.Course;
 import domain.repository.CourseRepository;
+import infra.database.MyBatisConnectionFactory;
 import infra.database.option.course.CourseOption;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -10,12 +11,9 @@ import java.util.List;
 
 public class RDBCourseRepository implements CourseRepository {
 
-    private SqlSessionFactory sqlSessionFactory = null;
+    private SqlSessionFactory sqlSessionFactory = MyBatisConnectionFactory.getSqlSessionFactory();
 
-    public RDBCourseRepository(SqlSessionFactory sqlSessionFactory)
-    {
-        this.sqlSessionFactory = sqlSessionFactory;
-    }
+    public RDBCourseRepository() {}
 
     @Override
     public List<Course> findAll(){
