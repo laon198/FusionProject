@@ -50,7 +50,8 @@ public interface LectureMapper {
 
     @InsertProvider(type = infra.database.mapper.sql.LectureSql.class, method = "insertLectureTime")
     void insertLectureTime(@Param("lectureID") long lectureID, @Param("lectureDay") String lectureDay,
-                           @Param("room") String room, @Param("startTime") int startTime, @Param("endTime") int endTime);
+                            @Param("room") String room, @Param("startTime") int startTime,
+                                @Param("endTime") int endTime, @Param("lectureName") String lectureName);
 
     @InsertProvider(type = infra.database.mapper.sql.LectureSql.class, method = "insertPlanner")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "lecture_planner_PK")
@@ -62,7 +63,8 @@ public interface LectureMapper {
 
     @UpdateProvider(type = infra.database.mapper.sql.LectureSql.class, method = "updateLectureTime")
     void updateLectureTime(@Param("id") long id, @Param("lectureDay") String lectureDay,
-                           @Param("room") String room, @Param("startTime") int startTime, @Param("endTime") int endTime);
+                           @Param("room") String room, @Param("startTime") int startTime,
+                            @Param("endTime") int endTime, @Param("lectureName")String lectureName);
 
 
     @UpdateProvider(type = infra.database.mapper.sql.LectureSql.class, method = "updatePlanner")

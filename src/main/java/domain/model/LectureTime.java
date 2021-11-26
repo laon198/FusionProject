@@ -1,4 +1,4 @@
-package domain.generic;
+package domain.model;
 
 import java.util.Objects;
 
@@ -22,11 +22,12 @@ public class LectureTime {
                 '}';
     }
 
-    private  long id;
+    private long id;
     private DayOfWeek lectureDay;
     private LecturePeriod startTime;
     private LecturePeriod endTime;
     private String room;
+    private String lectureName;
 
     public static class Builder{
         private long id;
@@ -34,6 +35,7 @@ public class LectureTime {
         private LecturePeriod startTime;
         private LecturePeriod endTime;
         private String room;
+        private String lectureName;
 
         public Builder lectureDay(String value){
             switch(value){
@@ -60,6 +62,11 @@ public class LectureTime {
 
         public Builder id(long value){
             id = value;
+            return this;
+        }
+
+        public Builder lectureName(String value){
+            lectureName = value;
             return this;
         }
 
@@ -149,6 +156,7 @@ public class LectureTime {
         startTime = builder.startTime;
         endTime = builder.endTime;
         room = builder.room;
+        lectureName = builder.lectureName;
     }
 
     public LectureTime(long id, DayOfWeek dayOfWeek, LecturePeriod startTime, LecturePeriod endTime, String room){

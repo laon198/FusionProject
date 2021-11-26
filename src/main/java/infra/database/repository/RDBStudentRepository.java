@@ -1,6 +1,6 @@
 package infra.database.repository;
 
-import domain.generic.LectureTime;
+import domain.model.LectureTime;
 import domain.model.Registering;
 import domain.model.Student;
 import domain.repository.StudentRepository;
@@ -315,6 +315,7 @@ public class RDBStudentRepository implements StudentRepository {
                         .room(lectureInfo.getString("lecture_room"))
                         .startTime(lectureInfo.getInt("start_period"))
                         .endTime(lectureInfo.getInt("end_period"))
+                        .lectureName(lectureInfo.getString("lectureName"))
                         .build()
                 );
             }

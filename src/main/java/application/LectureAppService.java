@@ -1,6 +1,6 @@
 package application;
 
-import domain.generic.LectureTime;
+import domain.model.LectureTime;
 import domain.model.Lecture;
 import domain.repository.LectureRepository;
 import domain.service.LectureManageService;
@@ -33,6 +33,7 @@ public class LectureAppService {
                     .endTime(timeDTO.getEndTime())
                     .startTime(timeDTO.getStartTime())
                     .room(timeDTO.getRoom())
+                    .lectureName(timeDTO.getLectureName())
                     .build()
             );
         }

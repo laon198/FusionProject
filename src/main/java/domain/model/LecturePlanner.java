@@ -1,7 +1,5 @@
 package domain.model;
 
-import domain.generic.Period;
-
 import java.time.LocalDateTime;
 import java.util.*;
 

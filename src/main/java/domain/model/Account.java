@@ -5,12 +5,14 @@ public class Account {
     private long pk;
     private String id;
     private String password;
+    private String position;
     private long memberID;
 
     public static class Builder{
         private long pk=-1;
         private String id;
         private String password;
+        private String position;
         private long memberID;
 
         public Builder pk(long value){
@@ -20,6 +22,11 @@ public class Account {
 
         public Builder memberID(long value){
             memberID = value;
+            return this;
+        }
+
+        public Builder position(String value){
+            position = value;
             return this;
         }
 
@@ -47,10 +54,15 @@ public class Account {
         id = builder.id;
         password = builder.password;
         memberID = builder.memberID;
+        position = builder.position;
     }
 
     public boolean checkPassword(String pwd){
         return password.equals(pwd);
+    }
+
+    public String getPosition(){
+        return position;
     }
 
     //TODO : 비밀번호 변경시 제약사항?

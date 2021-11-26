@@ -1,6 +1,6 @@
 package infra.database.repository;
 
-import domain.generic.LectureTime;
+import domain.model.LectureTime;
 import domain.model.Lecture;
 import domain.model.LecturePlanner;
 import domain.model.Registering;
@@ -112,13 +112,13 @@ public class RDBLectureRepository implements LectureRepository {
                 if (lectureTimeDTO.getId() == -1) {
                     mapper.insertLectureTime(lectureDTO.getId(), lectureTimeDTO.getLectureDay(),
                             lectureTimeDTO.getRoom(), lectureTimeDTO.getStartTime(),
-                            lectureTimeDTO.getEndTime());
+                            lectureTimeDTO.getEndTime(), lectureTimeDTO.getLectureName());
                 } else {
                     mapper.updateLectureTime(
                             lectureTimeDTO.getId(),
                             lectureTimeDTO.getLectureDay(),
                             lectureTimeDTO.getRoom(), lectureTimeDTO.getStartTime(),
-                            lectureTimeDTO.getEndTime()
+                            lectureTimeDTO.getEndTime(), lectureTimeDTO.getLectureName()
                     );
                 }
             }
@@ -150,7 +150,7 @@ public class RDBLectureRepository implements LectureRepository {
                 mapper.insertLectureTime(
                         lectureDTO.getId(), lectureTimeDTO.getLectureDay(),
                         lectureTimeDTO.getRoom(), lectureTimeDTO.getStartTime(),
-                        lectureTimeDTO.getEndTime()
+                        lectureTimeDTO.getEndTime(), lectureTimeDTO.getLectureName()
                 );
             }
 

@@ -1,10 +1,7 @@
 package domain.model;
 
-import domain.generic.Period;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Set;
 
 public class RegisteringPeriod {
     private long id;

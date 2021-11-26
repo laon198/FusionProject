@@ -49,19 +49,4 @@ public class Admin extends Member {
         adminCode=builder.adminCode;
     }
 
-    @Override
-    public boolean isAdminPermission() {
-        return true;
-    }
-
-    @Override
-    public boolean isProfessorPermission() {
-        return false;
-    }
-
-    @Override
-    public boolean isStudentPermission() {
-        return false;
-    }
-
 }

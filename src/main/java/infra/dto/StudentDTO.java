@@ -1,11 +1,5 @@
 package infra.dto;
 
-import domain.generic.LectureTime;
-import domain.model.Lecture;
-import domain.model.Registering;
-import domain.model.Student;
-
-import java.time.LocalDate;
 import java.util.*;
 
 public class StudentDTO extends MemberDTO {

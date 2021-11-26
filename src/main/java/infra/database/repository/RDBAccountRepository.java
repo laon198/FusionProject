@@ -146,17 +146,20 @@ public class RDBAccountRepository implements AccountRepository {
         long pk;
         String id;
         String password;
+        String position;
 
         while(res.next()){
             pk = res.getLong("account_pk");
             id = res.getString("account_ID");
             password = res.getString("account_PW");
+            position = res.getString("position");
 
             list.add(
                     Account.builder()
                         .pk(pk)
                         .id(id)
                         .password(password)
+                        .position(position)
                         .build()
             );
         }

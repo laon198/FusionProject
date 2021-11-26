@@ -1,4 +1,4 @@
-package domain.generic;
+package domain.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

@@ -1,6 +1,6 @@
 package infra.database.repository;
 
-import domain.generic.LectureTime;
+import domain.model.LectureTime;
 import domain.model.Professor;
 import domain.repository.ProfessorRepository;
 import infra.database.PooledDataSource;

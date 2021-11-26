@@ -1,9 +1,6 @@
 package infra.dto;
 
-import domain.generic.Period;
-
 import java.util.Map;
-import java.util.Set;
 
 public class LecturePlannerDTO {
     private Map<String, String> items;

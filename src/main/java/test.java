@@ -1,30 +1,16 @@
 
 import application.*;
-import domain.generic.LectureTime;
 import domain.model.*;
 import domain.repository.*;
 import infra.database.MyBatisConnectionFactory;
-import infra.database.option.account.AccountIDOption;
-import infra.database.option.lecture.LectureCodeOption;
-import infra.database.option.lecture.LectureDepartmentOption;
-import infra.database.option.lecture.LectureOption;
-import infra.database.option.lecture.ProfessorCodeOption;
 import infra.database.repository.*;
 import infra.dto.*;
 import infra.network.Deserializer;
 import infra.network.Serializer;
 
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import static domain.generic.LectureTime.DayOfWeek.FRI;
-import static domain.generic.LectureTime.DayOfWeek.WED;
 
 public class test {
 
