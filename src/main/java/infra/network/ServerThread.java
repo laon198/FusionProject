@@ -37,8 +37,7 @@ public class ServerThread extends Thread {
 
     @Override
     public void run() {
-        boolean programRun = true;
-        while (programRun) {
+        while (socket.isConnected()) {
             try {
                 protocol = read();
                 handler(protocol);
@@ -48,6 +47,11 @@ public class ServerThread extends Thread {
             } catch (Exception e) {
                 System.out.println("Exception");
             }
+        }
+        try {
+            exit();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -96,7 +100,7 @@ public class ServerThread extends Thread {
                     logoutReq();
                     break;
                 case Protocol.T1_CODE_EXIT:    // 종료
-                    exitReq();
+                    exit();
                     break;
                 default : // 사용자 종류별 전용 Controller
                     if (user == USER_STUDENT) {
@@ -160,7 +164,7 @@ public class ServerThread extends Thread {
             prof = null;
     }
 
-    private void exitReq() throws IOException {
+    private void exit() throws IOException {
         socket.close();
         Server.removeThread(clientID);
     }

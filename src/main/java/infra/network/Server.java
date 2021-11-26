@@ -44,7 +44,7 @@ public class Server {
             clients[clientCount].start();
             System.out.println("client Port : " + clients[clientCount].getClientID()    );
             clientCount++;
-            System.out.print("clientCount : " + clientCount);
+            System.out.println("clientCount : " + clientCount);
         } else {
             System.out.println("Client refused: maximum " + clients.length + " reached.");
         }
@@ -58,7 +58,7 @@ public class Server {
     }
 
     // 쓰레드 지우기
-    public synchronized static void removeThread(int ID) throws IOException {
+    public synchronized static void removeThread(int ID) {
         int pos = findClient(ID);
         if (pos >= 0) {
             ServerThread st = clients[pos];
