@@ -6,6 +6,8 @@ import controller.Controller;
 import controller.LoginController;
 import controller.ProfessorController;
 import controller.StudentController;
+import domain.repository.*;
+import infra.database.repository.*;
 import infra.dto.AccountDTO;
 import infra.network.Protocol;
 
@@ -31,13 +33,39 @@ public class MainController extends Thread {
     private OutputStream os;
     private Controller myController;
 
+    private AccountRepository accRepo;
+    private AdminRepository adminRepo;
+    private CourseRepository courseRepo;
+    private LectureRepository lectureRepo;
+    private ProfessorRepository profRepo;
+    private RegisteringRepository regRepo;
+    private RegPeriodRepository regPeriodRepo;
+    private StudentRepository stdRepo;
+
     // 스레드 생성자
-    public MainController(Socket socket) throws IOException {
-        userType = USER_UNDEFINED;
+
+    public MainController(
+            AccountRepository accRepo, AdminRepository adminRepo, CourseRepository courseRepo,
+            LectureRepository lectureRepo, ProfessorRepository profRepo, RegisteringRepository regRepo,
+            RegPeriodRepository regPeriodRepo, StudentRepository stdRepo, Socket socket
+    ){
+        this.accRepo = accRepo;
+        this.adminRepo = adminRepo;
+        this.courseRepo = courseRepo;
+        this.lectureRepo = lectureRepo;
+        this.profRepo = profRepo;
+        this.regRepo = regRepo;
+        this.regPeriodRepo = regPeriodRepo;
+        this.stdRepo = stdRepo;
+        this.socket = socket;
         clientID = socket.getPort();
         this.socket = socket;
-        is = socket.getInputStream();
-        os = socket.getOutputStream();
+        try{
+            is = socket.getInputStream();
+            os = socket.getOutputStream();
+        }catch(IOException e){
+            e.getStackTrace();
+        }
     }
 
     @Override
@@ -64,7 +92,7 @@ public class MainController extends Thread {
         switch(userType){
             case USER_UNDEFINED:
                 Controller loginController = new LoginController(
-                        socket, is, os, clientID
+                        socket, is, os, clientID, accRepo
                 );
                 userType = loginController.handler(pt);
                 setMyController();

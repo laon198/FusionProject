@@ -1,5 +1,7 @@
 package controller;
 
+import application.AccountAppService;
+import domain.repository.AccountRepository;
 import infra.dto.AccountDTO;
 import infra.network.*;
 
@@ -9,17 +11,24 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class LoginController implements Controller {
+    public static final int FAIL = -1;
+    public static final int STUD_TYPE = 0;
+    public static final int PROF_TYPE = 1;
+    public static final int ADMIN_TYPE = 2;
+
+    private AccountRepository accRepo;
     private Socket socket;
     private InputStream is;
     private OutputStream os;
     private int clientID;
 
-    public LoginController(Socket socket, InputStream is,
-                           OutputStream os, int clientID){
+    public LoginController(Socket socket, InputStream is, OutputStream os,
+                           int clientID, AccountRepository accRepo){
         this.socket = socket;
         this.is = is;
         this.os = os;
         this.clientID = clientID;
+        this.accRepo = accRepo;
     }
 
     public int handler(Protocol recvPt){
@@ -43,21 +52,34 @@ public class LoginController implements Controller {
         return 0;
     }
 
-    private void loginReq(Protocol recvPt) throws Exception{
+    private int loginReq(Protocol recvPt) throws Exception{
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
-
         AccountDTO accDTO = (AccountDTO) recvPt.getObject();
 
-        // < DB >
-        // 로그인 성공
+        try{
+            AccountAppService accService = new AccountAppService(accRepo);
+            AccountDTO resAccDTO= accService.login(accDTO);
 
-        sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-        sendPt.send(os);
+            // < DB >
+            // 로그인 성공
+            sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+            sendPt.setObject(resAccDTO);
+            sendPt.send(os);
 
+            if(resAccDTO.getPosition().equals("STUD")){
+                return STUD_TYPE;
+            }else if(resAccDTO.getPosition().equals("PROF")){
+                return PROF_TYPE;
+            }else{
+                return ADMIN_TYPE;
+            }
+        }catch(IllegalArgumentException e){
 //            // 로그인 실패
-//            sendPt.setCode(Protocol.T2_CODE_FAIL);
-//            send(sendPt);
+            sendPt.setCode(Protocol.T2_CODE_FAIL);
+            sendPt.send(os);
+        }
 
+        return FAIL;
     }
 
     private void logoutReq() throws IOException {

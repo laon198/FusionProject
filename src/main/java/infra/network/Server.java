@@ -1,6 +1,7 @@
 package infra.network;
 
 import controller.MainController;
+import domain.repository.*;
 import org.apache.log4j.chainsaw.Main;
 
 import java.io.IOException;
@@ -8,16 +9,41 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
+    private AccountRepository accRepo;
+    private AdminRepository adminRepo;
+    private CourseRepository courseRepo;
+    private LectureRepository lectureRepo;
+    private ProfessorRepository profRepo;
+    private RegisteringRepository regRepo;
+    private RegPeriodRepository regPeriodRepo;
+    private StudentRepository stdRepo;
+
+    public Server(
+            AccountRepository accRepo, AdminRepository adminRepo, CourseRepository courseRepo,
+            LectureRepository lectureRepo, ProfessorRepository profRepo, RegisteringRepository regRepo,
+            RegPeriodRepository regPeriodRepo, StudentRepository stdRepo
+    ){
+        this.accRepo = accRepo;
+        this.adminRepo = adminRepo;
+        this.courseRepo = courseRepo;
+        this.lectureRepo = lectureRepo;
+        this.profRepo = profRepo;
+        this.regRepo = regRepo;
+        this.regPeriodRepo = regPeriodRepo;
+        this.stdRepo = stdRepo;
+        try{
+            serverSocket = new ServerSocket(3000);
+            clients = new MainController[50];
+            clientCount = 0;
+        }catch(Exception e){
+            e.getStackTrace();
+        }
+    }
 
     private static ServerSocket serverSocket;
     private static MainController clients[];
     private static int clientCount;
 
-    public Server() throws IOException {
-        serverSocket = new ServerSocket(3000);
-        clients = new MainController[50];
-        clientCount = 0;
-    }
 
     // 구동
     public void run() throws Exception {
@@ -33,7 +59,11 @@ public class Server {
 
     public synchronized void addThread(Socket socket) throws Exception {
         if (clientCount < clients.length) {
-            MainController st = new MainController(socket);
+            MainController st = new MainController(
+                    accRepo, adminRepo, courseRepo,
+                    lectureRepo, profRepo, regRepo,
+                    regPeriodRepo, stdRepo, socket
+            );
             clients[clientCount++] = st;
             System.out.println("Create thread > clientCount = " + clientCount);
             clients[clientCount].start();
