@@ -10,11 +10,11 @@ import domain.repository.*;
 import infra.database.repository.*;
 import infra.dto.AccountDTO;
 import infra.network.Protocol;
+import infra.network.Server;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 
 public class MainController extends Thread {
@@ -68,20 +68,21 @@ public class MainController extends Thread {
         }
     }
 
+    private boolean running;
     @Override
     public void run() {
-        boolean programRun = true;
-        while (programRun) {
+        running = true;
+        while (running) {
             try {
                 Protocol pt = new Protocol();
                 handler(pt.read(is));
             } catch (IOException e) {
-                System.out.println("ServerTh.run() -> IOException");
-                this.interrupt();
+                System.out.println("read ...");
             } catch (Exception e) {
                 System.out.println("Exception");
             }
         }
+        System.out.println("thread 종료");
     }
 
     public int getClientID() {
@@ -89,6 +90,12 @@ public class MainController extends Thread {
     }
 
     public void handler(Protocol pt) throws Exception {
+        if (pt.getType() == Protocol.TYPE_REQUEST && pt.getCode() == Protocol.T1_CODE_EXIT)
+        {
+            exit();
+            return;
+        }
+
         switch(userType){
             case USER_UNDEFINED:
                 Controller loginController = new LoginController(
@@ -117,5 +124,21 @@ public class MainController extends Thread {
                 myController = new AdminController(is, os);
                 break;
         }
+    }
+
+
+    public void socketClose() throws IOException
+    {
+        socket.close();
+        is.close();
+        os.close();
+    }
+
+    private void exit() throws IOException {
+//        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE, Protocol.T2_CODE_SUCCESS);
+//        sendPt.send(os);
+//        Server.removeThread(clientID);
+        Server.removeThread(clientID);
+        running = false;
     }
 }
