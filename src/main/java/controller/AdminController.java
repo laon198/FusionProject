@@ -1,29 +1,23 @@
-package infra.network;
-import java.io.IOException;
+package controller;
 
-public class AdminController
-{
-    private Protocol sendPt;
+import infra.network.Protocol;
 
-    public AdminController()
-    {}
+import java.io.InputStream;
+import java.io.OutputStream;
 
-    public void setSendPt(Protocol pt)
-    {
-        sendPt = pt;
+public class AdminController implements Controller {
+    private InputStream is;
+    private OutputStream os;
+
+    public AdminController(InputStream is, OutputStream os) {
+        this.is = is;
+        this.os = os;
     }
 
-    public Protocol getSendPt()
-    {
-        return sendPt;
-    }
+    @Override
+    public int handler(Protocol recvPt) throws Exception  {
 
-    public void handler(Protocol recvPt) throws Exception
-    {
-        sendPt = new Protocol(Protocol.TYPE_RESPONSE);
-
-        switch (recvPt.getCode())
-        {
+        switch (recvPt.getCode()) {
             case Protocol.T1_CODE_CREATE: // 등록
                 createReq(recvPt);
                 break;
@@ -37,10 +31,10 @@ public class AdminController
                 deleteReq(recvPt);
                 break;
             default:
-                sendPt.setCode(Protocol.T2_CODE_FAIL);
-                setSendPt(sendPt);
         }
+        return 0;
     }
+
 
     // 생성 요청 받았을 때 수행할 일
     private void createReq (Protocol recvPt) throws Exception
@@ -63,8 +57,6 @@ public class AdminController
                 createPlannerPeriod(recvPt);
                 break;
             default:
-                sendPt.setCode(Protocol.T2_CODE_FAIL);
-                setSendPt(sendPt);
         }
     }
 
@@ -83,8 +75,6 @@ public class AdminController
                 readLecture(recvPt);
                 break;
             default:
-                sendPt.setCode(Protocol.T2_CODE_FAIL);
-                setSendPt(sendPt);
         }
     }
 
@@ -103,8 +93,6 @@ public class AdminController
                 updateLecture(recvPt);
                 break;
             default:
-                sendPt.setCode(Protocol.T2_CODE_FAIL);
-                setSendPt(sendPt);
         }
     }
 
@@ -120,8 +108,6 @@ public class AdminController
                 deleteLecture(recvPt);
                 break;
             default:
-                sendPt.setCode(Protocol.T2_CODE_FAIL);
-                setSendPt(sendPt);
         }
     }
 
@@ -130,13 +116,17 @@ public class AdminController
      */
     private void createAccount(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getObject();
+        //Object data = recvPt.getObject();
         /*
          Account 생성하는 기능 수행
          */
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         // 계정 생성 실패 - 중복 계정 존재
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
+
     }
 
     /*
@@ -144,14 +134,17 @@ public class AdminController
      */
     private void createCourse(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getObject();
+       // Object data = recvPt.getObject();
         /*
         교과목 생성하는 기능 수행
          */
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);  // 성공
         // 교과목 생성 실패 - 중복 교과목 존재
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
+
     }
 
 
@@ -167,9 +160,13 @@ public class AdminController
         /*
          lecture 생성하는 기능 수행
          */
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);  // 성공
         // 개설교과목 생성 실패 - ?
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
+
     }
 
     /*
@@ -177,13 +174,17 @@ public class AdminController
      */
     private void createRegisteringPeriod(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getObject();
+//        Object data = recvPt.getObject();
         /*
          수강신청 기간 생성하는 기능 수행
          */
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         // 수강신청기간 등록 실패 - 중복 기간 존재 (시작, 끝 날짜가 완전히 중복)
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
+
     }
 
     /*
@@ -191,13 +192,17 @@ public class AdminController
      */
     private void createPlannerPeriod(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getObject();
+//        Object data = recvPt.getObject();
         /*
          강의계획서 입력 기간 생성하는 기능 수행
          */
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);  // 성공
         // 실패 - 중복 기간 존재 (시작, 끝 날짜가 완전히 중복)
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
+
     }
 
 
@@ -206,17 +211,20 @@ public class AdminController
      */
     private void readAccount(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getObject();
+//        Object data = recvPt.getObject();
         /*
         개인 정보 조회하는 기능 수행
          */
         Object sndData = null;
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         sendPt.setObject(sndData);
 
         //실패 - 존재하지 않는 code
         //sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
+
     }
 
     /*
@@ -225,11 +233,13 @@ public class AdminController
      */
     private void readCourse(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getObject();
+//        Object data = recvPt.getObject();
         /*
         교과목 목록 조회하는 기능 수행
          */
         Object[] sndData = null;
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
         if (sndData != null)
         {
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
@@ -237,6 +247,8 @@ public class AdminController
         }
         else // 실패 - 교과목 없는 경우
             sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
+
     }
 
     /*
@@ -244,13 +256,15 @@ public class AdminController
      */
     private void readLecture(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getObject();  // 학년,학과,교수 option
+//        Object data = recvPt.getObject();  // 학년,학과,교수 option
         /*
         개설 교과목 정보 조회하는 기능 수행
          */
         //if 옵션 잘못됨
         //sendPt.setCode(Protocol.T2_CODE_FAIL);
         Object[] sndData = null;
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
         if (sndData != null)
         {
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
@@ -258,6 +272,8 @@ public class AdminController
         }
         else // 실패 - 개설 교과목 없는 경우
             sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
+
     }
 
     /*
@@ -273,7 +289,8 @@ public class AdminController
             : 2 currentPassword newPassword
          */
 
-        Object data = recvPt.getObject();
+//        Object data = recvPt.getObject();
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         // if (전화번호 수정)
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
@@ -282,8 +299,12 @@ public class AdminController
             // 현재 비밀번호 일치하는지 확인
             // 비밀번호 수정 기능 수행
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+            sendPt.send(os);
+
         } catch (IllegalArgumentException e) { // 현재 비밀번호 불일치
             sendPt.setCode(Protocol.T2_CODE_FAIL);
+            sendPt.send(os);
+
         }
     }
 
@@ -295,13 +316,15 @@ public class AdminController
      */
     private void updateCourse(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getObject();
+//        Object data = recvPt.getObject();
         // 교과목 정보 수정하는 기능 수행
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         // if (변경 성공)
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         // else (변경실패)
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
 
     }
 
@@ -313,13 +336,16 @@ public class AdminController
     */
     private void updateLecture(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getObject();
+//        Object data = recvPt.getObject();
         // 개설교과목 정보 수정하는 기능 수행
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         // if (변경 성공)
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         // else (변경실패)
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
+
     }
 
     /*
@@ -330,13 +356,15 @@ public class AdminController
     */
     private void deleteCourse(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getObject();
+//        Object data = recvPt.getObject();
         // 교과목 삭제하는 기능 수행
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         // if (삭제 성공)
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         // else (삭제 실패)
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
 
     }
 
@@ -348,13 +376,17 @@ public class AdminController
     */
     private void deleteLecture(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getObject();
+//        Object data = recvPt.getObject();
         // 개설교과목 삭제하는 기능 수행
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         // if (삭제 성공)
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         // else (삭제 실패)
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
 
     }
+
 }
+

@@ -1,27 +1,21 @@
 package infra.network;
 
+import controller.MainController;
+import org.apache.log4j.chainsaw.Main;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
 
-    public static void main(String[] args) {
-        try {
-            Server server = new Server();
-            server.run();
-        } catch (Exception e) {
-            System.err.println(e);
-        }
-    }
-
     private static ServerSocket serverSocket;
-    private static ServerThread clients[];
+    private static MainController clients[];
     private static int clientCount;
 
     public Server() throws IOException {
         serverSocket = new ServerSocket(3000);
-        clients = new ServerThread[50];
+        clients = new MainController[50];
         clientCount = 0;
     }
 
@@ -34,17 +28,16 @@ public class Server {
             System.out.println("Success socket connection");
             // 스레드 생성
             addThread(socket);
-            System.out.println("Create thread");
         }
     }
 
     public synchronized void addThread(Socket socket) throws Exception {
         if (clientCount < clients.length) {
-            clients[clientCount] = new ServerThread(socket);
+            MainController st = new MainController(socket);
+            clients[clientCount++] = st;
+            System.out.println("Create thread > clientCount = " + clientCount);
             clients[clientCount].start();
-            System.out.println("client Port : " + clients[clientCount].getClientID()    );
-            clientCount++;
-            System.out.print("clientCount : " + clientCount);
+//            System.out.println("client Port : " + clients[clientCount].getClientID()    );
         } else {
             System.out.println("Client refused: maximum " + clients.length + " reached.");
         }
@@ -61,12 +54,13 @@ public class Server {
     public synchronized static void removeThread(int ID) throws IOException {
         int pos = findClient(ID);
         if (pos >= 0) {
-            ServerThread st = clients[pos];
+            MainController st = clients[pos];
             if (pos < clientCount - 1)
                 for (int i = pos + 1; i < clientCount; i++)
                     clients[i - 1] = clients[i];
             clientCount--;
             System.out.print("clientCount : " + clientCount);
+           // st.close();
             st.interrupt();
         }
     }

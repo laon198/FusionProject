@@ -134,7 +134,7 @@ public class test {
 
         AdminRepository adminRepo = new RDBAdminRepository();
 //        LectureRepository lectureRepo = new RDBLectureRepository();
-        CourseRepository courseRepo = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
+        CourseRepository courseRepo = new RDBCourseRepository();
         RegisteringRepository regRepo = new RDBRegisteringRepository();
         RegPeriodRepository periodRepo = new RDBRegPeriodRepository();
         StudentRepository stdRepo = new RDBStudentRepository();

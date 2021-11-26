@@ -1,29 +1,21 @@
-package infra.network;
+package controller;
+import infra.network.Protocol;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-import java.io.IOException;
+public class ProfessorController implements Controller  {
+    private InputStream is;
+    private OutputStream os;
 
-public class ProfController
-{
-    private Protocol sendPt;
-
-    public ProfController()
-    {}
-
-    public void setSendPt(Protocol pt)
-    {
-        sendPt = pt;
+    public ProfessorController(InputStream is, OutputStream os) {
+        this.is = is;
+        this.os = os;
     }
 
-    public Protocol getSendPt()
-    {
-        return sendPt;
-    }
+    @Override
+    public int handler(Protocol recvPt) throws Exception {
 
-    public void handler(Protocol recvPt) throws Exception
-    {
-        sendPt = new Protocol(Protocol.TYPE_RESPONSE);
-
-        switch (recvPt.getEntity())
+        switch (recvPt.getCode())
         {
             case Protocol.T1_CODE_CREATE: // 등록
                 createReq(recvPt);
@@ -35,9 +27,8 @@ public class ProfController
                 updateReq(recvPt);
                 break;
             default:
-                sendPt.setCode(Protocol.T2_CODE_FAIL);
-                setSendPt(sendPt);
         }
+        return 0;
     }
 
     // 생성 요청
@@ -49,8 +40,6 @@ public class ProfController
                 createLecturePlanner(recvPt);
                 break;
             default:
-                sendPt.setCode(Protocol.T2_CODE_FAIL);
-                setSendPt(sendPt);
         }
     }
 
@@ -78,8 +67,6 @@ public class ProfController
                 readLectureStudList(recv);
                 break;
             default:
-                sendPt.setCode(Protocol.T2_CODE_FAIL);
-                setSendPt(sendPt);
         }
     }
 
@@ -95,8 +82,6 @@ public class ProfController
                 updatePlanner(recv);
                 break;
             default:
-                sendPt.setCode(Protocol.T2_CODE_FAIL);
-                setSendPt(sendPt);
         }
     }
 
@@ -108,14 +93,15 @@ public class ProfController
      */
     private void createLecturePlanner(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getObject();
+        // Object data = recvPt.getObject();
         /*
          강의계획서 생성하는 기능 수행
          */
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-
         // 강의계획서 생성 실패
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
     }
 
     /*
@@ -127,10 +113,11 @@ public class ProfController
          개인정보 조회 기능 수행
          */
         Object sndData = null;
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         sendPt.setObject(sndData);
-
         //sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
     }
 
     /*
@@ -140,11 +127,13 @@ public class ProfController
     {
         // 교과목 전체 조회 기능 수행
         Object[] data = null;
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         sendPt.setObjectArray(data);
 
         // 교과목 조회 실패 - 존재하는 교과목 없음
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
     }
 
     /*
@@ -152,13 +141,15 @@ public class ProfController
      */
     private void readLecture(Protocol recvPt) throws Exception
     {
-        Object option = recvPt.getObject();  // 학년,학과,교수 option
+        //Object option = recvPt.getObject();  // 학년,학과,교수 option
         /*
         개설 교과목 정보 조회하는 기능 수행
          */
         //if 옵션 잘못됨
         //sendPt.setCode(Protocol.T2_CODE_FAIL);
         Object[] sndData = null;
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
         if (sndData != null)
         {
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
@@ -166,6 +157,7 @@ public class ProfController
         }
         else // 실패 - 개설 교과목 없는 경우
             sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
     }
 
 
@@ -176,16 +168,19 @@ public class ProfController
     */
     private void readLecturePlanner(Protocol recvPt) throws Exception
     {
-        Object option = recvPt.getObject();  // 학년,학과,교수 option
+        //Object option = recvPt.getObject();  // 학년,학과,교수 option
 
         // pk로 강의계획서 조회 기능 수행
 
         // if (강의계획서 등록O)
         Object sndData = null;
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         sendPt.setObject(sndData);
         // else (강의계획서 등록X)
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
 
     }
 
@@ -196,10 +191,13 @@ public class ProfController
     {
         // 강의시간표 조회 기능 수행
         Object[] sndData = null;
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         sendPt.setObjectArray(sndData);
         //시간표 조회 실패 - 담당 교과목 없음
         //sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
     }
 
     /*
@@ -211,10 +209,12 @@ public class ProfController
         Object option = recvPt.getObject();  // 학년,학과,교수 option
         // 학생 목록 조회 기능 수행
         Object[] sndData = null;
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         sendPt.setObjectArray(sndData);
         // 조회 실패
         // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
     }
 
     /*
@@ -231,6 +231,7 @@ public class ProfController
          */
 
         Object data = recvPt.getObject();
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         // if (전화번호 수정)
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
@@ -239,8 +240,10 @@ public class ProfController
             // 현재 비밀번호 일치하는지 확인
             // 비밀번호 수정 기능 수행
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+            sendPt.send(os);
         } catch (IllegalArgumentException e) { // 현재 비밀번호 불일치
             sendPt.setCode(Protocol.T2_CODE_FAIL);
+            sendPt.send(os);
         }
     }
 
@@ -252,12 +255,15 @@ public class ProfController
      */
     private void updatePlanner(Protocol recvPt) throws Exception
     {
-        Object data = recvPt.getObject();
+//        Object data = recvPt.getObject();
         // 강의계획서 수정 기능 수행
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
 
         // 수정 실패
-        sendPt.setCode(Protocol.T2_CODE_FAIL);
+        //sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
 
     }
 }
