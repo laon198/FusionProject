@@ -73,6 +73,12 @@ public class AdminController implements DefinedController {
             case Protocol.ENTITY_LECTURE:  // 개설교과목 조회
                 readLecture(recvPt);
                 break;
+            case Protocol.ENTITY_STUD_LIST: // 학생 목록 조회
+                readStudList();
+                break;
+            case Protocol.ENTITY_PROF_LIST: // 교수 목록 조회
+                readProfList();
+                break;
             default:
         }
     }
@@ -275,6 +281,34 @@ public class AdminController implements DefinedController {
 
     }
 
+
+    private void readProfList() throws Exception
+    {
+        Object[] sndData = null;
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+        if (sndData != null)
+        {
+            sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+            sendPt.setObjectArray(sndData);
+        }
+        else
+            sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
+    }
+
+    private void readStudList() throws Exception
+    {
+        Object[] sndData = null;
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+        if (sndData != null)
+        {
+            sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+            sendPt.setObjectArray(sndData);
+        }
+        else
+            sendPt.setCode(Protocol.T2_CODE_FAIL);
+        sendPt.send(os);
+    }
     /*
      < 개인정보(전화번호) 수정 및 비밀번호 수정 >
      */

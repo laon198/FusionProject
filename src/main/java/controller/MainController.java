@@ -67,7 +67,7 @@ public class MainController extends Thread {
                 Protocol pt = new Protocol();
                 handler(pt.read(is));
             } catch (IOException e) {
-                System.out.println("read ...");
+                exit();
             } catch (Exception e) {
                 System.out.println("Exception");
             }
@@ -128,9 +128,6 @@ public class MainController extends Thread {
     }
 
     private void exit() throws IOException {
-//        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE, Protocol.T2_CODE_SUCCESS);
-//        sendPt.send(os);
-//        Server.removeThread(clientID);
         Server.removeThread(clientID);
         running = false;
     }
