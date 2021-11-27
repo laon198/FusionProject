@@ -86,7 +86,7 @@ public class Server {
     }
 
     // 쓰레드 지우기
-    public synchronized static void removeThread(int ID) throws IOException {
+    public synchronized static void removeThread(int ID) {
         int pos = findClient(ID);
         if (pos >= 0) {
             MainController thread = clients[pos];
@@ -95,8 +95,6 @@ public class Server {
                     clients[i - 1] = clients[i];
             clientCount--;
             System.out.print("clientCount : " + clientCount);
-            thread.socketClose();
         }
     }
-
 }

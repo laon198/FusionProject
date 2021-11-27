@@ -66,10 +66,13 @@ public class MainController extends Thread {
             try {
                 Protocol pt = new Protocol();
                 handler(pt.read(is));
-            } catch (IOException e) {
-                exit();
             } catch (Exception e) {
-                System.out.println("Exception");
+                System.err.println(e);
+                try {
+                    exit();
+                } catch (IOException ex) {
+                    System.err.println(ex);
+                }
             }
         }
         System.out.println("thread 종료");
@@ -119,16 +122,9 @@ public class MainController extends Thread {
         }
     }
 
-
-    public void socketClose() throws IOException
-    {
-        socket.close();
-        is.close();
-        os.close();
-    }
-
     private void exit() throws IOException {
         Server.removeThread(clientID);
+        socket.close();
         running = false;
     }
 }
