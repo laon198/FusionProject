@@ -75,6 +75,7 @@ public class Server {
             System.out.println("clientCount : " + clientCount);
         } else {
             System.out.println("Client refused: maximum " + clients.length + " reached.");
+            socket.close();
         }
     }
 
