@@ -30,8 +30,8 @@ public class Protocol {
     public static final int ENTITY_REGISTRATION = 6;
     public static final int ENTITY_STUDENT = 7;
     public static final int ENTITY_PROFESSOR = 8;
-    public static final int ENTITY_ADMIN = 8;
-    public static final int ENTITY_LECTURE_STUD_LIST = 9;
+    public static final int ENTITY_ADMIN = 9;
+    public static final int ENTITY_LECTURE_STUD_LIST = 10;
 
     // LENGTH
     public static final int LEN_HEADER = 7;
@@ -164,23 +164,35 @@ public class Protocol {
 
     public void send(OutputStream os) throws IOException {
         os.write(getPacket());
+        os.flush();
         System.out.println("Send to Client");
     }
 
-    public Protocol read(InputStream is) throws IOException {
+    public Protocol read(InputStream is) throws Exception {
         byte[] header = new byte[Protocol.LEN_HEADER];
         int totalReceived = 0;
         int readSize;
 
-        is.read(header, 0, Protocol.LEN_HEADER);
-        setHeader(header);
+        try {
+            is.read(header, 0, Protocol.LEN_HEADER);
+            setHeader(header);
 
-        byte[] buf = new byte[getBodyLength()];
-        while (totalReceived < getBodyLength()) {
-            readSize = is.read(buf, totalReceived, getBodyLength() - totalReceived);
-            totalReceived += readSize;
+            if (this.type == Protocol.UNDEFINED)
+                throw new Exception("통신 오류 > 연결 오류");
+
+            byte[] buf = new byte[getBodyLength()];
+            while (totalReceived < getBodyLength()) {
+                readSize = is.read(buf, totalReceived, getBodyLength() - totalReceived);
+                totalReceived += readSize;
+                if (readSize == -1) {
+                    throw new Exception("통신 오류 > 연결 끊김");
+                }
+            }
+            setBody(buf);
+            return this;
         }
-        setBody(buf);
-        return this;
+        catch (IOException e) {
+            throw new IOException("통신 오류 > 데이터 수신 실패");
+        }
     }
 }
