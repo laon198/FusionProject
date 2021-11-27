@@ -5,7 +5,7 @@ import infra.network.Protocol;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class AdminController implements Controller {
+public class AdminController implements DefinedController {
     private InputStream is;
     private OutputStream os;
 
@@ -15,7 +15,7 @@ public class AdminController implements Controller {
     }
 
     @Override
-    public int handler(Protocol recvPt) throws Exception  {
+    public void handler(Protocol recvPt) throws Exception  {
 
         switch (recvPt.getCode()) {
             case Protocol.T1_CODE_CREATE: // 등록
@@ -32,7 +32,6 @@ public class AdminController implements Controller {
                 break;
             default:
         }
-        return 0;
     }
 
 

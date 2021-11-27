@@ -1,14 +1,6 @@
 package controller;
 
-import application.AccountAppService;
-import controller.AdminController;
-import controller.Controller;
-import controller.LoginController;
-import controller.ProfessorController;
-import controller.StudentController;
 import domain.repository.*;
-import infra.database.repository.*;
-import infra.dto.AccountDTO;
 import infra.network.Protocol;
 import infra.network.Server;
 
@@ -20,18 +12,16 @@ import java.net.Socket;
 public class MainController extends Thread {
     // USER 구분
     public static final int USER_UNDEFINED = 0;
-    public static final int USER_DEFINED = 1;
-
-    public static final int STUD_TYPE = 0;
-    public static final int PROF_TYPE = 1;
-    public static final int ADMIN_TYPE = 2;
+    public static final int STUD_TYPE = 1;
+    public static final int PROF_TYPE = 2;
+    public static final int ADMIN_TYPE = 3;
     private int userType;
 
     private int clientID;
     private Socket socket;
     private InputStream is;
     private OutputStream os;
-    private Controller myController;
+    private DefinedController myController;
 
     private AccountRepository accRepo;
     private AdminRepository adminRepo;
@@ -90,23 +80,24 @@ public class MainController extends Thread {
     }
 
     public void handler(Protocol pt) throws Exception {
-        if (pt.getType() == Protocol.TYPE_REQUEST && pt.getCode() == Protocol.T1_CODE_EXIT)
-        {
+        if (pt.getType() == Protocol.TYPE_REQUEST &&
+                pt.getCode() == Protocol.T1_CODE_EXIT){
             exit();
             return;
         }
 
         switch(userType){
             case USER_UNDEFINED:
-                Controller loginController = new LoginController(
+                UndefinedController undefinedController = new UndefinedController(
                         socket, is, os, clientID, accRepo
                 );
-                userType = loginController.handler(pt);
+                userType = undefinedController.handler(pt);
                 setMyController();
-                userType = USER_DEFINED;
                 break;
 
-            case USER_DEFINED:
+            case STUD_TYPE:
+            case PROF_TYPE:
+            case ADMIN_TYPE:
                 myController.handler(pt);
                 break;
         }
@@ -122,6 +113,8 @@ public class MainController extends Thread {
                 break;
             case ADMIN_TYPE:
                 myController = new AdminController(is, os);
+                break;
+            default:
                 break;
         }
     }

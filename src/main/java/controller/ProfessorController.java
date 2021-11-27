@@ -3,7 +3,7 @@ import infra.network.Protocol;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class ProfessorController implements Controller  {
+public class ProfessorController implements DefinedController {
     private InputStream is;
     private OutputStream os;
 
@@ -13,7 +13,7 @@ public class ProfessorController implements Controller  {
     }
 
     @Override
-    public int handler(Protocol recvPt) throws Exception {
+    public void handler(Protocol recvPt) throws Exception {
 
         switch (recvPt.getCode())
         {
@@ -28,7 +28,6 @@ public class ProfessorController implements Controller  {
                 break;
             default:
         }
-        return 0;
     }
 
     // 생성 요청

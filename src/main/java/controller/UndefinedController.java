@@ -10,11 +10,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class LoginController implements Controller {
-    public static final int FAIL = -1;
-    public static final int STUD_TYPE = 0;
-    public static final int PROF_TYPE = 1;
-    public static final int ADMIN_TYPE = 2;
+public class UndefinedController {
+    public static final int USER_UNDEFINED = 0;
+    public static final int STUD_TYPE = 1;
+    public static final int PROF_TYPE = 2;
+    public static final int ADMIN_TYPE = 3;
 
     private AccountRepository accRepo;
     private Socket socket;
@@ -22,8 +22,8 @@ public class LoginController implements Controller {
     private OutputStream os;
     private int clientID;
 
-    public LoginController(Socket socket, InputStream is, OutputStream os,
-                           int clientID, AccountRepository accRepo){
+    public UndefinedController(Socket socket, InputStream is, OutputStream os,
+                               int clientID, AccountRepository accRepo){
         this.socket = socket;
         this.is = is;
         this.os = os;
@@ -35,8 +35,10 @@ public class LoginController implements Controller {
         try{
             switch (recvPt.getCode()) {
                 case Protocol.T1_CODE_LOGIN:   // 로그인
-                    loginReq(recvPt);
-                    return 1;
+                    return loginReq(recvPt);
+                case Protocol.T1_CODE_CREATE: //admin 생성
+                    createAdmin(recvPt);
+                    return USER_UNDEFINED;
                 case Protocol.T1_CODE_LOGOUT:  // 로그아웃
                     logoutReq();
                     break;
@@ -46,7 +48,7 @@ public class LoginController implements Controller {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return 0;
+        return USER_UNDEFINED;
     }
 
     private int loginReq(Protocol recvPt) throws Exception{
@@ -76,7 +78,11 @@ public class LoginController implements Controller {
             sendPt.send(os);
         }
 
-        return FAIL;
+        return USER_UNDEFINED;
+    }
+
+    private void createAdmin(Protocol recvPt){
+//        if(recvPt.getEntity()!=Protocol.ENTITY_AD)
     }
 
     private void logoutReq() throws IOException {

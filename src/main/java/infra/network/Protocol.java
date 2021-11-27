@@ -27,10 +27,10 @@ public class Protocol {
     public static final int ENTITY_REGIS_PERIOD= 4;
     public static final int ENTITY_PLANNER_PERIOD = 5;
     public static final int ENTITY_REGISTRATION = 6;
-    public static final int ENTITY_PLANNER = 7;
-    public static final int ENTITY_PROF_TIMETABLE = 8;
+   // public static final int ENTITY_PLANNER = 7;
+   // public static final int ENTITY_PROF_TIMETABLE = 8;
     public static final int ENTITY_LECTURE_STUD_LIST = 9;
-    public static final int ENTITY_STUD_TIMETABLE = 10;
+    //public static final int ENTITY_STUD_TIMETABLE = 10;
     // LENGTH
     public static final int LEN_HEADER = 7;
     public static final int LEN_TYPE = 1;
