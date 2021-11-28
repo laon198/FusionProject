@@ -9,13 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CourseAppService {
-    private CourseRepository courseRepo;
+    private final CourseRepository courseRepo;
 
     public CourseAppService(CourseRepository courseRepo) {
         this.courseRepo = courseRepo;
     }
 
     public void create(CourseDTO courseDTO){
+        //TODO : 생성 validation 체크필요
         Course course = Course.builder()
                         .courseCode(courseDTO.getCourseCode())
                         .courseName(courseDTO.getCourseName())

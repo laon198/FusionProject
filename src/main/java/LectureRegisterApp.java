@@ -5,15 +5,15 @@ import infra.network.Server;
 import java.io.IOException;
 
 public class LectureRegisterApp {
-    private AccountRepository accRepo;
-    private AdminRepository adminRepo;
-    private CourseRepository courseRepo;
-    private LectureRepository lectureRepo;
-    private ProfessorRepository profRepo;
-    private RegisteringRepository regRepo;
-    private RegPeriodRepository regPeriodRepo;
-    private StudentRepository stdRepo;
-    private Server mainServer;
+    private final AccountRepository accRepo;
+    private final AdminRepository adminRepo;
+    private final CourseRepository courseRepo;
+    private final LectureRepository lectureRepo;
+    private final ProfessorRepository profRepo;
+    private final RegisteringRepository regRepo;
+    private final RegPeriodRepository regPeriodRepo;
+    private final StudentRepository stdRepo;
+    private final Server mainServer;
 
     public LectureRegisterApp(){
         accRepo = new RDBAccountRepository();

@@ -22,15 +22,16 @@ public class MainController extends Thread {
     private InputStream is;
     private OutputStream os;
     private DefinedController myController;
+    private boolean running;
 
-    private AccountRepository accRepo;
-    private AdminRepository adminRepo;
-    private CourseRepository courseRepo;
-    private LectureRepository lectureRepo;
-    private ProfessorRepository profRepo;
-    private RegisteringRepository regRepo;
-    private RegPeriodRepository regPeriodRepo;
-    private StudentRepository stdRepo;
+    private final AccountRepository accRepo;
+    private final AdminRepository adminRepo;
+    private final CourseRepository courseRepo;
+    private final LectureRepository lectureRepo;
+    private final ProfessorRepository profRepo;
+    private final RegisteringRepository regRepo;
+    private final RegPeriodRepository regPeriodRepo;
+    private final StudentRepository stdRepo;
 
     // 스레드 생성자
 
@@ -58,7 +59,6 @@ public class MainController extends Thread {
         }
     }
 
-    private boolean running;
     @Override
     public void run() {
         running = true;
@@ -66,9 +66,7 @@ public class MainController extends Thread {
             try {
                 Protocol pt = new Protocol();
                 handler(pt.read(is));
-            } catch (IOException e) {
-                exit();
-            } catch (Exception e) {
+            }catch (Exception e) {
                 System.out.println("Exception");
             }
         }
@@ -87,6 +85,7 @@ public class MainController extends Thread {
         }
 
         switch(userType){
+            //TODO : 로그아웃 생각필요
             case USER_UNDEFINED:
                 UndefinedController undefinedController = new UndefinedController(
                         socket, is, os, clientID, accRepo
@@ -106,13 +105,25 @@ public class MainController extends Thread {
     private void setMyController() {
         switch (userType){
             case STUD_TYPE:
-                myController = new StudentController(is, os);
+                myController = new StudentController(
+                        accRepo, adminRepo, courseRepo,
+                        lectureRepo, profRepo, regRepo,
+                        regPeriodRepo, stdRepo, is, os
+                );
                 break;
             case PROF_TYPE:
-                myController = new ProfessorController(is, os);
+                myController = new ProfessorController(
+                        accRepo, adminRepo, courseRepo,
+                        lectureRepo, profRepo, regRepo,
+                        regPeriodRepo, stdRepo, is, os
+                );
                 break;
             case ADMIN_TYPE:
-                myController = new AdminController(is, os);
+                myController = new AdminController(
+                        accRepo, adminRepo, courseRepo,
+                        lectureRepo, profRepo, regRepo,
+                        regPeriodRepo, stdRepo, is, os
+                );
                 break;
             default:
                 break;
@@ -120,8 +131,7 @@ public class MainController extends Thread {
     }
 
 
-    public void socketClose() throws IOException
-    {
+    public void socketClose() throws IOException {
         socket.close();
         is.close();
         os.close();

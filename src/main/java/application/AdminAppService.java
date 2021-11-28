@@ -21,6 +21,7 @@ public class AdminAppService {
     }
 
     public void create(AdminDTO adminDTO){
+        //TODO : 생성시 발리데이션 체크필요
         Admin admin = Admin.builder()
                 .name(adminDTO.getName())
                 .birthDate(adminDTO.getBirthDate())

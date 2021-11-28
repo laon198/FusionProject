@@ -30,8 +30,8 @@ public class Protocol {
     public static final int ENTITY_REGISTRATION = 6;
     public static final int ENTITY_STUDENT = 7;
     public static final int ENTITY_PROFESSOR = 8;
-    public static final int ENTITY_ADMIN = 8;
-    public static final int ENTITY_LECTURE_STUD_LIST = 9;
+    public static final int ENTITY_ADMIN = 9;
+    public static final int ENTITY_LECTURE_STUD_LIST = 10;
 
     // LENGTH
     public static final int LEN_HEADER = 7;

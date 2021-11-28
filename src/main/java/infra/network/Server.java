@@ -9,14 +9,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-    private AccountRepository accRepo;
-    private AdminRepository adminRepo;
-    private CourseRepository courseRepo;
-    private LectureRepository lectureRepo;
-    private ProfessorRepository profRepo;
-    private RegisteringRepository regRepo;
-    private RegPeriodRepository regPeriodRepo;
-    private StudentRepository stdRepo;
+    private final AccountRepository accRepo;
+    private final AdminRepository adminRepo;
+    private final CourseRepository courseRepo;
+    private final LectureRepository lectureRepo;
+    private final ProfessorRepository profRepo;
+    private final RegisteringRepository regRepo;
+    private final RegPeriodRepository regPeriodRepo;
+    private final StudentRepository stdRepo;
 
     public Server(
             AccountRepository accRepo, AdminRepository adminRepo, CourseRepository courseRepo,

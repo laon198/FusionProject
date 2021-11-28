@@ -21,12 +21,14 @@ public class StudentAppService {
     }
 
     public void create(StudentDTO stdDTO){
+        //TODO : 생성시의 Validation 예외필요
         Student std = Student.builder()
                     .name(stdDTO.getName())
                     .birthDate(stdDTO.getBirthDate())
                     .department(stdDTO.getDepartment())
                     .year(stdDTO.getYear())
                     .studentCode(stdDTO.getStudentCode())
+                    .credit(stdDTO.getCredit())
                     .maxCredit(stdDTO.getMaxCredit())
                     .build();
 
@@ -43,16 +45,10 @@ public class StudentAppService {
 
     //TODO : partial update 불가
     //TODO : 바뀌면 안되는 값에 대한 처리?
-    public void update(StudentDTO stdDTO){
-        Student std = Student.builder()
-                .id(stdDTO.getId())
-                .name(stdDTO.getName())
-                .birthDate(stdDTO.getBirthDate())
-                .department(stdDTO.getDepartment())
-                .year(stdDTO.getYear())
-                .studentCode(stdDTO.getStudentCode())
-                .maxCredit(stdDTO.getMaxCredit())
-                .build();
+    public void update(StudentDTO stdDTO) throws IllegalArgumentException{
+        Student std = stdRepo.findByID(stdDTO.getId());
+        std.setName(stdDTO.getName());
+        //TODO : 업데이트 가능한 항목들 추가필요
 
         stdRepo.save(std);
     }

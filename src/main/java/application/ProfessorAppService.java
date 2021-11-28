@@ -20,6 +20,7 @@ public class ProfessorAppService {
     }
 
     public void create(ProfessorDTO profDTO) {
+        //TODO : 생성시 validation 로직 필요
         Professor prof = Professor.builder()
                 .name(profDTO.getName())
                 .birthDate(profDTO.getBirthDate())
@@ -42,14 +43,9 @@ public class ProfessorAppService {
     //TODO : partial update 불가
     //TODO : 바뀌면 안되는 값에 대한 처리?
     public void update(ProfessorDTO profDTO) {
-        Professor prof = Professor.builder()
-                .id(profDTO.getId())
-                .name(profDTO.getName())
-                .birthDate(profDTO.getBirthDate())
-                .department(profDTO.getDepartment())
-                .professorCode(profDTO.getProfessorCode())
-                .telePhone(profDTO.getTelePhone())
-                .build();
+        Professor prof = profRepo.findByID(profDTO.getId());
+
+        //TODO : 교수 업데이트 되는 항목 추가필요
 
         profRepo.save(prof);
     }

@@ -12,11 +12,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class RegisterAppService {
-    private LectureRepository lectureRepo;
-    private StudentRepository stdRepo;
-    private CourseRepository courseRepo;
-    private RegisteringRepository regRepo;
-    private RegPeriodRepository periodRepo;
+    private final LectureRepository lectureRepo;
+    private final StudentRepository stdRepo;
+    private final CourseRepository courseRepo;
+    private final RegisteringRepository regRepo;
+    private final RegPeriodRepository periodRepo;
 
     public RegisterAppService(
             LectureRepository lectureRepo,
