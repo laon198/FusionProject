@@ -1,7 +1,6 @@
 package application;
 
-import domain.generic.LectureTime;
-import domain.generic.Period;
+import domain.model.Period;
 import domain.model.*;
 import domain.repository.*;
 import domain.service.Registrar;

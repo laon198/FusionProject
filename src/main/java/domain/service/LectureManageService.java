@@ -1,10 +1,8 @@
 package domain.service;
 
-import domain.generic.LectureTime;
+import domain.model.LectureTime;
 import domain.model.*;
-import domain.repository.CourseRepository;
 import domain.repository.LectureRepository;
-import domain.repository.ProfessorRepository;
 
 import java.util.Set;
 

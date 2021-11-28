@@ -4,7 +4,7 @@ import infra.network.Protocol;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class StudentController implements Controller {
+public class StudentController implements DefinedController {
 
     private InputStream is;
     private OutputStream os;
@@ -16,7 +16,7 @@ public class StudentController implements Controller {
     }
 
     @Override
-    public int handler(Protocol recvPt)throws Exception
+    public void handler(Protocol recvPt)throws Exception
     {
         switch (recvPt.getCode())
         {
@@ -34,7 +34,6 @@ public class StudentController implements Controller {
                 break;
             default:
         }
-        return 0;
     }
 
 

@@ -1,11 +1,10 @@
 package infra.dto;
 
-import domain.generic.LectureTime;
-import domain.generic.Period;
+import domain.model.LectureTime;
+import domain.model.Period;
 import domain.model.*;
 
 import java.lang.reflect.Field;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import java.util.HashSet;

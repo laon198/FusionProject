@@ -1,8 +1,5 @@
 package domain.model;
 
-import domain.generic.LectureTime;
-import domain.generic.Period;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;

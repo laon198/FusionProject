@@ -1,6 +1,6 @@
 package infra.dto;
 
-import domain.generic.LectureTime;
+import domain.model.LectureTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,6 +14,7 @@ public class LectureTimeDTO {
     private int startTime;
     private int endTime;
     private String room;
+    private String lectureName;
 
     public static class Builder{
         private long id;
@@ -21,9 +22,15 @@ public class LectureTimeDTO {
         private int startTime;
         private int endTime;
         private String room;
+        private String lectureName;
 
         public Builder id(long value){
             id = value;
+            return this;
+        }
+
+        public Builder lectureName(String value){
+            lectureName = value;
             return this;
         }
 
@@ -36,19 +43,19 @@ public class LectureTimeDTO {
             switch(value){
                 case MON:
                     lectureDay = "MON";
-                break;
+                    break;
                 case TUE:
                     lectureDay = "TUE";
-                break;
+                    break;
                 case WED:
                     lectureDay = "WED";
-                break;
+                    break;
                 case THU:
                     lectureDay = "THU";
-                break;
+                    break;
                 case FRI:
                     lectureDay = "FRI";
-                break;
+                    break;
             }
             return this;
         }
@@ -57,31 +64,31 @@ public class LectureTimeDTO {
             switch (value){
                 case FIRST:
                     startTime = 1;
-                break;
+                    break;
                 case SECOND:
                     startTime = 2;
-                break;
+                    break;
                 case THIRD:
                     startTime = 3;
-                break;
+                    break;
                 case FOURTH:
                     startTime = 4;
-                break;
+                    break;
                 case FIFTH:
                     startTime = 5;
-                break;
+                    break;
                 case SIXTH:
                     startTime = 6;
-                break;
+                    break;
                 case SEVENTH:
                     startTime = 7;
-                break;
+                    break;
                 case EIGHTH:
                     startTime = 8;
-                break;
+                    break;
                 case NINTH:
                     startTime = 9;
-                break;
+                    break;
             }
             return this;
         }
@@ -136,5 +143,6 @@ public class LectureTimeDTO {
         startTime = builder.startTime;
         endTime = builder.endTime;
         room = builder.room;
+        lectureName = builder.lectureName;
     }
 }

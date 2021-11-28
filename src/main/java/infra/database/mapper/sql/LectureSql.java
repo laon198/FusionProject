@@ -92,6 +92,7 @@ public class LectureSql {
             VALUES("end_period", "#{endTime}");
             VALUES("day_of_week", "#{lectureDay}");
             VALUES("lecture_room", "#{room}");
+            VALUES("lecture_name", "#{lectureName}");
         }};
         return sql.toString();
     }
@@ -129,6 +130,7 @@ public class LectureSql {
             SET("end_period = #{endTime}");
             SET("day_of_week = #{lectureDay}");
             SET("lecture_room = #{room}");
+            SET("lecture_name = #{lectureName}");
             WHERE("lecture_time_PK = #{id}");
 
         }};

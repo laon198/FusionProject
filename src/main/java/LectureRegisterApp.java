@@ -2,6 +2,8 @@ import domain.repository.*;
 import infra.database.repository.*;
 import infra.network.Server;
 
+import java.io.IOException;
+
 public class LectureRegisterApp {
     private AccountRepository accRepo;
     private AdminRepository adminRepo;
@@ -22,6 +24,11 @@ public class LectureRegisterApp {
         regRepo = new RDBRegisteringRepository();
         regPeriodRepo = new RDBRegPeriodRepository();
         stdRepo = new RDBStudentRepository();
+        mainServer = new Server(
+                accRepo, adminRepo, courseRepo,
+                lectureRepo, profRepo, regRepo,
+                regPeriodRepo, stdRepo
+        );
     }
 
     public void run(){

@@ -1,7 +1,5 @@
 package domain.model;
 
-import domain.generic.LectureTime;
-
 import java.util.*;
 
 public class Student extends Member{
@@ -177,22 +175,6 @@ public class Student extends Member{
     public void setName(String value){
         name = value;
     }
-
-    @Override
-    public boolean isAdminPermission() {
-        return false;
-    }
-
-    @Override
-    public boolean isProfessorPermission() {
-        return false;
-    }
-
-    @Override
-    public boolean isStudentPermission() {
-        return true;
-    }
-
 
     //TODO : 테스트용
     @Override

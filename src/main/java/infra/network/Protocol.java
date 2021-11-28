@@ -20,6 +20,7 @@ public class Protocol {
     // TYPE_RESPONSE_CODE
     public static final int T2_CODE_SUCCESS = 1;
     public static final int T2_CODE_FAIL = 2;
+
     // ENTITY
     public static final int ENTITY_ACCOUNT = 1;
     public static final int ENTITY_COURSE = 2;
@@ -27,7 +28,11 @@ public class Protocol {
     public static final int ENTITY_REGIS_PERIOD= 4;
     public static final int ENTITY_PLANNER_PERIOD = 5;
     public static final int ENTITY_REGISTRATION = 6;
-    public static final int ENTITY_LECTURE_STUD_LIST = 7;
+    public static final int ENTITY_STUDENT = 7;
+    public static final int ENTITY_PROFESSOR = 8;
+    public static final int ENTITY_ADMIN = 8;
+    public static final int ENTITY_LECTURE_STUD_LIST = 9;
+
     // LENGTH
     public static final int LEN_HEADER = 7;
     public static final int LEN_TYPE = 1;

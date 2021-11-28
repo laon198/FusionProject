@@ -4,13 +4,14 @@ public class AccountDTO {
     private long pk;
     private String id;
     private String password;
+    private String position;
     private long memberID;
-
 
     public static class Builder{
         private long pk;
         private String id;
         private String password;
+        private String position;
         private long memberID;
 
         public Builder pk(long value){
@@ -20,6 +21,11 @@ public class AccountDTO {
 
         public Builder memberID(long value){
             memberID = value;
+            return this;
+        }
+
+        public Builder position(String value){
+            position = value;
             return this;
         }
 
@@ -47,6 +53,7 @@ public class AccountDTO {
         id = builder.id;
         password = builder.password;
         memberID = builder.memberID;
+        position = builder.position;
     }
 
     public long getPk() {
@@ -63,5 +70,9 @@ public class AccountDTO {
 
     public long getMemberID() {
         return memberID;
+    }
+
+    public String getPosition(){
+        return position;
     }
 }

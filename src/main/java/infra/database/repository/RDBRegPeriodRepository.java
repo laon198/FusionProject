@@ -1,6 +1,6 @@
 package infra.database.repository;
 
-import domain.generic.Period;
+import domain.model.Period;
 import domain.model.RegisteringPeriod;
 import domain.repository.RegPeriodRepository;
 import infra.database.PooledDataSource;

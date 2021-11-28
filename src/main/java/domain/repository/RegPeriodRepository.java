@@ -1,6 +1,5 @@
 package domain.repository;
 
-import domain.generic.LectureTime;
 import domain.model.RegisteringPeriod;
 
 import java.util.List;

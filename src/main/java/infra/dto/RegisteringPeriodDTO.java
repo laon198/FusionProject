@@ -1,9 +1,5 @@
 package infra.dto;
 
-import domain.generic.Period;
-import domain.model.RegisteringPeriod;
-import domain.model.Student;
-
 public class RegisteringPeriodDTO {
     private long id;
     private PeriodDTO period;
