@@ -33,7 +33,6 @@ public class MainController extends Thread {
     private StudentRepository stdRepo;
 
     // 스레드 생성자
-
     public MainController(
             AccountRepository accRepo, AdminRepository adminRepo, CourseRepository courseRepo,
             LectureRepository lectureRepo, ProfessorRepository profRepo, RegisteringRepository regRepo,
@@ -65,11 +64,11 @@ public class MainController extends Thread {
         while (running) {
             try {
                 Protocol pt = new Protocol();
-                handler(pt.read(is));
+                handler(pt.read(is));  // pt.read(is)는 pt 반환
             } catch (Exception e) {
                 System.err.println(e);
                 try {
-                    exit();
+                    stopThread();
                 } catch (IOException ex) {
                     System.err.println(ex);
                 }
@@ -83,25 +82,32 @@ public class MainController extends Thread {
     }
 
     public void handler(Protocol pt) throws Exception {
-        if (pt.getType() == Protocol.TYPE_REQUEST &&
-                pt.getCode() == Protocol.T1_CODE_EXIT){
-            exit();
+        // protocol type이 request가 아닌 경우 실패 메시지 전송
+        if (pt.getType() != Protocol.TYPE_REQUEST) {
+            Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE, Protocol.T2_CODE_FAIL);
+            sendPt.send(os);
             return;
         }
 
+        // 종료 요청 받은 경우
+        if (pt.getType() == Protocol.TYPE_REQUEST &&
+                pt.getCode() == Protocol.T1_CODE_EXIT) {
+            throw new Exception(clientID + "와 통신 종료 (정상종료)");
+        }
+
         switch(userType){
-            case USER_UNDEFINED:
-                UndefinedController undefinedController = new UndefinedController(
-                        socket, is, os, clientID, accRepo
-                );
+            case USER_UNDEFINED: // 사용자 로그인 전
+                UndefinedController undefinedController = new UndefinedController(is, os, accRepo);
+//                UndefinedController undefinedController = new UndefinedController(
+//                        socket, is, os, clientID, accRepo
+//                );
                 userType = undefinedController.handler(pt);
                 setMyController();
                 break;
-
             case STUD_TYPE:
             case PROF_TYPE:
             case ADMIN_TYPE:
-                myController.handler(pt);
+                userType = myController.handler(pt);
                 break;
         }
     }
@@ -118,11 +124,10 @@ public class MainController extends Thread {
                 myController = new AdminController(is, os);
                 break;
             default:
-                break;
         }
     }
 
-    private void exit() throws IOException {
+    private void stopThread() throws IOException {
         Server.removeThread(clientID);
         socket.close();
         running = false;
