@@ -13,7 +13,7 @@ public class LectureManageService {
         this.lectureRepo = lectureRepo;
     }
 
-    public Lecture create( long courseID, String lectureCode, String professorCode,
+    public Lecture create(Course course, String lectureCode, String professorCode,
             int limit, Set<LectureTime> lectureTimes){
         //TODO : lectureID확인 로직 필요
 //        Professor p = professorRepo.findByID(professorID); //TODO : 존재하지않을때 예외 로직필요
@@ -26,7 +26,7 @@ public class LectureManageService {
 
         //TODO : 다른방식으로 생성?
         return Lecture.builder()
-                .courseID(courseID)
+                .course(course)
                 .lectureCode(lectureCode)
                 .lecturerID(professorCode)
                 .limit(limit)

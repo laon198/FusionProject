@@ -46,7 +46,9 @@ public interface LectureMapper {
 
     @InsertProvider(type = infra.database.mapper.sql.LectureSql.class, method = "insert")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "lecture_PK")
-    int insert(LectureDTO lectureDTO);
+    int insert(@Param("courseID")long courseID, @Param("lectureCode")String lectureCode,
+                @Param("limit")int limit, @Param("applicant")int applicant,
+                @Param("professorCode")String professorCode);
 
     @InsertProvider(type = infra.database.mapper.sql.LectureSql.class, method = "insertLectureTime")
     void insertLectureTime(@Param("lectureID") long lectureID, @Param("lectureDay") String lectureDay,
@@ -59,7 +61,9 @@ public interface LectureMapper {
 
 
     @UpdateProvider(type = infra.database.mapper.sql.LectureSql.class, method = "updateLecture")
-    void updateLecture(LectureDTO lectureDTO);
+    void updateLecture(@Param("courseID")long courseID, @Param("lectureCode")String lectureCode,
+                       @Param("limit")int limit, @Param("applicant")int applicant,
+                       @Param("professorCode")String professorCode, @Param("id")long id);
 
     @UpdateProvider(type = infra.database.mapper.sql.LectureSql.class, method = "updateLectureTime")
     void updateLectureTime(@Param("id") long id, @Param("lectureDay") String lectureDay,

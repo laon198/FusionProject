@@ -4,6 +4,7 @@ import domain.model.LectureTime;
 import domain.model.Professor;
 import domain.repository.ProfessorRepository;
 import infra.database.PooledDataSource;
+import infra.database.option.professor.ProfessorOption;
 import infra.dto.ModelMapper;
 import infra.dto.ProfessorDTO;
 
@@ -45,6 +46,49 @@ public class RDBProfessorRepository implements ProfessorRepository {
             }
         }
         return prof;
+    }
+
+    @Override
+    public List<Professor> findByOption(ProfessorOption... options) {
+        String and = " AND ";
+        String where = " WHERE ";
+        StringBuilder query = new StringBuilder(
+                "SELECT * FROM professors_tb AS p " +
+                        "JOIN members_tb AS m " +
+                        "ON p.member_PK = m.member_PK "
+        );
+
+        for(int i=0; i<options.length; i++){
+            if(i==0){
+                query.append(where);
+            }
+
+            query.append(options[i].getQuery());
+
+            if(i!=options.length-1){
+                query.append(and);
+            }
+        }
+
+        Professor prof = null;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet res = null;
+        try{
+            conn = ds.getConnection();
+            pstmt = conn.prepareStatement(new String(query));
+            res = pstmt.executeQuery();
+            return getProfFrom(res);
+        }catch(SQLException sqlException){
+            sqlException.printStackTrace();
+        }finally {
+            try{
+                conn.close();
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     @Override

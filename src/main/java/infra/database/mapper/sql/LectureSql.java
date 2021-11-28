@@ -104,7 +104,7 @@ public class LectureSql {
             VALUES("lecture_code", "#{lectureCode}");
             VALUES("capacity", "#{limit}");
             VALUES("applicant_CNT", "#{applicant}");
-            VALUES("professor_code", "#{lecturerID}");
+            VALUES("professor_code", "#{professorCode}");
         }};
         return sql.toString();
     }

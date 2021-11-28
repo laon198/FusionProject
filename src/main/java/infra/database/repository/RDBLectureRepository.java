@@ -4,10 +4,13 @@ import domain.model.LectureTime;
 import domain.model.Lecture;
 import domain.model.LecturePlanner;
 import domain.model.Registering;
+import domain.repository.CourseRepository;
 import domain.repository.LectureRepository;
+import domain.repository.ProfessorRepository;
 import infra.database.MyBatisConnectionFactory;
 import infra.database.mapper.LectureMapper;
 import infra.database.option.lecture.LectureOption;
+import infra.database.option.professor.ProfessorCodeOption;
 import infra.dto.LectureDTO;
 import infra.dto.LectureTimeDTO;
 import infra.dto.ModelMapper;
@@ -18,8 +21,14 @@ import java.util.*;
 
 public class RDBLectureRepository implements LectureRepository {
     private SqlSessionFactory sqlSessionFactory = MyBatisConnectionFactory.getSqlSessionFactory();
+    private CourseRepository courseRepo;
+    private ProfessorRepository profRepo;
 
-    public RDBLectureRepository() {}
+    public RDBLectureRepository(
+            CourseRepository courseRepo, ProfessorRepository profRepo) {
+        this.courseRepo = courseRepo;
+        this.profRepo = profRepo;
+    }
 
     public List<Lecture> findByOption(LectureOption ...lectureOptions) {
         List<Lecture> list = new ArrayList<>();
@@ -106,7 +115,11 @@ public class RDBLectureRepository implements LectureRepository {
             Map<String, String> items = new HashMap<>(lectureDTO.getPlanner().getItems());
             items.put("id", Long.toString(lectureDTO.getId()));
             mapper.updateLecturePlanner(items);
-            mapper.updateLecture(lectureDTO);
+            mapper.updateLecture(
+                    lectureDTO.getCourseID(), lectureDTO.getProfessorCode(),
+                    lectureDTO.getLimit(), lectureDTO.getApplicant(),
+                    lectureDTO.getProfessorCode(), lectureDTO.getId()
+            );
 
             for (LectureTimeDTO lectureTimeDTO : lectureTimes) {
                 if (lectureTimeDTO.getId() == -1) {
@@ -140,7 +153,12 @@ public class RDBLectureRepository implements LectureRepository {
         LectureDTO lectureDTO = ModelMapper.lectureToDTO(lecture);
         Set<LectureTimeDTO> lectureTimes = lectureDTO.getLectureTimes();
         try {
-            mapper.insert(lectureDTO);
+            mapper.insert(
+                    lectureDTO.getCourseID(), lectureDTO.getProfessorCode(),
+                    lectureDTO.getLimit(), lectureDTO.getApplicant(),
+                    lectureDTO.getProfessorCode()
+            );
+
             Map<String, String> items = new HashMap<>(lectureDTO.getPlanner().getItems());
             items.put("id", "");
             items.put("lecturePK", Long.toString(lectureDTO.getId()));
@@ -261,9 +279,15 @@ public class RDBLectureRepository implements LectureRepository {
                                  Set<Registering> regs, LecturePlanner planner) {
         return Lecture.builder()
                 .id((long) lectureMap.get("lecture_PK"))
-                .courseID((long) lectureMap.get("course_PK"))
-                .lecturerID(lectureMap.get("lecture_code").toString())
-                .lectureCode(lectureMap.get("professor_code").toString())
+                .course(courseRepo.findByID((long)lectureMap.get("course_PK")))
+                .lectureCode(lectureMap.get("lecture_code").toString())
+                .professor(
+                        profRepo.findByOption(
+                                new ProfessorCodeOption(
+                                        lectureMap.get("professor_code").toString()
+                                )
+                        ).get(0)
+                )
                 .limit((int) lectureMap.get("capacity"))
                 .registerings(regs)
                 .lectureTimes(times)

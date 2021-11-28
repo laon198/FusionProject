@@ -15,7 +15,7 @@ import java.util.List;
 public class test {
 
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException {
-        LectureRepository lectureRepo = new RDBLectureRepository();
+//        LectureRepository lectureRepo = new RDBLectureRepository();
 //        Course[] courses = new Course[3];
 //        courses[0] = Course.builder()
 //                    .id(1)
@@ -132,31 +132,31 @@ public class test {
 //            System.out.println("l = " + l);
 //        }
 
-        AdminRepository adminRepo = new RDBAdminRepository();
-//        LectureRepository lectureRepo = new RDBLectureRepository();
-        CourseRepository courseRepo = new RDBCourseRepository();
-        RegisteringRepository regRepo = new RDBRegisteringRepository();
-        RegPeriodRepository periodRepo = new RDBRegPeriodRepository();
-        StudentRepository stdRepo = new RDBStudentRepository();
-        ProfessorRepository profRepo = new RDBProfessorRepository();
-        AccountRepository accRepo = new RDBAccountRepository();
-        StudentAppService stdService = new StudentAppService(
-                stdRepo, accRepo
-        );
-
-        ProfessorAppService profService = new ProfessorAppService(
-                profRepo, accRepo
-        );
-
-        AdminAppService adminService = new AdminAppService(
-                adminRepo, accRepo
-        );
-
-        CourseAppService courseService = new CourseAppService(
-                courseRepo
-        );
-
-        RegisterAppService r = new RegisterAppService(lectureRepo, stdRepo, courseRepo, regRepo, periodRepo);
+//        AdminRepository adminRepo = new RDBAdminRepository();
+////        LectureRepository lectureRepo = new RDBLectureRepository();
+//        CourseRepository courseRepo = new RDBCourseRepository();
+//        RegisteringRepository regRepo = new RDBRegisteringRepository();
+//        RegPeriodRepository periodRepo = new RDBRegPeriodRepository();
+//        StudentRepository stdRepo = new RDBStudentRepository();
+//        ProfessorRepository profRepo = new RDBProfessorRepository();
+//        AccountRepository accRepo = new RDBAccountRepository();
+//        StudentAppService stdService = new StudentAppService(
+//                stdRepo, accRepo
+//        );
+//
+//        ProfessorAppService profService = new ProfessorAppService(
+//                profRepo, accRepo
+//        );
+//
+//        AdminAppService adminService = new AdminAppService(
+//                adminRepo, accRepo
+//        );
+//
+//        CourseAppService courseService = new CourseAppService(
+//                courseRepo
+//        );
+//
+//        RegisterAppService r = new RegisterAppService(lectureRepo, stdRepo, courseRepo, regRepo, periodRepo);
 
         //회원 Create
         //create Admin
@@ -168,26 +168,26 @@ public class test {
 //                .build();
 //        adminService.create(adminDTO);
         //end of admin create
-
-        List<Professor> profList = profRepo.findAll();
-//        List<ProfessorDTO> dtoList = new ArrayList<>();
-        ProfessorDTO[] dtos = new ProfessorDTO[profList.size()];
-        int cnt = 0;
-        for(Professor p : profList){
-            dtos[cnt++] = ModelMapper.professorToDTO(p);
-        }
-
-        
-        try{
-            byte[] packets = Serializer.objectArrToBytes(dtos);
-            ProfessorDTO[] p = (ProfessorDTO[]) Deserializer.bytesToObjectArr(packets);
-
-            for(ProfessorDTO p2 : p){
-                System.out.println("p2 = " + p2);
-            }
-        }catch (Exception e){
-            System.out.println("e.getMessage() = " + e.getMessage());
-        }
+//
+//        List<Professor> profList = profRepo.findAll();
+////        List<ProfessorDTO> dtoList = new ArrayList<>();
+//        ProfessorDTO[] dtos = new ProfessorDTO[profList.size()];
+//        int cnt = 0;
+//        for(Professor p : profList){
+//            dtos[cnt++] = ModelMapper.professorToDTO(p);
+//        }
+//
+//
+//        try{
+//            byte[] packets = Serializer.objectArrToBytes(dtos);
+//            ProfessorDTO[] p = (ProfessorDTO[]) Deserializer.bytesToObjectArr(packets);
+//
+//            for(ProfessorDTO p2 : p){
+//                System.out.println("p2 = " + p2);
+//            }
+//        }catch (Exception e){
+//            System.out.println("e.getMessage() = " + e.getMessage());
+//        }
 
 
         //create professor

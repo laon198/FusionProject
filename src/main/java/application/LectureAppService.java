@@ -42,7 +42,7 @@ public class LectureAppService {
         Lecture lecture = m.create(
                 lectureDTO.getCourseID(),
                 lectureDTO.getLectureCode(),
-                lectureDTO.getLecturerID(),
+                lectureDTO.getProfessorCode(),
                 lectureDTO.getLimit(),
                 times
         );

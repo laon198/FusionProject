@@ -226,9 +226,9 @@ public class ModelMapper {
     public static LectureDTO lectureToDTO(Lecture lecture) {
         try {
             long id = getLongField(lecture, "id");
-            long courseID = getLongField(lecture, "courseID");
+            CourseDTO course = courseToDTO(getCourseField(lecture, "course"));
             String lectureCode = getStringField(lecture,"lectureCode");
-            String lecturerID = getStringField(lecture, "lecturerID");
+            ProfessorDTO professor = professorToDTO(getProfessorField(lecture, "professor"));
             int limit = getIntField(lecture, "limit");
             Set<LectureTimeDTO> lectureTimes = getLectureTimeDTOTable(getTimeTable(lecture,"lectureTimes"));
             Set<RegisteringDTO> myRegisterings = getRegDTOSet(getRegisteringSet(lecture,"myRegisterings"));
@@ -236,9 +236,9 @@ public class ModelMapper {
 
             return LectureDTO.builder()
                     .id(id)
-                    .courseID(courseID)
+                    .course(course)
+                    .professor(professor)
                     .lectureCode(lectureCode)
-                    .lecturerID(lecturerID)
                     .limit(limit)
                     .lectureTimes(lectureTimes)
                     .registerings(myRegisterings)
@@ -250,6 +250,18 @@ public class ModelMapper {
         }
 
         return null;
+    }
+
+    private static Professor getProfessorField(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        Field f1 = obj.getClass().getSuperclass().getDeclaredField(fieldName);
+        f1.setAccessible(true);
+        return (Professor) f1.get(obj);
+    }
+
+    private static Course getCourseField(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        Field f1 = obj.getClass().getSuperclass().getDeclaredField(fieldName);
+        f1.setAccessible(true);
+        return (Course) f1.get(obj);
     }
 
 

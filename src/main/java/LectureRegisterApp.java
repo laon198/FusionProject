@@ -19,8 +19,10 @@ public class LectureRegisterApp {
         accRepo = new RDBAccountRepository();
         adminRepo = new RDBAdminRepository();
         courseRepo = new RDBCourseRepository();
-        lectureRepo = new RDBLectureRepository();
         profRepo = new RDBProfessorRepository();
+        lectureRepo = new RDBLectureRepository(
+                courseRepo, profRepo
+        );
         regRepo = new RDBRegisteringRepository();
         regPeriodRepo = new RDBRegPeriodRepository();
         stdRepo = new RDBStudentRepository();

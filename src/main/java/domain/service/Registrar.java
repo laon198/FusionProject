@@ -20,7 +20,7 @@ public class Registrar {
     }
 
     public Registering register(Lecture lecture, Student student) throws  IllegalStateException, IllegalArgumentException{
-        Course course = courseRepo.findByID(lecture.getCourseID());
+        Course course = lecture.getCourse();
 
         if(!isValidPeriodAbout(student, course)){
             throw new IllegalStateException("해당학년 수강신청 기간이 아닙니다.");
@@ -63,7 +63,7 @@ public class Registrar {
         if(!student.hasLecture(lecture.getID())){
             throw new IllegalArgumentException("수강하지 않는 강의 입니다.");
         }
-        Course course = courseRepo.findByID(lecture.getCourseID());
+        Course course = lecture.getCourse();
 
         student.cancel(registering, lecture.getLectureTimes(), course.getCredit());
         lecture.cancel(registering);

@@ -92,6 +92,7 @@ public class Professor extends Member{
         telePhone = value;
     }
 
+    public String getProfessorCode(){return professorCode;}
     //TODO : 테스트용
 
     @Override

@@ -1,14 +1,16 @@
 package domain.model;
 
+import infra.dto.ProfessorDTO;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 public class Lecture {
     private long id;
-    private long courseID;
+    private Course course;
     private String lectureCode;
-    private String lecturerID;
+    private Professor professor;
     private int limit;
     private Set<LectureTime> lectureTimes;
     private Set<Registering> myRegisterings;
@@ -16,9 +18,9 @@ public class Lecture {
 
     public static class Builder {
         private long id;
-        private long courseID;
+        private Course course;
         private String lectureCode;
-        private String lecturerID;
+        private Professor professor;
         private int limit;
         private Set<LectureTime> lectureTimes = new HashSet<>();
         private Set<Registering> myRegisterings = new HashSet<>();
@@ -30,8 +32,8 @@ public class Lecture {
             return this;
         }
 
-        public Builder courseID(long courseID) {
-            this.courseID = courseID;
+        public Builder course(Course course) {
+            this.course = course;
             return this;
         }
 
@@ -40,8 +42,8 @@ public class Lecture {
             return this;
         }
 
-        public Builder lecturerID(String lecturerID) {
-            this.lecturerID = lecturerID;
+        public Builder professor(Professor value) {
+            professor = value;
             return this;
         }
 
@@ -76,49 +78,35 @@ public class Lecture {
 
     private Lecture(Builder builder) {
         id = builder.id;
-        courseID = builder.courseID;
+        course = builder.course;
         lectureCode = builder.lectureCode;
-        lecturerID = builder.lecturerID;
+        professor = builder.professor;
         limit = builder.limit;
         lectureTimes = builder.lectureTimes;
         myRegisterings = builder.myRegisterings;
         planner = builder.planner;
     }
 
-    //TODO : set을 직접 받는 것 별로 좋지 않은듯
-    public Lecture() {
-    }
+    public Lecture() {}
 
-    public Lecture(long lectureID, String professorID, int limitPersonNum, long courseID, String lectureCode,
-                   Set<LectureTime> lectureTimes, Set<Registering> registerings) { //TODO : 강의시간 더나은 방법으로
-        id = lectureID;
-        lecturerID = professorID;
-        limit = limitPersonNum;
-        this.lectureTimes = lectureTimes;
-        this.courseID = courseID;
-        planner = new LecturePlanner();
-        this.lectureCode = lectureCode;
-        myRegisterings = registerings;
-    }
-
-    //TODO : LectureManageService 때문에 만들어 놓은 임시 생성자. 나중에 지우자.
-    public Lecture(long lectureID, String professorID, int limitPersonNum, long courseID,
-                   Set<LectureTime> lectureTimes) { //TODO : 강의시간 더나은 방법으로
-        id = lectureID;
-        lecturerID = professorID;
-        limit = limitPersonNum;
-        myRegisterings = new HashSet<>(); //TODO
-        this.lectureTimes = lectureTimes;
-        this.courseID = courseID;
-        planner = new LecturePlanner();
-    }
+//    public Lecture(long lectureID, String professorID, int limitPersonNum, Course course, String lectureCode,
+//                   Set<LectureTime> lectureTimes, Set<Registering> registerings) {
+//        id = lectureID;
+//        lecturerID = professorID;
+//        limit = limitPersonNum;
+//        this.lectureTimes = lectureTimes;
+//        this.course = course;
+//        planner = new LecturePlanner();
+//        this.lectureCode = lectureCode;
+//        myRegisterings = registerings;
+//    }
 
     public long getID() {
         return id;
     }
 
-    public long getCourseID() {
-        return courseID;
+    public Course getCourse() {
+        return course;
     }
 
     public Set<LectureTime> getLectureTimes() {
@@ -147,8 +135,8 @@ public class Lecture {
         myRegisterings.remove(registering);
     }
 
-    public void writePlanner(String itemName, String content, String writerID) {
-        if (writerID.equals(lecturerID)) {
+    public void writePlanner(String itemName, String content, String writerCode) {
+        if (writerCode.equals(professor.getProfessorCode())) {
             throw new IllegalStateException("담당 교과목이 아닙니다.");
         }
 
@@ -160,7 +148,7 @@ public class Lecture {
     }
 
     public boolean isEqualCourse(Lecture lecture) {
-        return lecture.courseID == courseID;
+        return lecture.course.equals(lecture.course);
     }
 
     @Override
@@ -181,9 +169,7 @@ public class Lecture {
     public String toString() {
         return "Lecture{" +
                 "id=" + id +
-                ", courseID=" + courseID +
                 ", lectureCode='" + lectureCode + '\'' +
-                ", lecturerID='" + lecturerID + '\'' +
                 ", limit=" + limit +
                 ", lectureTimes=" + lectureTimes +
                 ", myRegisterings=" + myRegisterings +
