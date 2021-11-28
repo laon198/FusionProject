@@ -1,9 +1,7 @@
 package infra.network;
-
 import controller.MainController;
-import domain.repository.*;
-import org.apache.log4j.chainsaw.Main;
 
+import domain.repository.*;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -56,7 +54,7 @@ public class Server {
                 // 스레드 생성
                 addThread(socket);
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println(e);
             }
         }
     }
@@ -69,15 +67,16 @@ public class Server {
                     regPeriodRepo, stdRepo, socket
             );
             clients[clientCount++] = thread;
-            System.out.println("Create thread > clientCount = " + clientCount);
-            System.out.println("client Port : " + clients[clientCount].getClientID());
-            clients[clientCount++].start();
-            System.out.println("clientCount : " + clientCount);
+            System.out.println("Create thread : clientCount = " + clientCount);
+            System.out.println("client Port : " + thread.getClientID());
+            thread.start();
         } else {
             System.out.println("Client refused: maximum " + clients.length + " reached.");
+            socket.close();
         }
     }
 
+    // clients 배열에서 해당 ID(port)를 가진 client pos 리턴
     public static int findClient(int ID) {
         for (int i = 0; i < clientCount; i++)
             if (clients[i].getClientID() == ID)
@@ -86,17 +85,13 @@ public class Server {
     }
 
     // 쓰레드 지우기
-    public synchronized static void removeThread(int ID) throws IOException {
+    public synchronized static void removeThread(int ID) {
         int pos = findClient(ID);
         if (pos >= 0) {
-            MainController thread = clients[pos];
             if (pos < clientCount - 1)
                 for (int i = pos + 1; i < clientCount; i++)
                     clients[i - 1] = clients[i];
             clientCount--;
-            System.out.print("clientCount : " + clientCount);
-            thread.socketClose();
         }
     }
-
 }
