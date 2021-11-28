@@ -21,8 +21,9 @@ public class MainController extends Thread {
     private Socket socket;
     private InputStream is;
     private OutputStream os;
-    private DefinedController myController;
+
     private boolean running;
+    private DefinedController myController;
 
     private final AccountRepository accRepo;
     private final AdminRepository adminRepo;
@@ -66,8 +67,9 @@ public class MainController extends Thread {
             try {
                 Protocol pt = new Protocol();
                 handler(pt.read(is));
-            }catch (Exception e) {
-                System.out.println("Exception");
+            } catch (Exception e) {
+                System.err.println(e);
+                exit();
             }
         }
         System.out.println("thread 종료");
@@ -130,15 +132,21 @@ public class MainController extends Thread {
         }
     }
 
-
-    public void socketClose() throws IOException {
-        socket.close();
-        is.close();
-        os.close();
-    }
-
-    private void exit() throws IOException {
+    // 소켓 종료 및 스레드 종료
+    private void exit() {
         Server.removeThread(clientID);
+        socketClose();
         running = false;
     }
+
+    public void socketClose() {
+        try {
+            socket.close();
+            is.close();
+            os.close();
+        } catch (IOException e) {
+            System.err.println(e);
+        }
+    }
+
 }
