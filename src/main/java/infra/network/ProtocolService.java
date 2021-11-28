@@ -10,24 +10,19 @@ public class ProtocolService {
     }
 
     // 실패 메시지 응답
-    public void resFailMessage() throws IOException {
+    public void responseFail() throws IOException {
         Protocol pt = new Protocol(Protocol.TYPE_RESPONSE, Protocol.T2_CODE_FAIL);
         pt.send(os);
     }
 
-    public void reponseHeaderOnly(boolean succeed) throws IOException {
-        if (succeed)
-        {
-            Protocol pt = new Protocol(Protocol.TYPE_RESPONSE, Protocol.T2_CODE_SUCCESS);
-            pt.send(os);
-        }
-        else
-            resFailMessage();
+    public void reponseSuccess() throws IOException {
+        Protocol pt = new Protocol(Protocol.TYPE_RESPONSE, Protocol.T2_CODE_SUCCESS);
+        pt.send(os);
     }
 
     public void responseObject(Object data) throws IOException, IllegalAccessException {
         if (data == null)
-            resFailMessage();
+            responseFail();
         else
         {
             Protocol pt = new Protocol(Protocol.TYPE_RESPONSE, Protocol.T2_CODE_SUCCESS);
@@ -38,7 +33,7 @@ public class ProtocolService {
 
     public void responseObjectArray(Object[] data) throws IOException, IllegalAccessException {
         if (data == null)
-            resFailMessage();
+            responseFail();
         else
         {
             Protocol pt = new Protocol(Protocol.TYPE_RESPONSE, Protocol.T2_CODE_SUCCESS);
