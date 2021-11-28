@@ -9,10 +9,15 @@ import infra.database.option.lecture.LectureOption;
 import infra.database.option.student.StudentOption;
 import infra.dto.*;
 import infra.network.Protocol;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 public class StudentController implements DefinedController {
+    public static final int USER_UNDEFINED = 0;
+    public static final int STUD_TYPE = 1;
+
     private final AccountRepository accRepo;
     private final AdminRepository adminRepo;
     private final CourseRepository courseRepo;
@@ -47,14 +52,14 @@ public class StudentController implements DefinedController {
         this.os = os;
 
         stdService = new StudentAppService(stdRepo, accRepo);
-        lectureService = new LectureAppService(lectureRepo);
+        lectureService = new LectureAppService(lectureRepo, courseRepo, profRepo);
         regService = new RegisterAppService(
                 lectureRepo, stdRepo, courseRepo, regRepo, regPeriodRepo
         );
     }
 
     @Override
-    public void handler(Protocol recvPt) throws Exception {
+    public int handler(Protocol recvPt) throws Exception {
         switch (recvPt.getCode()){
             case Protocol.T1_CODE_CREATE: // 등록
                 createReq(recvPt);
@@ -68,9 +73,14 @@ public class StudentController implements DefinedController {
             case Protocol.T1_CODE_DELETE:  // 삭제
                 deleteReq(recvPt);
                 break;
+            case Protocol.T1_CODE_LOGOUT:
+                logoutReq(recvPt);
+                return USER_UNDEFINED;
             default:
                 break;
         }
+
+        return STUD_TYPE;
     }
 
     // 생성 요청
@@ -95,6 +105,9 @@ public class StudentController implements DefinedController {
                 break;
             case Protocol.ENTITY_REGIS_PERIOD: // 수강신청기간 조회
                 readRegisteringPeriod(recvPt);
+                break;
+            case Protocol.ENTITY_REGISTRATION: // 수강신청한 강의조회
+                readRegisteredLectures(recvPt);
                 break;
             default:
                 break;
@@ -125,7 +138,14 @@ public class StudentController implements DefinedController {
         }
     }
 
-     //< 수강신청 >
+    private void logoutReq(Protocol recvPt) throws IOException {
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+        sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+        sendPt.send(os);
+    }
+
+
+    //< 수강신청 >
     private void createRegistration(Protocol recvPt) throws Exception {
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
@@ -242,7 +262,23 @@ public class StudentController implements DefinedController {
         }
     }
 
-     // < 비밀번호 수정 >
+    private void readRegisteredLectures(Protocol recvPt) throws Exception {
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
+        try{
+            StudentDTO stdDTO = (StudentDTO) recvPt.getObject();
+            LectureDTO[] res = lectureService.getRegisteredLectures(stdDTO.getMyRegisterings());
+            sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+            sendPt.setObject(res);
+            sendPt.send(os);
+        }catch(IllegalArgumentException e){
+            sendPt.setCode(Protocol.T2_CODE_FAIL);
+            sendPt.send(os);
+        }
+    }
+
+
+    // < 비밀번호 수정 >
     private void changePassword(Protocol recvPt) throws Exception {
         AccountAppService accService = new AccountAppService(accRepo);
         AccountDTO accDTO = (AccountDTO) recvPt.getObject();

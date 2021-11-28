@@ -1,13 +1,16 @@
 package application;
 
-import domain.model.LectureTime;
-import domain.model.Lecture;
+import domain.model.*;
+import domain.repository.CourseRepository;
 import domain.repository.LectureRepository;
+import domain.repository.ProfessorRepository;
 import domain.service.LectureManageService;
 import infra.database.option.lecture.LectureOption;
+import infra.database.option.professor.ProfessorCodeOption;
 import infra.dto.LectureDTO;
 import infra.dto.LectureTimeDTO;
 import infra.dto.ModelMapper;
+import infra.dto.RegisteringDTO;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,9 +19,15 @@ import java.util.Set;
 
 public class LectureAppService {
     private LectureRepository lectureRepo;
+    private CourseRepository courseRepo;
+    private ProfessorRepository profRepo;
 
-    public LectureAppService(LectureRepository lectureRepo) {
+    public LectureAppService(
+            LectureRepository lectureRepo, CourseRepository courseRepo,
+            ProfessorRepository profRepo ) {
         this.lectureRepo = lectureRepo;
+        this.courseRepo = courseRepo;
+        this.profRepo = profRepo;
     }
 
     public void create(LectureDTO lectureDTO){
@@ -39,10 +48,13 @@ public class LectureAppService {
             );
         }
 
+        Course course = courseRepo.findByID(lectureDTO.getCourseID());
+        Professor prof = profRepo.findByOption(new ProfessorCodeOption(lectureDTO.getProfessorCode())).get(0);
+
         Lecture lecture = m.create(
-                lectureDTO.getCourseID(),
+                course,
                 lectureDTO.getLectureCode(),
-                lectureDTO.getProfessorCode(),
+                prof,
                 lectureDTO.getLimit(),
                 times
         );
@@ -64,6 +76,16 @@ public class LectureAppService {
 
     public LectureDTO[] retrieveByOption(LectureOption... options){
         return lectureListToDTOArr(lectureRepo.findByOption(options));
+    }
+
+    public LectureDTO[] getRegisteredLectures(RegisteringDTO[] regs){
+        LectureDTO[] res = new LectureDTO[regs.length];
+
+        for(int i=0; i<res.length; i++){
+            res[i] = ModelMapper.lectureToDTO(lectureRepo.findByID(regs[i].getLectureID()));
+        }
+
+        return res;
     }
 
     private LectureDTO[] lectureListToDTOArr(List<Lecture> lectures){

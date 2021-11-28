@@ -108,7 +108,14 @@ public class StudentDTO extends MemberDTO {
         return maxCredit;
     }
 
-    //TODO : 테스트용
+    public RegisteringDTO[] getMyRegisterings() {
+        return myRegisterings;
+    }
+
+    public LectureTimeDTO[] getTimeTable() {
+        return timeTable;
+    }
+//TODO : 테스트용
 
     @Override
     public String toString() {

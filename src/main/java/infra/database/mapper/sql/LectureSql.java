@@ -141,6 +141,7 @@ public class LectureSql {
         SQL sql = new SQL() {{
             UPDATE("lecture_planners_tb");
             SET("lecture_goal = #{goal}");
+            SET("lecture_summary = #{summary}");
             WHERE("lecture_PK = #{id}");
         }};
         return sql.toString();

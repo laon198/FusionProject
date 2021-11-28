@@ -9,6 +9,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class ProfessorController implements DefinedController {
+    public static final int USER_UNDEFINED = 0;
+    public static final int PROF_TYPE = 2;
+
     private final AccountRepository accRepo;
     private final AdminRepository adminRepo;
     private final CourseRepository courseRepo;
@@ -40,7 +43,7 @@ public class ProfessorController implements DefinedController {
     }
 
     @Override
-    public void handler(Protocol recvPt) throws Exception {
+    public int handler(Protocol recvPt) throws Exception {
         switch (recvPt.getCode()) {
             case Protocol.T1_CODE_READ:   // 조회
                 readReq(recvPt);
@@ -50,6 +53,8 @@ public class ProfessorController implements DefinedController {
                 break;
             default:
         }
+
+        return PROF_TYPE;
     }
 
     // 조회 요청

@@ -128,7 +128,7 @@ public class Protocol {
         System.arraycopy(intToByte(bodyLength), 0, packet,
                     LEN_TYPE + LEN_CODE + LEN_ENTITY+LEN_READ_OPTION, LEN_BODYLENGTH);
         if (bodyLength > 0) // 바디 담기
-            System.arraycopy(body, LEN_BODYLENGTH, packet, LEN_HEADER, getBodyLength());
+            System.arraycopy(body, 0, packet, LEN_HEADER, getBodyLength());
         return packet;
     }
 
@@ -136,14 +136,14 @@ public class Protocol {
     public void setObjectArray(Object[] bytes) throws IllegalAccessException {
         byte[] serializedObject = Serializer.objectArrToBytes(bytes);  // bytes = data length + data
         this.body = serializedObject;
-        setBodyLength(serializedObject.length - LEN_BODYLENGTH);
+        setBodyLength(serializedObject.length);
     }
 
     // 보낼 data - 객체를 직렬화하여 body 초기화
     public void setObject(Object bytes) throws IllegalAccessException {
         byte[] serializedObject = Serializer.objectToBytes(bytes);
         this.body = serializedObject;
-        setBodyLength(serializedObject.length - LEN_BODYLENGTH);
+        setBodyLength(serializedObject.length);
     }
 
     // 받은 패킷 -> 헤더 초기화
@@ -162,7 +162,7 @@ public class Protocol {
     public void setBody(byte[] packet) {
         if (bodyLength > 0) {
             byte[] data = new byte[bodyLength];
-            System.arraycopy(packet, LEN_HEADER, data, 0, bodyLength);
+            System.arraycopy(packet, 0, data, 0, bodyLength);
             body = data;
         }
     }
@@ -204,13 +204,16 @@ public class Protocol {
                 throw new Exception("통신 오류 > 연결 오류");
 
             byte[] buf = new byte[getBodyLength()];
-            while (totalReceived < getBodyLength()) {
-                readSize = is.read(buf, totalReceived, getBodyLength() - totalReceived);
-                totalReceived += readSize;
-                if (readSize == -1) {
-                    throw new Exception("통신 오류 > 연결 끊김");
-                }
-            }
+            is.read(buf, 0, getBodyLength());
+
+//            while (totalReceived < getBodyLength()) {
+//                readSize = is.read(buf, totalReceived, getBodyLength() - totalReceived);
+//                totalReceived += readSize;
+//                if (readSize == -1) {
+//                    throw new Exception("통신 오류 > 연결 끊김");
+//                }
+//            }
+
             setBody(buf);
             return this;    
         } 

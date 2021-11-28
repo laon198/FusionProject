@@ -35,7 +35,6 @@ public class MainController extends Thread {
     private final StudentRepository stdRepo;
 
     // 스레드 생성자
-
     public MainController(
             AccountRepository accRepo, AdminRepository adminRepo, CourseRepository courseRepo,
             LectureRepository lectureRepo, ProfessorRepository profRepo, RegisteringRepository regRepo,
@@ -65,6 +64,7 @@ public class MainController extends Thread {
         running = true;
         while (running) {
             try {
+                System.out.println("main controller entry");
                 Protocol pt = new Protocol();
                 handler(pt.read(is));
             } catch (Exception e) {
@@ -80,6 +80,7 @@ public class MainController extends Thread {
     }
 
     public void handler(Protocol pt) throws Exception {
+        System.out.println("handler entry");
         if (pt.getType() == Protocol.TYPE_REQUEST &&
                 pt.getCode() == Protocol.T1_CODE_EXIT){
             exit();
@@ -87,7 +88,6 @@ public class MainController extends Thread {
         }
 
         switch(userType){
-            //TODO : 로그아웃 생각필요
             case USER_UNDEFINED:
                 UndefinedController undefinedController = new UndefinedController(
                         socket, is, os, clientID, accRepo
@@ -99,7 +99,8 @@ public class MainController extends Thread {
             case STUD_TYPE:
             case PROF_TYPE:
             case ADMIN_TYPE:
-                myController.handler(pt);
+                userType = myController.handler(pt);
+                setMyController();
                 break;
         }
     }
@@ -107,27 +108,34 @@ public class MainController extends Thread {
     private void setMyController() {
         switch (userType){
             case STUD_TYPE:
-                myController = new StudentController(
-                        accRepo, adminRepo, courseRepo,
-                        lectureRepo, profRepo, regRepo,
-                        regPeriodRepo, stdRepo, is, os
-                );
+                if(myController==null){
+                    myController = new StudentController(
+                            accRepo, adminRepo, courseRepo,
+                            lectureRepo, profRepo, regRepo,
+                            regPeriodRepo, stdRepo, is, os
+                    );
+                }
                 break;
             case PROF_TYPE:
-                myController = new ProfessorController(
-                        accRepo, adminRepo, courseRepo,
-                        lectureRepo, profRepo, regRepo,
-                        regPeriodRepo, stdRepo, is, os
-                );
+                if(myController==null){
+                    myController = new ProfessorController(
+                            accRepo, adminRepo, courseRepo,
+                            lectureRepo, profRepo, regRepo,
+                            regPeriodRepo, stdRepo, is, os
+                    );
+                }
                 break;
             case ADMIN_TYPE:
-                myController = new AdminController(
-                        accRepo, adminRepo, courseRepo,
-                        lectureRepo, profRepo, regRepo,
-                        regPeriodRepo, stdRepo, is, os
-                );
+                if(myController==null){
+                    myController = new AdminController(
+                            accRepo, adminRepo, courseRepo,
+                            lectureRepo, profRepo, regRepo,
+                            regPeriodRepo, stdRepo, is, os
+                    );
+                }
                 break;
-            default:
+            case USER_UNDEFINED:
+                myController = null;
                 break;
         }
     }

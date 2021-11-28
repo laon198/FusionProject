@@ -52,6 +52,7 @@ public class UndefinedController {
     }
 
     private int loginReq(Protocol recvPt) throws Exception{
+        System.out.println("login entry");
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
         AccountDTO accDTO = (AccountDTO) recvPt.getObject();
 

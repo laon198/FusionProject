@@ -36,12 +36,14 @@ public class ModelMapper {
             long pk = getLongField(account, "pk");
             String id = getStringField(account, "id");
             String password = getStringField(account, "password");
+            String position = getStringField(account, "position");
             long memberID = getLongField(account, "memberID");
 
             return AccountDTO.builder()
                         .pk(pk)
                         .id(id)
                         .memberID(memberID)
+                        .position(position)
                         .password(password)
                         .build();
 
@@ -79,11 +81,12 @@ public class ModelMapper {
 
     public static LecturePlannerDTO plannerToDTO(LecturePlanner planner){
         try{
-            Map<String, String> items = getPlannerItems(planner, "items");
-            PeriodDTO writePeriod = periodToDTO(getPeriod(planner,"writePeriod"));
+            String goal = getStringField(planner, "goal");
+            String summary = getStringField(planner, "summary");
+
             return LecturePlannerDTO.builder()
-                    .items(items)
-                    .writePeriod(writePeriod)
+                    .goal(goal)
+                    .summary(summary)
                     .build();
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.getStackTrace();

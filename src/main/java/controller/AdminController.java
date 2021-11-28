@@ -10,6 +10,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class AdminController implements DefinedController {
+    public static final int USER_UNDEFINED = 0;
+    public static final int ADMIN_TYPE = 3;
+
     private final AccountRepository accRepo;
     private final AdminRepository adminRepo;
     private final CourseRepository courseRepo;
@@ -50,14 +53,14 @@ public class AdminController implements DefinedController {
         profService = new ProfessorAppService(profRepo, accRepo);
         adminService = new AdminAppService(adminRepo, accRepo);
         courseService = new CourseAppService(courseRepo);
-        lectureService = new LectureAppService(lectureRepo);
+        lectureService = new LectureAppService(lectureRepo, courseRepo, profRepo);
         regService = new RegisterAppService(
                 lectureRepo, stdRepo, courseRepo, regRepo, regPeriodRepo
         );
     }
 
     @Override
-    public void handler(Protocol recvPt) throws Exception  {
+    public int handler(Protocol recvPt) throws Exception  {
         switch (recvPt.getCode()) {
             case Protocol.T1_CODE_CREATE: // 등록
                 createReq(recvPt);
@@ -73,6 +76,7 @@ public class AdminController implements DefinedController {
                 break;
             default:
         }
+        return ADMIN_TYPE;
     }
 
 

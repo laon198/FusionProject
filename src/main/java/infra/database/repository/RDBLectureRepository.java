@@ -53,8 +53,8 @@ public class RDBLectureRepository implements LectureRepository {
 
                 Map<String, Object> plannerInfo = mapper.selectPlanner(id);
                 LecturePlanner planner = new LecturePlanner();
-                //TODO : 해당 카테고리가 비었을때 예외남 처리필요
                 planner.writeItem("goal", plannerInfo.get("lecture_goal").toString());
+                planner.writeItem("summary", plannerInfo.get("lecture_summary").toString());
 
                 // Lecture 생성해서 리턴할 List에 추가
                 list.add(
@@ -83,12 +83,10 @@ public class RDBLectureRepository implements LectureRepository {
             Set<Registering> registerings = getRegSetFrom(mapper.selectRegisterings(id));
             Set<LectureTime> lectureTimes = getLtimeFrom(mapper.selectLectureTimes(id));
 
-            //TODO : 강의계획서 어떤거 들어갈지?
-            //TODO : 강의계획서 내용 넣는거 변경 필요할듯?
-            //TODO : 변경시 findAll도 함께 변경 필요
             Map<String, Object> plannerInfo = mapper.selectPlanner(id);
             LecturePlanner planner = new LecturePlanner();
             planner.writeItem("goal", plannerInfo.get("lecture_goal").toString());
+            planner.writeItem("summary", plannerInfo.get("lecture_summary").toString());
 
             lecture = mapToLecture(mapper.findByID(id), lectureTimes, registerings, planner);
 
@@ -109,10 +107,13 @@ public class RDBLectureRepository implements LectureRepository {
         SqlSession session = sqlSessionFactory.openSession();
         LectureMapper mapper = session.getMapper(LectureMapper.class);
         LectureDTO lectureDTO = ModelMapper.lectureToDTO(lecture);
-        Set<LectureTimeDTO> lectureTimes = lectureDTO.getLectureTimes();
+        LectureTimeDTO[] lectureTimes = lectureDTO.getLectureTimes();
 
         try {
-            Map<String, String> items = new HashMap<>(lectureDTO.getPlanner().getItems());
+            Map<String, String> items = new HashMap<>();
+            items.put("goal", lectureDTO.getPlanner().getGoal());
+            items.put("summary", lectureDTO.getPlanner().getSummary());
+
             items.put("id", Long.toString(lectureDTO.getId()));
             mapper.updateLecturePlanner(items);
             mapper.updateLecture(
@@ -151,7 +152,7 @@ public class RDBLectureRepository implements LectureRepository {
         SqlSession session = sqlSessionFactory.openSession();
         LectureMapper mapper = session.getMapper(LectureMapper.class);
         LectureDTO lectureDTO = ModelMapper.lectureToDTO(lecture);
-        Set<LectureTimeDTO> lectureTimes = lectureDTO.getLectureTimes();
+        LectureTimeDTO[] lectureTimes = lectureDTO.getLectureTimes();
         try {
             mapper.insert(
                     lectureDTO.getCourseID(), lectureDTO.getProfessorCode(),
@@ -159,7 +160,9 @@ public class RDBLectureRepository implements LectureRepository {
                     lectureDTO.getProfessorCode()
             );
 
-            Map<String, String> items = new HashMap<>(lectureDTO.getPlanner().getItems());
+            Map<String, String> items = new HashMap<>();
+            items.put("goal", lectureDTO.getPlanner().getGoal());
+            items.put("summary", lectureDTO.getPlanner().getSummary());
             items.put("id", "");
             items.put("lecturePK", Long.toString(lectureDTO.getId()));
             mapper.insertLecturePlanner(items);
@@ -224,8 +227,8 @@ public class RDBLectureRepository implements LectureRepository {
 
                 Map<String, Object> plannerInfo = mapper.selectPlanner(id);
                 LecturePlanner planner = new LecturePlanner();
-                //TODO : 해당 카테고리가 비었을때 예외남 처리필요
                 planner.writeItem("goal", plannerInfo.get("lecture_goal").toString());
+                planner.writeItem("summary", plannerInfo.get("lecture_summary").toString());
 
                 // Lecture 생성해서 리턴할 List에 추가
                 list.add(
