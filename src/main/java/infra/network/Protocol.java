@@ -195,4 +195,5 @@ public class Protocol {
             throw new IOException("통신 오류 > 데이터 수신 실패");
         }
     }
+
 }
