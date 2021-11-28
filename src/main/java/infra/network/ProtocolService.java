@@ -2,10 +2,10 @@ package infra.network;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class StudentProtocolService {
+public class ProtocolService {
     private OutputStream os;
 
-    public StudentProtocolService(OutputStream os) {
+    public ProtocolService(OutputStream os) {
         this.os = os;
     }
 
@@ -15,8 +15,17 @@ public class StudentProtocolService {
         pt.send(os);
     }
 
-    // 개인 정보 조회에 대한 응답
-    public void resReadPersonalInfo(Object data) throws IOException, IllegalAccessException {
+    public void reponseHeaderOnly(boolean succeed) throws IOException {
+        if (succeed)
+        {
+            Protocol pt = new Protocol(Protocol.TYPE_RESPONSE, Protocol.T2_CODE_SUCCESS);
+            pt.send(os);
+        }
+        else
+            resFailMessage();
+    }
+
+    public void responseObject(Object data) throws IOException, IllegalAccessException {
         if (data == null)
             resFailMessage();
         else
@@ -27,4 +36,14 @@ public class StudentProtocolService {
         }
     }
 
+    public void responseObjectArray(Object[] data) throws IOException, IllegalAccessException {
+        if (data == null)
+            resFailMessage();
+        else
+        {
+            Protocol pt = new Protocol(Protocol.TYPE_RESPONSE, Protocol.T2_CODE_SUCCESS);
+            pt.setObjectArray(data);
+            pt.send(os);
+        }
+    }
 }
