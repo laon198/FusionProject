@@ -22,7 +22,8 @@ public class Server {
             AccountRepository accRepo, AdminRepository adminRepo, CourseRepository courseRepo,
             LectureRepository lectureRepo, ProfessorRepository profRepo, RegisteringRepository regRepo,
             RegPeriodRepository regPeriodRepo, StudentRepository stdRepo
-    ){
+    )
+    {
         this.accRepo = accRepo;
         this.adminRepo = adminRepo;
         this.courseRepo = courseRepo;
