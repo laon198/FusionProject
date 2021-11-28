@@ -4,6 +4,7 @@ import domain.model.LectureTime;
 import domain.model.Lecture;
 import domain.repository.LectureRepository;
 import domain.service.LectureManageService;
+import infra.database.option.lecture.LectureOption;
 import infra.dto.LectureDTO;
 import infra.dto.LectureTimeDTO;
 import infra.dto.ModelMapper;
@@ -57,17 +58,19 @@ public class LectureAppService {
         return ModelMapper.lectureToDTO(lectureRepo.findByID(id));
     }
 
-    public List<LectureDTO> retrieveAll(){
-        return lectureListToDTOList(lectureRepo.findAll());
+    public LectureDTO[] retrieveAll(){
+        return lectureListToDTOArr(lectureRepo.findAll());
     }
 
-    private List<LectureDTO> lectureListToDTOList(List<Lecture> lectures){
-        List<LectureDTO> dtos = new ArrayList<>();
+    public LectureDTO[] retrieveByOption(LectureOption... options){
+        return lectureListToDTOArr(lectureRepo.findByOption(options));
+    }
 
-        for(Lecture l : lectures){
-            dtos.add(
-                    ModelMapper.lectureToDTO(l)
-            );
+    private LectureDTO[] lectureListToDTOArr(List<Lecture> lectures){
+        LectureDTO[] dtos = new LectureDTO[lectures.size()];
+
+        for(int i=0; i<dtos.length; i++){
+            dtos[i] = ModelMapper.lectureToDTO(lectures.get(i));
         }
 
         return dtos;

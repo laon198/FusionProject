@@ -5,10 +5,12 @@ import domain.model.*;
 import domain.repository.*;
 import domain.service.Registrar;
 import infra.database.option.student.StudentCodeOption;
+import infra.dto.ModelMapper;
 import infra.dto.RegisteringDTO;
 import infra.dto.RegisteringPeriodDTO;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class RegisterAppService {
@@ -82,6 +84,17 @@ public class RegisterAppService {
         }
 
         periodRepo.save(newPeriod);
+    }
+
+    public RegisteringPeriodDTO[] retrieveRegPeriodAll(){
+        List<RegisteringPeriod> regPeriods = periodRepo.findAll();
+        RegisteringPeriodDTO[] dtos = new RegisteringPeriodDTO[regPeriods.size()];
+
+        for(int i=0; i<dtos.length; i++){
+            dtos[i] = ModelMapper.regPeriodToDTO(regPeriods.get(i));
+        }
+
+        return dtos;
     }
 
     public void removeRegisteringPeriod(RegisteringPeriodDTO rPeriodDTO) {

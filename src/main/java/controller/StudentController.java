@@ -1,12 +1,13 @@
 package controller;
 
 import application.AccountAppService;
+import application.LectureAppService;
 import application.RegisterAppService;
 import application.StudentAppService;
 import domain.repository.*;
-import infra.dto.AccountDTO;
-import infra.dto.RegisteringDTO;
-import infra.dto.StudentDTO;
+import infra.database.option.lecture.LectureOption;
+import infra.database.option.student.StudentOption;
+import infra.dto.*;
 import infra.network.Protocol;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,6 +21,10 @@ public class StudentController implements DefinedController {
     private final RegisteringRepository regRepo;
     private final RegPeriodRepository regPeriodRepo;
     private final StudentRepository stdRepo;
+
+    private final StudentAppService stdService;
+    private final LectureAppService lectureService;
+    private final RegisterAppService regService;
 
     private InputStream is;
     private OutputStream os;
@@ -40,6 +45,12 @@ public class StudentController implements DefinedController {
         this.stdRepo = stdRepo;
         this.is = is;
         this.os = os;
+
+        stdService = new StudentAppService(stdRepo, accRepo);
+        lectureService = new LectureAppService(lectureRepo);
+        regService = new RegisterAppService(
+                lectureRepo, stdRepo, courseRepo, regRepo, regPeriodRepo
+        );
     }
 
     @Override
@@ -58,9 +69,9 @@ public class StudentController implements DefinedController {
                 deleteReq(recvPt);
                 break;
             default:
+                break;
         }
     }
-
 
     // 생성 요청
     private void createReq (Protocol recvPt) throws Exception {
@@ -69,6 +80,7 @@ public class StudentController implements DefinedController {
                 createRegistration(recvPt);
                 break;
             default:
+                break;
         }
     }
 
@@ -79,12 +91,13 @@ public class StudentController implements DefinedController {
                 readStudent(recvPt);
                 break;
             case Protocol.ENTITY_LECTURE:  // 개설교과목 조회
-                readLecture();
+                readLecture(recvPt);
                 break;
             case Protocol.ENTITY_REGIS_PERIOD: // 수강신청기간 조회
-                readRegisteringPeriod();
+                readRegisteringPeriod(recvPt);
                 break;
             default:
+                break;
         }
     }
 
@@ -94,10 +107,11 @@ public class StudentController implements DefinedController {
             case Protocol.ENTITY_ACCOUNT: // 비밀번호 변경
                 changePassword(recvPt);
                 break;
-            case Protocol.ENTITY_STUDENT:
+            case Protocol.ENTITY_STUDENT: // 학생정보 변경
                 updateStudent(recvPt);
                 break;
             default:
+                break;
         }
     }
 
@@ -111,18 +125,8 @@ public class StudentController implements DefinedController {
         }
     }
 
-    /*
-     < 수강신청 >
-     클라이언트
-     - 수강신청 전 수강신청기간 조회하여 수강신청 가능한지 확인
-     - 학생이 수강신청할 개설교과목 선택(수강신청기간에 해당하는 교과목만 출력 및 선택 가능)
-     - 수강신청 요청 메시지 전송
-     */
+     //< 수강신청 >
     private void createRegistration(Protocol recvPt) throws Exception {
-        RegisterAppService regService = new RegisterAppService(
-                lectureRepo, stdRepo, courseRepo,
-                regRepo, regPeriodRepo
-        );
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
 
@@ -130,61 +134,115 @@ public class StudentController implements DefinedController {
             RegisteringDTO regDTO = (RegisteringDTO) recvPt.getObject();
             regService.register(regDTO);
             sendPt.send(os);
-        }catch(Exception e){
-            // 실패 - 수강신청인원초과 or 시간표중복
-            // sendPt.setCode(Protocol.T2_CODE_FAIL);
+        }catch(IllegalArgumentException e){
+             sendPt.setCode(Protocol.T2_CODE_FAIL);
+             sendPt.send(os);
         }
     }
 
-    /*
-    < 학생 조회 >
-     */
+    //< 학생 조회 >
     private void readStudent(Protocol recvPt) throws Exception {
-        // 개인정보 조회 기능 수행
-        Object sndData = null;
-        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
-        sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-        sendPt.setObject(sndData);
-
-        //sendPt.setCode(Protocol.T2_CODE_FAIL);
-        sendPt.send(os);
-
-    }
-
-    /*
-    < 개설교과목 조회 (전학년) >
-     */
-    private void readLecture() throws Exception {
-        // 개설교과목 전체 조회 기능 수행
-        Object[] sndData = null;
-        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
-        sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-        sendPt.setObjectArray(sndData);
-        // 개설교과목 조회 실패 - 존재하는 개설교과목 없음
-        // sendPt.setCode(Protocol.T2_CODE_FAIL);
-        sendPt.send(os);
-
-    }
-
-    /*
-    < 수강신청기간 조회 >
-    createRegistration 할 때 필요
-    수강신청기간을 보내주는 것이 아니라 현재 날짜가 수강신청 가능한 날짜인지 yes(success)/no(fail)로 답변
-     */
-    private void readRegisteringPeriod() throws Exception {
-        // 수강신청 기간 조회 기능 수행
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
-        // if (수강신청기간임)
-        sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-        // else
-        // sendPt.setCode(Protocol.T2_CODE_FAIL);
-        sendPt.send(os);
+        switch(recvPt.getReadOption()){
+            case Protocol.READ_ALL:{
+                sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+                StudentDTO[] res = stdService.retrieveAll();
+                sendPt.setObjectArray(res);
+                sendPt.send(os);
+                break;
+            }
+            case Protocol.READ_BY_ID:{
+                try{
+                    sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+                    StudentDTO stdDTO = (StudentDTO) recvPt.getObject();
+                    StudentDTO res = stdService.retrieveByID(stdDTO.getId());
+                    sendPt.setObject(res);
+                    sendPt.send(os);
+                    break;
+                }catch(IllegalArgumentException e){
+                    sendPt.setCode(Protocol.T2_CODE_FAIL);
+                    sendPt.send(os);
+                }
+            }
+            case Protocol.READ_BY_OPTION:{
+                try{
+                    sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+                    StudentOption[] options = (StudentOption[]) recvPt.getObjectArray();
+                    StudentDTO[] res = stdService.retrieveByOption(options);
+                    sendPt.setObjectArray(res);
+                    sendPt.send(os);
+                    break;
+                }catch(IllegalArgumentException e){
+                    sendPt.setCode(Protocol.T2_CODE_FAIL);
+                    sendPt.send(os);
+                }
+            }
+        }
     }
 
-    /*
-     < 비밀번호 수정 >
-     */
+    // < 개설교과목 조회 (전학년) >
+    private void readLecture(Protocol recvPt) throws Exception {
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
+        switch(recvPt.getReadOption()){
+            case Protocol.READ_ALL:{
+                sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+                LectureDTO[] res = lectureService.retrieveAll();
+                sendPt.setObjectArray(res);
+                sendPt.send(os);
+                break;
+            }
+            case Protocol.READ_BY_ID:{
+                try{
+                    sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+                    LectureDTO lectureDTO = (LectureDTO) recvPt.getObject();
+                    LectureDTO res = lectureService.retrieveByID(lectureDTO.getId());
+                    sendPt.setObject(res);
+                    sendPt.send(os);
+                    break;
+                }catch(IllegalArgumentException e){
+                    sendPt.setCode(Protocol.T2_CODE_FAIL);
+                    sendPt.send(os);
+                }
+            }
+            case Protocol.READ_BY_OPTION:{
+                try{
+                    sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+                    LectureOption[] options = (LectureOption[]) recvPt.getObjectArray();
+                    LectureDTO[] res = lectureService.retrieveByOption(options);
+                    sendPt.setObjectArray(res);
+                    sendPt.send(os);
+                    break;
+                }catch(IllegalArgumentException e){
+                    sendPt.setCode(Protocol.T2_CODE_FAIL);
+                    sendPt.send(os);
+                }
+            }
+        }
+    }
+
+    // < 수강신청기간 조회 >
+    private void readRegisteringPeriod(Protocol recvPt) throws Exception {
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
+        switch(recvPt.getReadOption()){
+            case Protocol.READ_ALL:{
+                sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+                RegisteringPeriodDTO[] res = regService.retrieveRegPeriodAll();
+                sendPt.setObjectArray(res);
+                sendPt.send(os);
+                break;
+            }
+            default:{
+                sendPt.setCode(Protocol.T2_CODE_FAIL);
+                sendPt.send(os);
+                break;
+            }
+        }
+    }
+
+     // < 비밀번호 수정 >
     private void changePassword(Protocol recvPt) throws Exception {
         AccountAppService accService = new AccountAppService(accRepo);
         AccountDTO accDTO = (AccountDTO) recvPt.getObject();
@@ -203,7 +261,6 @@ public class StudentController implements DefinedController {
     }
 
     private void updateStudent(Protocol recvPt) throws Exception {
-        StudentAppService stdService = new StudentAppService(stdRepo, accRepo);
         StudentDTO stdDTO = (StudentDTO) recvPt.getObject();
 
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);

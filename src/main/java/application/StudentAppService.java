@@ -64,24 +64,22 @@ public class StudentAppService {
         return ModelMapper.studentToDTO( stdRepo.findByID(id));
     }
 
-    public List<StudentDTO> retrieveByOption(StudentOption... options){
-        return stdListToDTOList(stdRepo.findByOption(options));
+    public StudentDTO[] retrieveByOption(StudentOption... options){
+        return stdListToDTOArr(stdRepo.findByOption(options));
     }
 
     //TODO : 비효율적
-    public List<StudentDTO> retrieveAll(){
-        return stdListToDTOList(stdRepo.findAll());
+    public StudentDTO[] retrieveAll(){
+        return stdListToDTOArr(stdRepo.findAll());
     }
 
-    private List<StudentDTO> stdListToDTOList(List<Student> stdList){
-        List<StudentDTO> list = new ArrayList<>();
+    private StudentDTO[] stdListToDTOArr(List<Student> stdList){
+        StudentDTO[] dtos = new StudentDTO[stdList.size()];
 
-        for(Student std : stdList){
-            list.add(
-                    ModelMapper.studentToDTO(std)
-            );
+        for(int i=0; i<dtos.length; i++){
+            dtos[i] = ModelMapper.studentToDTO(stdList.get(i));
         }
 
-        return list;
+        return dtos;
     }
 }
