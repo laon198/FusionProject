@@ -32,6 +32,12 @@ public class RDBAdminRepository implements AdminRepository {
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
             throw new IllegalArgumentException("잘못된 id값입니다.");
+        }finally {
+            try{
+                conn.close();
+            }catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
         }
     }
 
@@ -50,6 +56,12 @@ public class RDBAdminRepository implements AdminRepository {
             return getAdminFrom(res);
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
+        }finally {
+            try{
+                conn.close();
+            }catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
         }
 
         return null;
@@ -107,10 +119,14 @@ public class RDBAdminRepository implements AdminRepository {
 //                e.printStackTrace();
 //            }
         }finally {
-            return id;
+            try{
+                conn.close();
+            }catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
         }
 
-
+        return id;
     }
 
     private void update(Admin admin){
@@ -151,6 +167,12 @@ public class RDBAdminRepository implements AdminRepository {
 //            }catch (SQLException e){
 //                e.printStackTrace();
 //            }
+        }finally {
+            try{
+                conn.close();
+            }catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
         }
 
     }
@@ -206,6 +228,12 @@ public class RDBAdminRepository implements AdminRepository {
 //            }catch (SQLException e){
 //                e.printStackTrace();
 //            }
+        }finally {
+            try{
+                conn.close();
+            }catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
         }
 
     }

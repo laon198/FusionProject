@@ -256,13 +256,13 @@ public class ModelMapper {
     }
 
     private static Professor getProfessorField(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        Field f1 = obj.getClass().getSuperclass().getDeclaredField(fieldName);
+        Field f1 = obj.getClass().getDeclaredField(fieldName);
         f1.setAccessible(true);
         return (Professor) f1.get(obj);
     }
 
     private static Course getCourseField(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        Field f1 = obj.getClass().getSuperclass().getDeclaredField(fieldName);
+        Field f1 = obj.getClass().getDeclaredField(fieldName);
         f1.setAccessible(true);
         return (Course) f1.get(obj);
     }
@@ -303,6 +303,7 @@ public class ModelMapper {
         for (LectureTime time : timeTable) {
             long id = getLongField(time,"id");
             String room = getStringField(time, "room");
+            String lectureName = getStringField(time, "lectureName");
             LectureTime.DayOfWeek lectureDay = getLectureDay(time, "lectureDay");
             LectureTime.LecturePeriod startTime = getLecturePeriod(time, "startTime");
             LectureTime.LecturePeriod endTime = getLecturePeriod(time, "endTime");
@@ -312,6 +313,7 @@ public class ModelMapper {
                             .id(id)
                             .room(room)
                             .lectureDay(lectureDay)
+                            .lectureName(lectureName)
                             .startTime(startTime)
                             .endTime(endTime)
                             .build()

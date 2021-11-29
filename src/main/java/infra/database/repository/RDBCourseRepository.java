@@ -10,10 +10,11 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import java.util.List;
 
 public class RDBCourseRepository implements CourseRepository {
+    private SqlSessionFactory sqlSessionFactory;
 
-    private SqlSessionFactory sqlSessionFactory = MyBatisConnectionFactory.getSqlSessionFactory();
-
-    public RDBCourseRepository() {}
+    public RDBCourseRepository( SqlSessionFactory sqlSessionFactory) {
+        this.sqlSessionFactory = sqlSessionFactory;
+    }
 
     @Override
     public List<Course> findAll(){

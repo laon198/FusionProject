@@ -1,6 +1,8 @@
 import domain.repository.*;
+import infra.database.MyBatisConnectionFactory;
 import infra.database.repository.*;
 import infra.network.Server;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 import java.io.IOException;
 
@@ -13,15 +15,17 @@ public class LectureRegisterApp {
     private final RegisteringRepository regRepo;
     private final RegPeriodRepository regPeriodRepo;
     private final StudentRepository stdRepo;
+    private final SqlSessionFactory sqlSessionFactory;
     private final Server mainServer;
 
     public LectureRegisterApp(){
+        sqlSessionFactory = MyBatisConnectionFactory.getSqlSessionFactory();
         accRepo = new RDBAccountRepository();
         adminRepo = new RDBAdminRepository();
-        courseRepo = new RDBCourseRepository();
+        courseRepo = new RDBCourseRepository(sqlSessionFactory);
         profRepo = new RDBProfessorRepository();
         lectureRepo = new RDBLectureRepository(
-                courseRepo, profRepo
+                courseRepo, profRepo, sqlSessionFactory
         );
         regRepo = new RDBRegisteringRepository();
         regPeriodRepo = new RDBRegPeriodRepository();

@@ -315,7 +315,7 @@ public class RDBStudentRepository implements StudentRepository {
                         .room(lectureInfo.getString("lecture_room"))
                         .startTime(lectureInfo.getInt("start_period"))
                         .endTime(lectureInfo.getInt("end_period"))
-                        .lectureName(lectureInfo.getString("lectureName"))
+                        .lectureName(lectureInfo.getString("lecture_name"))
                         .build()
                 );
             }

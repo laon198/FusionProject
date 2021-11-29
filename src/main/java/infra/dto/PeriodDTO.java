@@ -30,6 +30,8 @@ public class PeriodDTO {
         return new Builder();
     }
 
+    public PeriodDTO(){}
+
     private PeriodDTO(Builder builder){
         beginTime = builder.beginTime;
         endTime = builder.endTime;

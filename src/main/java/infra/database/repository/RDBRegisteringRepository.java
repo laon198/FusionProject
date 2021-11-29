@@ -34,6 +34,12 @@ public class RDBRegisteringRepository implements RegisteringRepository {
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
             throw new IllegalArgumentException("잘못된 id값입니다.");
+        }finally {
+            try{
+                conn.close();
+            }catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
         }
     }
 

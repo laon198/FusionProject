@@ -20,14 +20,16 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import java.util.*;
 
 public class RDBLectureRepository implements LectureRepository {
-    private SqlSessionFactory sqlSessionFactory = MyBatisConnectionFactory.getSqlSessionFactory();
+    private SqlSessionFactory sqlSessionFactory;
     private CourseRepository courseRepo;
     private ProfessorRepository profRepo;
 
     public RDBLectureRepository(
-            CourseRepository courseRepo, ProfessorRepository profRepo) {
+            CourseRepository courseRepo, ProfessorRepository profRepo,
+            SqlSessionFactory sqlSessionFactory) {
         this.courseRepo = courseRepo;
         this.profRepo = profRepo;
+        this.sqlSessionFactory = sqlSessionFactory;
     }
 
     public List<Lecture> findByOption(LectureOption ...lectureOptions) {

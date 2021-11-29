@@ -91,8 +91,13 @@ public class RDBRegPeriodRepository implements RegPeriodRepository {
             pstmt.execute();
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
+        }finally {
+            try{
+                conn.close();
+            }catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
         }
-
     }
 
 

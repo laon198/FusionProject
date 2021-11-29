@@ -269,7 +269,7 @@ public class StudentController implements DefinedController {
             StudentDTO stdDTO = (StudentDTO) recvPt.getObject();
             LectureDTO[] res = lectureService.getRegisteredLectures(stdDTO.getMyRegisterings());
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-            sendPt.setObject(res);
+            sendPt.setObjectArray(res);
             sendPt.send(os);
         }catch(IllegalArgumentException e){
             sendPt.setCode(Protocol.T2_CODE_FAIL);

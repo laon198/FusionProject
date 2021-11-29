@@ -93,12 +93,12 @@ public class Course {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return Objects.equals(courseCode, course.courseCode);
+        return id == course.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(courseCode);
+        return Objects.hash(id);
     }
 
     //TODO : 테스트용

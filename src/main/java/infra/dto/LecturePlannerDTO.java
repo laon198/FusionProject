@@ -37,6 +37,8 @@ public class LecturePlannerDTO {
         return summary;
     }
 
+    public LecturePlannerDTO(){}
+
     private LecturePlannerDTO(Builder builder){
         goal = builder.goal;
         summary = builder.summary;

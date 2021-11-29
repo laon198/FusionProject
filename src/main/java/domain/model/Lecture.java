@@ -148,7 +148,7 @@ public class Lecture {
     }
 
     public boolean isEqualCourse(Lecture lecture) {
-        return lecture.course.equals(lecture.course);
+        return course.equals(lecture.course);
     }
 
     @Override

@@ -31,6 +31,12 @@ public class RDBAccountRepository implements AccountRepository {
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
             throw new IllegalArgumentException("잘못된 id값입니다.");
+        }finally {
+            try{
+                conn.close();
+            }catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
         }
     }
 
@@ -62,7 +68,14 @@ public class RDBAccountRepository implements AccountRepository {
             return getAccFrom(res);
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
+        }finally {
+            try{
+                conn.close();
+            }catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
         }
+
         return null;
     }
 
@@ -102,6 +115,12 @@ public class RDBAccountRepository implements AccountRepository {
 //            }catch (SQLException e){
 //                e.printStackTrace();
 //            }
+        }finally {
+            try{
+                conn.close();
+            }catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
         }
     }
 
@@ -137,7 +156,14 @@ public class RDBAccountRepository implements AccountRepository {
 //            }catch (SQLException e){
 //                e.printStackTrace();
 //            }
+        }finally{
+            try{
+                conn.close();
+            } catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
         }
+
         return id;
     }
 
@@ -147,11 +173,13 @@ public class RDBAccountRepository implements AccountRepository {
         String id;
         String password;
         String position;
+        long memberID;
 
         while(res.next()){
             pk = res.getLong("account_pk");
             id = res.getString("account_ID");
             password = res.getString("account_PW");
+            memberID = res.getLong("member_PK");
             position = res.getString("position");
 
             list.add(
@@ -159,6 +187,7 @@ public class RDBAccountRepository implements AccountRepository {
                         .pk(pk)
                         .id(id)
                         .password(password)
+                        .memberID(memberID)
                         .position(position)
                         .build()
             );
