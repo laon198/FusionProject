@@ -31,7 +31,10 @@ public class LectureSql {
     public String findByOption(LectureOption... options){
         SQL sql = new SQL(){{
             SELECT("*");
-            FROM("LECTURES_TB");
+            FROM("LECTURES_TB AS l");
+            INNER_JOIN("COURSES_TB AS c ON c.course_PK = l.course_PK ");
+            INNER_JOIN("PROFESSORS_TB AS p ON p.professor_code = l.professor_code");
+
         }};
 
         for(LectureOption option : options){
