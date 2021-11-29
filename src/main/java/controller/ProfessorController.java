@@ -112,6 +112,7 @@ public class ProfessorController implements DefinedController {
                 break;
             case Protocol.ENTITY_PROFESSOR: // 개인정보 변경
                 updateProfessor(recv);
+                break;
             case Protocol.ENTITY_LECTURE:
                 updateLecturePlanner(recv);
                 break;
