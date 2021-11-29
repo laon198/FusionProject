@@ -3,14 +3,12 @@ package application;
 import domain.model.*;
 import domain.repository.CourseRepository;
 import domain.repository.LectureRepository;
+import domain.repository.PlannerPeriodRepository;
 import domain.repository.ProfessorRepository;
 import domain.service.LectureManageService;
 import infra.database.option.lecture.LectureOption;
 import infra.database.option.professor.ProfessorCodeOption;
-import infra.dto.LectureDTO;
-import infra.dto.LectureTimeDTO;
-import infra.dto.ModelMapper;
-import infra.dto.RegisteringDTO;
+import infra.dto.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,13 +19,15 @@ public class LectureAppService {
     private LectureRepository lectureRepo;
     private CourseRepository courseRepo;
     private ProfessorRepository profRepo;
+    private PlannerPeriodRepository plannerPeriodRepo;
 
     public LectureAppService(
             LectureRepository lectureRepo, CourseRepository courseRepo,
-            ProfessorRepository profRepo ) {
+            ProfessorRepository profRepo, PlannerPeriodRepository plannerPeriodRepo) {
         this.lectureRepo = lectureRepo;
         this.courseRepo = courseRepo;
         this.profRepo = profRepo;
+        this.plannerPeriodRepo = plannerPeriodRepo;
     }
 
     public void create(LectureDTO lectureDTO){
@@ -96,6 +96,16 @@ public class LectureAppService {
         }
 
         return dtos;
+    }
+
+    public PeriodDTO retrievePlannerPeriod(){
+        return ModelMapper.periodToDTO(plannerPeriodRepo.find());
+    }
+
+    public void changePlannerPeriod(PeriodDTO periodDTO){
+        Period period = new Period(periodDTO.getBeginTime(), periodDTO.getEndTime());
+        plannerPeriodRepo.delete();
+        plannerPeriodRepo.save(period);
     }
 
     public void update(LectureDTO lectureDTO){

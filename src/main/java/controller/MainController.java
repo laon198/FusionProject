@@ -33,12 +33,14 @@ public class MainController extends Thread {
     private final RegisteringRepository regRepo;
     private final RegPeriodRepository regPeriodRepo;
     private final StudentRepository stdRepo;
+    private final PlannerPeriodRepository plannerPeriodRepo;
 
     // 스레드 생성자
     public MainController(
             AccountRepository accRepo, AdminRepository adminRepo, CourseRepository courseRepo,
             LectureRepository lectureRepo, ProfessorRepository profRepo, RegisteringRepository regRepo,
-            RegPeriodRepository regPeriodRepo, StudentRepository stdRepo, Socket socket
+            RegPeriodRepository regPeriodRepo, StudentRepository stdRepo,
+            PlannerPeriodRepository plannerPeriodRepo, Socket socket
     ){
         this.accRepo = accRepo;
         this.adminRepo = adminRepo;
@@ -48,6 +50,7 @@ public class MainController extends Thread {
         this.regRepo = regRepo;
         this.regPeriodRepo = regPeriodRepo;
         this.stdRepo = stdRepo;
+        this.plannerPeriodRepo = plannerPeriodRepo;
         this.socket = socket;
         clientID = socket.getPort();
         this.socket = socket;
@@ -113,7 +116,8 @@ public class MainController extends Thread {
                     myController = new StudentController(
                             accRepo, adminRepo, courseRepo,
                             lectureRepo, profRepo, regRepo,
-                            regPeriodRepo, stdRepo, is, os
+                            regPeriodRepo, stdRepo, plannerPeriodRepo,
+                            is, os
                     );
                 }
                 break;
@@ -131,7 +135,8 @@ public class MainController extends Thread {
                     myController = new AdminController(
                             accRepo, adminRepo, courseRepo,
                             lectureRepo, profRepo, regRepo,
-                            regPeriodRepo, stdRepo, is, os
+                            regPeriodRepo, stdRepo, plannerPeriodRepo,
+                            is, os
                     );
                 }
                 break;

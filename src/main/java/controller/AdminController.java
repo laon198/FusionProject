@@ -27,6 +27,7 @@ public class AdminController implements DefinedController {
     private final RegisteringRepository regRepo;
     private final RegPeriodRepository regPeriodRepo;
     private final StudentRepository stdRepo;
+    private final PlannerPeriodRepository plannerPeriodRepo;
 
     private final StudentAppService stdService;
     private final ProfessorAppService profService;
@@ -43,6 +44,7 @@ public class AdminController implements DefinedController {
             CourseRepository courseRepo, LectureRepository lectureRepo,
             ProfessorRepository profRepo, RegisteringRepository regRepo,
             RegPeriodRepository regPeriodRepo, StudentRepository stdRepo,
+            PlannerPeriodRepository plannerPeriodRepo,
             InputStream is, OutputStream os){
         this.accRepo = accRepo;
         this.adminRepo = adminRepo;
@@ -52,6 +54,7 @@ public class AdminController implements DefinedController {
         this.regRepo = regRepo;
         this.regPeriodRepo = regPeriodRepo;
         this.stdRepo = stdRepo;
+        this.plannerPeriodRepo = plannerPeriodRepo;
         this.is = is;
         this.os = os;
 
@@ -59,7 +62,7 @@ public class AdminController implements DefinedController {
         profService = new ProfessorAppService(profRepo, accRepo);
         adminService = new AdminAppService(adminRepo, accRepo);
         courseService = new CourseAppService(courseRepo);
-        lectureService = new LectureAppService(lectureRepo, courseRepo, profRepo);
+        lectureService = new LectureAppService(lectureRepo, courseRepo, profRepo, plannerPeriodRepo);
         regService = new RegisterAppService(
                 lectureRepo, stdRepo, courseRepo, regRepo, regPeriodRepo
         );
@@ -128,6 +131,9 @@ public class AdminController implements DefinedController {
                 break;
             case Protocol.ENTITY_REGIS_PERIOD:
                 readRegPeriod(recvPt);
+                break;
+            case Protocol.ENTITY_PLANNER_PERIOD:
+                readPlannerPeriod(recvPt);
                 break;
             default:
         }
@@ -258,16 +264,17 @@ public class AdminController implements DefinedController {
     < 강의계획서 입력 기간 설정 >
      */
     private void createPlannerPeriod(Protocol recvPt) throws Exception {
-//        Object data = recvPt.getObject();
-        /*
-         강의계획서 입력 기간 생성하는 기능 수행
-         */
+        PeriodDTO periodDTO = (PeriodDTO) recvPt.getObject();
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
-        sendPt.setCode(Protocol.T2_CODE_SUCCESS);  // 성공
-        // 실패 - 중복 기간 존재 (시작, 끝 날짜가 완전히 중복)
-        // sendPt.setCode(Protocol.T2_CODE_FAIL);
-        sendPt.send(os);
+        try{
+            lectureService.changePlannerPeriod(periodDTO);
+            sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+            sendPt.send(os);
+        }catch (IllegalArgumentException e){
+            sendPt.setCode(Protocol.T2_CODE_FAIL);
+            sendPt.send(os);
+        }
     }
 
 
@@ -471,8 +478,22 @@ public class AdminController implements DefinedController {
             sendPt.setCode(Protocol.T2_CODE_FAIL);
             sendPt.send(os);
         }
-
     }
+
+    private void readPlannerPeriod(Protocol recvPt) throws Exception {
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
+        try{
+            PeriodDTO periodDTO = lectureService.retrievePlannerPeriod();
+            sendPt.setObject(periodDTO);
+            sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+            sendPt.send(os);
+        }catch(IllegalArgumentException e){
+            sendPt.setCode(Protocol.T2_CODE_FAIL);
+            sendPt.send(os);
+        }
+    }
+
 
 
     /*

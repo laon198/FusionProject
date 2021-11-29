@@ -15,11 +15,13 @@ public class Server {
     private final RegisteringRepository regRepo;
     private final RegPeriodRepository regPeriodRepo;
     private final StudentRepository stdRepo;
+    private final PlannerPeriodRepository plannerPeriodRepo;
 
     public Server(
             AccountRepository accRepo, AdminRepository adminRepo, CourseRepository courseRepo,
             LectureRepository lectureRepo, ProfessorRepository profRepo, RegisteringRepository regRepo,
-            RegPeriodRepository regPeriodRepo, StudentRepository stdRepo
+            RegPeriodRepository regPeriodRepo, StudentRepository stdRepo,
+            PlannerPeriodRepository plannerPeriodRepo
     ){
         this.accRepo = accRepo;
         this.adminRepo = adminRepo;
@@ -29,6 +31,7 @@ public class Server {
         this.regRepo = regRepo;
         this.regPeriodRepo = regPeriodRepo;
         this.stdRepo = stdRepo;
+        this.plannerPeriodRepo = plannerPeriodRepo;
         try{
             serverSocket = new ServerSocket(3000);
             clients = new MainController[50];
@@ -64,7 +67,8 @@ public class Server {
             MainController thread = new MainController(
                     accRepo, adminRepo, courseRepo,
                     lectureRepo, profRepo, regRepo,
-                    regPeriodRepo, stdRepo, socket
+                    regPeriodRepo, stdRepo, plannerPeriodRepo,
+                    socket
             );
             clients[clientCount++] = thread;
             System.out.println("Create thread : clientCount = " + clientCount);

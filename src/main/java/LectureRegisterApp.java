@@ -15,6 +15,7 @@ public class LectureRegisterApp {
     private final RegisteringRepository regRepo;
     private final RegPeriodRepository regPeriodRepo;
     private final StudentRepository stdRepo;
+    private final PlannerPeriodRepository plannerPeriodRepo;
     private final SqlSessionFactory sqlSessionFactory;
     private final Server mainServer;
 
@@ -30,10 +31,11 @@ public class LectureRegisterApp {
         regRepo = new RDBRegisteringRepository();
         regPeriodRepo = new RDBRegPeriodRepository();
         stdRepo = new RDBStudentRepository();
+        plannerPeriodRepo = new RDBPlannerPeriodRepository();
         mainServer = new Server(
                 accRepo, adminRepo, courseRepo,
                 lectureRepo, profRepo, regRepo,
-                regPeriodRepo, stdRepo
+                regPeriodRepo, stdRepo, plannerPeriodRepo
         );
     }
 
