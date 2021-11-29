@@ -54,7 +54,7 @@ public class StudentController implements DefinedController {
         this.is = is;
         this.os = os;
 
-        stdService = new StudentAppService(stdRepo, accRepo);
+        stdService = new StudentAppService(stdRepo, accRepo, regRepo);
         lectureService = new LectureAppService(lectureRepo, courseRepo, profRepo, plannerPeriodRepo);
         regService = new RegisterAppService(
                 lectureRepo, stdRepo, courseRepo, regRepo, regPeriodRepo
@@ -77,7 +77,7 @@ public class StudentController implements DefinedController {
                 deleteReq(recvPt);
                 break;
             case Protocol.T1_CODE_LOGOUT:
-                logoutReq(recvPt);
+                logoutReq();
                 return USER_UNDEFINED;
             default:
                 break;
@@ -141,7 +141,7 @@ public class StudentController implements DefinedController {
         }
     }
 
-    private void logoutReq(Protocol recvPt) throws IOException {
+    private void logoutReq() throws IOException {
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         sendPt.send(os);

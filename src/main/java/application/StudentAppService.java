@@ -1,10 +1,15 @@
 package application;
 
 import domain.model.Account;
+import domain.model.Registering;
 import domain.model.Student;
 import domain.repository.AccountRepository;
+import domain.repository.RegisteringRepository;
 import domain.repository.StudentRepository;
+import infra.database.option.registering.LectureIDOption;
+import infra.database.option.student.StudentCodeOption;
 import infra.database.option.student.StudentOption;
+import infra.dto.LectureDTO;
 import infra.dto.ModelMapper;
 import infra.dto.StudentDTO;
 
@@ -14,10 +19,14 @@ import java.util.List;
 public class StudentAppService {
     private StudentRepository stdRepo;
     private AccountRepository accRepo;
+    private RegisteringRepository regRepo;
 
-    public StudentAppService(StudentRepository stdRepo, AccountRepository accRepo) {
+    public StudentAppService(
+            StudentRepository stdRepo, AccountRepository accRepo,
+            RegisteringRepository regRepo) {
         this.stdRepo = stdRepo;
         this.accRepo = accRepo;
+        this.regRepo = regRepo;
     }
 
     public void create(StudentDTO stdDTO){
@@ -71,6 +80,20 @@ public class StudentAppService {
     //TODO : 비효율적
     public StudentDTO[] retrieveAll(){
         return stdListToDTOArr(stdRepo.findAll());
+    }
+
+    public StudentDTO[] retrieveRegisteringStd(LectureDTO lectureDTO){
+        List<Registering> regs = regRepo.findByOption(new LectureIDOption(lectureDTO.getId()));
+        StudentDTO[] res = new StudentDTO[regs.size()];
+
+        int i = 0;
+        for(Registering reg : regs){
+            res[i++] = ModelMapper.studentToDTO(
+                    stdRepo.findByOption(new StudentCodeOption(reg.getStudentCode())).get(0)
+            );
+        }
+
+        return res;
     }
 
     private StudentDTO[] stdListToDTOArr(List<Student> stdList){

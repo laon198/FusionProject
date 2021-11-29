@@ -126,7 +126,8 @@ public class MainController extends Thread {
                     myController = new ProfessorController(
                             accRepo, adminRepo, courseRepo,
                             lectureRepo, profRepo, regRepo,
-                            regPeriodRepo, stdRepo, is, os
+                            regPeriodRepo, stdRepo, plannerPeriodRepo,
+                            is, os
                     );
                 }
                 break;

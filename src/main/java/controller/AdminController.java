@@ -58,7 +58,7 @@ public class AdminController implements DefinedController {
         this.is = is;
         this.os = os;
 
-        stdService = new StudentAppService(stdRepo, accRepo);
+        stdService = new StudentAppService(stdRepo, accRepo, regRepo);
         profService = new ProfessorAppService(profRepo, accRepo);
         adminService = new AdminAppService(adminRepo, accRepo);
         courseService = new CourseAppService(courseRepo);
@@ -83,11 +83,19 @@ public class AdminController implements DefinedController {
             case Protocol.T1_CODE_DELETE:  // 삭제
                 deleteReq(recvPt);
                 break;
+            case Protocol.T1_CODE_LOGOUT:
+                logoutReq();
+                return USER_UNDEFINED;
             default:
         }
         return ADMIN_TYPE;
     }
 
+    private void logoutReq() throws IOException {
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+        sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+        sendPt.send(os);
+    }
 
     // 생성 요청 받았을 때 수행할 일
     private void createReq (Protocol recvPt) throws Exception {
