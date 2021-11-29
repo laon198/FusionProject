@@ -91,6 +91,7 @@ public class Professor extends Member{
     public void setTelePhone(String value){
         telePhone = value;
     }
+    public void setName(String value){name = value;}
 
     public String getProfessorCode(){return professorCode;}
     //TODO : 테스트용

@@ -11,6 +11,8 @@ import infra.dto.LectureDTO;
 import infra.dto.ProfessorDTO;
 import infra.dto.StudentDTO;
 import infra.network.Protocol;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -31,6 +33,7 @@ public class ProfessorController implements DefinedController {
     private final ProfessorAppService profService;
     private final LectureAppService lectureService;
     private final StudentAppService stdService;
+    private final AccountAppService accService;
 
     private final InputStream is;
     private final OutputStream os;
@@ -55,6 +58,7 @@ public class ProfessorController implements DefinedController {
         profService = new ProfessorAppService(profRepo, accRepo);
         lectureService = new LectureAppService(lectureRepo, courseRepo, profRepo, plannerPeriodRepo);
         stdService = new StudentAppService(stdRepo, accRepo, regRepo);
+        accService = new AccountAppService(accRepo);
 
         this.is = is;
         this.os = os;
@@ -69,10 +73,19 @@ public class ProfessorController implements DefinedController {
             case Protocol.T1_CODE_UPDATE:  // 변경
                 updateReq(recvPt);
                 break;
+            case Protocol.T1_CODE_LOGOUT:
+                logoutReq();
+                return USER_UNDEFINED;
             default:
         }
 
         return PROF_TYPE;
+    }
+
+    private void logoutReq() throws IOException {
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+        sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+        sendPt.send(os);
     }
 
     // 조회 요청
@@ -99,6 +112,9 @@ public class ProfessorController implements DefinedController {
                 break;
             case Protocol.ENTITY_PROFESSOR: // 개인정보 변경
                 updateProfessor(recv);
+            case Protocol.ENTITY_LECTURE:
+                updateLecturePlanner(recv);
+                break;
             default:
         }
     }
@@ -189,7 +205,6 @@ public class ProfessorController implements DefinedController {
      < 개인정보(전화번호) 수정 및 비밀번호 수정 >
      */
     private void changePassword(Protocol recvPt) throws Exception {
-        AccountAppService accService = new AccountAppService(accRepo);
         AccountDTO accDTO = (AccountDTO) recvPt.getObject();
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
@@ -206,14 +221,11 @@ public class ProfessorController implements DefinedController {
     }
 
     private void updateProfessor(Protocol recv) throws Exception {
-        ProfessorAppService profService = new ProfessorAppService(profRepo, accRepo);
         ProfessorDTO profDTO = (ProfessorDTO) recv.getObject();
-
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         try{
             profService.update(profDTO);
-
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
             sendPt.send(os);
         }catch(IllegalArgumentException e){
@@ -221,4 +233,19 @@ public class ProfessorController implements DefinedController {
             sendPt.send(os);
         }
     }
+
+    private void updateLecturePlanner(Protocol recvPt) throws Exception {
+        LectureDTO lectureDTO = (LectureDTO) recvPt.getObject();
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
+        try{
+            lectureService.update(lectureDTO);
+            sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+            sendPt.send(os);
+        }catch(IllegalArgumentException e){
+            sendPt.setCode(Protocol.T2_CODE_FAIL);
+            sendPt.send(os);
+        }
+    }
+
 }

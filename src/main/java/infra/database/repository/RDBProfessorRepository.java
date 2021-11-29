@@ -285,6 +285,7 @@ public class RDBProfessorRepository implements ProfessorRepository {
                                 .room(lectureInfo.getString("lecture_room"))
                                 .startTime(lectureInfo.getInt("start_period"))
                                 .endTime(lectureInfo.getInt("end_period"))
+                                .lectureName(lectureInfo.getString("lecture_name"))
                                 .build()
                 );
             }

@@ -124,6 +124,11 @@ public class Lecture {
         myRegisterings.add(registering);
     }
 
+    public void writePlanner(String itemName, String content) throws IllegalArgumentException{
+
+        planner.writeItem(itemName, content);
+    }
+
     public boolean validLimitNum() {
         if (myRegisterings.size() >= limit) {
             return false;

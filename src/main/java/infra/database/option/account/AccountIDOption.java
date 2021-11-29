@@ -5,7 +5,7 @@ public class AccountIDOption implements AccountOption {
     private String query="account_ID=";
 
     public AccountIDOption(String accountID) {
-        this.query+=accountID;
+        this.query+= ("'"+accountID+"'");
     }
 
     public String getQuery() {

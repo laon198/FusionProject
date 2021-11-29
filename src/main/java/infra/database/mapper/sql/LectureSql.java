@@ -158,7 +158,7 @@ public class LectureSql {
             SET("lecture_code = #{lectureCode}");
             SET("capacity = #{limit}");
             SET("applicant_CNT = #{applicant}");
-            SET("professor_code = #{lecturerID}");
+            SET("professor_code = #{professorCode}");
             WHERE("lecture_PK = #{id}");
 
         }};

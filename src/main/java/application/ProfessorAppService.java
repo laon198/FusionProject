@@ -46,6 +46,8 @@ public class ProfessorAppService {
     public void update(ProfessorDTO profDTO) {
         Professor prof = profRepo.findByID(profDTO.getId());
 
+        prof.setName(profDTO.getName());
+        prof.setTelePhone(profDTO.getTelePhone());
         //TODO : 교수 업데이트 되는 항목 추가필요
 
         profRepo.save(prof);

@@ -111,6 +111,10 @@ public class LectureAppService {
     public void update(LectureDTO lectureDTO){
         Lecture lecture = lectureRepo.findByID(lectureDTO.getId());
 
+        //강의 계획서 업데이트
+        LecturePlannerDTO plannerDTO = lectureDTO.getPlanner();
+        lecture.writePlanner("goal", plannerDTO.getGoal());
+        lecture.writePlanner("summary", plannerDTO.getSummary());
         //TODO : 업데이트할 항목 추가필요
 
         lectureRepo.save(lecture);

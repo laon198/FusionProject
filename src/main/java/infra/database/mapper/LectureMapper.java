@@ -9,18 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface LectureMapper {
-    final String getAll = "SELECT * FROM LECTURES_TB";
-
-    @Select(getAll)
-    @Results(id = "lectureResultSet", value = {
-            @Result(property = "id", column = "lecture_PK"),
-            @Result(property = "courseID", column = "course_PK"),
-            @Result(property = "lecturerID", column = "professor_code"),
-            @Result(property = "lectureCode", column = "lecture_code"),
-            @Result(property = "limit", column = "capacity"),
-    })
-    List<Lecture> getAll();
-
     @SelectProvider(type = infra.database.mapper.sql.LectureSql.class, method = "findAll")
     List<Map<String, Object>> findAll();
 
