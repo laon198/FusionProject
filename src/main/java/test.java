@@ -3,6 +3,8 @@ import application.*;
 import domain.model.*;
 import domain.repository.*;
 import infra.database.MyBatisConnectionFactory;
+import infra.database.option.lecture.LectureCodeOption;
+import infra.database.option.lecture.LectureOption;
 import infra.database.option.professor.ProfessorCodeOption;
 import infra.database.option.student.StudentCodeOption;
 import infra.database.repository.*;
@@ -17,7 +19,22 @@ import java.util.List;
 public class test {
 
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException {
-        ProfessorRepository profRepo = new RDBProfessorRepository();
+        LectureOption[] options = new LectureOption[]{
+                new LectureCodeOption("P1000")
+        };
+        
+
+        try{
+            byte[] bytes = Serializer.objectArrToBytes(options);
+            LectureOption[] options2 = (LectureOption[]) Deserializer.bytesToObjectArr(bytes);
+
+            System.out.println("options2[0].getQuery() = " + options2[0].getQuery());
+        }catch (Exception e){
+            System.out.println("error");
+            e.getStackTrace();
+        }
+
+        
 //        CourseRepository c = new RDBCourseRepository();
 //        Professor p = profRepo.findByOption(new ProfessorCodeOption("P1000")).get(0);
 
