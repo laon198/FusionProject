@@ -94,25 +94,27 @@ public class ModelMapper {
         return null;
     }
 
-    private static Map<String, String> getPlannerItems(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        Field f1 = obj.getClass().getDeclaredField(fieldName);
-        f1.setAccessible(true);
-        return (Map<String, String>) f1.get(obj);
-    }
-
     public static Period getPeriod(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
         Field f1 = obj.getClass().getDeclaredField(fieldName);
         f1.setAccessible(true);
         return (Period) f1.get(obj);
     }
 
-    public static PeriodDTO periodToDTO(Period period) throws NoSuchFieldException, IllegalAccessException {
-        LocalDateTime beginTime = getLocalDateTimeField(period, "beginTime");
-        LocalDateTime endTime = getLocalDateTimeField(period, "endTime");
-        return PeriodDTO.builder()
-                .beginTime(beginTime)
-                .endTime(endTime)
-                .build();
+    public static PeriodDTO periodToDTO(Period period){
+        try{
+            LocalDateTime beginTime = getLocalDateTimeField(period, "beginTime");
+            LocalDateTime endTime = getLocalDateTimeField(period, "endTime");
+            return PeriodDTO.builder()
+                    .beginTime(beginTime)
+                    .endTime(endTime)
+                    .build();
+        } catch (NoSuchFieldException fieldException) {
+            fieldException.printStackTrace();
+        } catch (IllegalAccessException accessException) {
+            accessException.printStackTrace();
+        }
+
+        return null;
     }
 
     public static AdminDTO adminToDTO(Admin admin) {

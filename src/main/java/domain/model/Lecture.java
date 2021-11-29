@@ -135,18 +135,6 @@ public class Lecture {
         myRegisterings.remove(registering);
     }
 
-    public void writePlanner(String itemName, String content, String writerCode) {
-        if (writerCode.equals(professor.getProfessorCode())) {
-            throw new IllegalStateException("담당 교과목이 아닙니다.");
-        }
-
-        planner.writeItem(itemName, content);
-    }
-
-    public void setPlannerWritingPeriod(Period period) {
-        planner.setWritingPeriod(period);
-    }
-
     public boolean isEqualCourse(Lecture lecture) {
         return course.equals(lecture.course);
     }

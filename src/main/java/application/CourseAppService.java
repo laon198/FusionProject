@@ -29,14 +29,9 @@ public class CourseAppService {
     }
 
     public void update(CourseDTO courseDTO){
-        Course course = Course.builder()
-                .id(courseDTO.getId())
-                .courseCode(courseDTO.getCourseCode())
-                .courseName(courseDTO.getCourseName())
-                .department(courseDTO.getDepartment())
-                .targetYear(courseDTO.getTargetYear())
-                .credit(courseDTO.getCredit())
-                .build();
+        Course course = courseRepo.findByID(courseDTO.getId());
+
+        //TODO : 업데이트될 항목추가 필요
 
         courseRepo.save(course);
     }
@@ -46,7 +41,7 @@ public class CourseAppService {
         courseRepo.remove(course);
     }
 
-    public List<CourseDTO> retrieveAll(){
+    public CourseDTO[] retrieveAll(){
         return courseListToDTOList(courseRepo.findAll());
     }
 
@@ -54,15 +49,13 @@ public class CourseAppService {
         return ModelMapper.courseToDTO(courseRepo.findByID(id));
     }
 
-    private List<CourseDTO> courseListToDTOList(List<Course> courses){
-        List<CourseDTO> courseDTOS = new ArrayList<>();
+    private CourseDTO[] courseListToDTOList(List<Course> courses){
+        CourseDTO[] arr = new CourseDTO[courses.size()];
 
-        for(Course c : courses){
-            courseDTOS.add(
-                    ModelMapper.courseToDTO(c)
-            );
+        for(int i=0; i<arr.length; i++){
+            arr[i] = ModelMapper.courseToDTO(courses.get(i));
         }
 
-        return courseDTOS;
+        return arr;
     }
 }

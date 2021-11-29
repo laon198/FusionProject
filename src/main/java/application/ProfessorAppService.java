@@ -4,6 +4,7 @@ import domain.model.Account;
 import domain.model.Professor;
 import domain.repository.AccountRepository;
 import domain.repository.ProfessorRepository;
+import infra.database.option.professor.ProfessorOption;
 import infra.dto.ModelMapper;
 import infra.dto.ProfessorDTO;
 
@@ -62,26 +63,24 @@ public class ProfessorAppService {
     }
 
     //TODO : 추후구현
-//    public List<ProfessorDTO> retrieveByOption() {
-//        return stdListToDTOList(stdRepo.findByOption(options));
-//    }
+    public ProfessorDTO[] retrieveByOption(ProfessorOption...options) {
+        return profListToDTOArr(profRepo.findByOption(options));
+    }
 
 
     //TODO : 비효율적
-    public List<ProfessorDTO> retrieveAll() {
-        return profListToDTOList(profRepo.findAll());
+    public ProfessorDTO[] retrieveAll() {
+        return profListToDTOArr(profRepo.findAll());
     }
 
-    private List<ProfessorDTO> profListToDTOList(List<Professor> profList) {
-        List<ProfessorDTO> list = new ArrayList<>();
+    private ProfessorDTO[] profListToDTOArr(List<Professor> profList) {
+        ProfessorDTO[] arr = new ProfessorDTO[profList.size()];
 
-        for (Professor prof : profList) {
-            list.add(
-                    ModelMapper.professorToDTO(prof)
-            );
+        for(int i=0; i<arr.length; i++){
+            arr[i] = ModelMapper.professorToDTO(profList.get(i));
         }
 
-        return list;
+        return arr;
     }
 
 }

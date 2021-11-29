@@ -51,4 +51,14 @@ public class Period {
     public int hashCode() {
         return Objects.hash(beginTime, endTime);
     }
+
+    //TODO : 테스트용
+
+    @Override
+    public String toString() {
+        return "Period{" +
+                "beginTime=" + beginTime +
+                ", endTime=" + endTime +
+                '}';
+    }
 }

@@ -200,8 +200,9 @@ public class Protocol {
             is.read(header, 0, Protocol.LEN_HEADER);
             setHeader(header);
 
-            if (this.type == Protocol.UNDEFINED)
+            if (this.type == Protocol.UNDEFINED){
                 throw new Exception("통신 오류 > 연결 오류");
+            }
 
             byte[] buf = new byte[getBodyLength()];
             is.read(buf, 0, getBodyLength());
@@ -218,6 +219,7 @@ public class Protocol {
             return this;    
         } 
         catch (IOException e) {
+            e.printStackTrace();
             throw new IOException("통신 오류 > 데이터 수신 실패");
         }
         

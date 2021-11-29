@@ -68,7 +68,8 @@ public class MainController extends Thread {
                 Protocol pt = new Protocol();
                 handler(pt.read(is));
             } catch (Exception e) {
-                System.err.println(e);
+                e.printStackTrace();
+//                System.err.println(e.getStackTrace());
                 exit();
             }
         }

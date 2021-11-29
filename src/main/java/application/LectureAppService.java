@@ -98,41 +98,11 @@ public class LectureAppService {
         return dtos;
     }
 
-//    public void writePlanner(LectureDTO lectureDTO, String writerCode){
-//        Lecture lecture = lectureRepo.findByID(lectureDTO.getId());
-//
-//
-//    }
-
-
     public void update(LectureDTO lectureDTO){
-//        LectureManageService m = new LectureManageService(
-//                lectureRepo
-//        );
-//
-//        Set<LectureTime> times = new HashSet<>();
-//        for(LectureTimeDTO timeDTO : lectureDTO.getLectureTimes()){
-//            times.add(
-//                    LectureTime.builder()
-//                            .lectureDay(timeDTO.getLectureDay())
-//                            .endTime(timeDTO.getEndTime())
-//                            .startTime(timeDTO.getStartTime())
-//                            .room(timeDTO.getRoom())
-//                            .build()
-//            );
-//        }
-//
-//        Lecture lecture = Lecture.builder()
-//                .id(lectureDTO.getId())
-//                .lectureTimes(times)
-//                .lectureCode(lectureDTO.getLectureCode())
-//                .lecturerID(lectureDTO.getLecturerID())
-//                .courseID(lectureDTO.getCourseID())
-//                .limit(lectureDTO.getLimit())
-//                .registerings(lectureDTO.getMyRegisterings())
-//                .planner(lectureDTO.getPlanner())
-//                .build();
-//
-//        m.update(lecture);
+        Lecture lecture = lectureRepo.findByID(lectureDTO.getId());
+
+        //TODO : 업데이트할 항목 추가필요
+
+        lectureRepo.save(lecture);
     }
 }

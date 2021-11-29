@@ -15,11 +15,23 @@ import infra.network.Serializer;
 
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class test {
 
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException {
+        PlannerPeriodRepository p = new RDBPlannerPeriodRepository();
+        Period period = new Period(
+                LocalDateTime.now(),
+                LocalDateTime.of(2021,12,25,12,00)
+        );
+
+//        p.save(period);
+//        p.delete();
+        Period p2 = p.find();
+        System.out.println("p2 = " + p2);
+
 //        ProfessorRepository profRepo = new RDBProfessorRepository();
 //        CourseRepository c = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
 //        LectureRepository r = new RDBLectureRepository(c, profRepo, MyBatisConnectionFactory.getSqlSessionFactory());
