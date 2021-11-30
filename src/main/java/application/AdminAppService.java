@@ -35,6 +35,7 @@ public class AdminAppService {
                 .id(adminDTO.getAdminCode())
                 .password(adminDTO.getBirthDate())
                 .memberID(adminID)
+                .position("ADMIN")
                 .build();
 
         accRepo.save(acc);

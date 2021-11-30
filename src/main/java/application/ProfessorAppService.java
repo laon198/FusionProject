@@ -36,6 +36,7 @@ public class ProfessorAppService {
                 .id(profDTO.getProfessorCode())
                 .password(profDTO.getBirthDate())
                 .memberID(profID)
+                .position("PROF")
                 .build();
 
         accRepo.save(acc);
