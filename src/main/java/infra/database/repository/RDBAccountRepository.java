@@ -142,6 +142,7 @@ public class RDBAccountRepository implements AccountRepository {
             pstmt.setString(1, accDTO.getId());
             pstmt.setString(2, accDTO.getPassword());
             pstmt.setLong(3, accDTO.getMemberID());
+            pstmt.setString(4, accDTO.getPosition());
 
             pstmt.executeUpdate();
             ResultSet res = pstmt.getGeneratedKeys();
