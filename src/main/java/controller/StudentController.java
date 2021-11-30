@@ -157,8 +157,9 @@ public class StudentController implements DefinedController {
             RegisteringDTO regDTO = (RegisteringDTO) recvPt.getObject();
             regService.register(regDTO);
             sendPt.send(os);
-        }catch(IllegalArgumentException e){
+        }catch(IllegalArgumentException | IllegalStateException e){
              sendPt.setCode(Protocol.T2_CODE_FAIL);
+             sendPt.setObject(new MessageDTO(e.getMessage()));
              sendPt.send(os);
         }
     }

@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 public class Registrar {
-    private LectureRepository lectureRepo;
-    private CourseRepository courseRepo;
-    private Set<RegisteringPeriod> periodSet; //TODO : 의존성 주입필요
+    private final LectureRepository lectureRepo;
+    private final CourseRepository courseRepo;
+    private final Set<RegisteringPeriod> periodSet;
 
     public Registrar(LectureRepository lectureRepo, CourseRepository courseRepo,
                         Set<RegisteringPeriod> periodSet){
@@ -21,6 +21,14 @@ public class Registrar {
 
     public Registering register(Lecture lecture, Student student) throws  IllegalStateException, IllegalArgumentException{
         Course course = lecture.getCourse();
+
+        for(Registering registering : student.getMyRegisterings()){
+            Lecture stdLecture = lectureRepo.findByID(registering.getLectureID());
+
+            if(stdLecture.isEqualCourse(lecture)){
+                throw new IllegalArgumentException("중복된 수강입니다.");
+            }
+        }
 
         if(!isValidPeriodAbout(student, course)){
             throw new IllegalStateException("해당학년 수강신청 기간이 아닙니다.");
@@ -36,15 +44,6 @@ public class Registrar {
 
         if(!student.isValidCredit(course.getCredit())){
             throw new IllegalArgumentException("수강할수 있는 학점을 초과했습니다.");
-        }
-
-        //TODO : 학생객체가 수강강의 객체를 바로 참조하지못해서 캡슐화가 깨짐
-        for(Registering registering : student.getMyRegisterings()){
-            Lecture stdLecture = lectureRepo.findByID(registering.getLectureID());
-
-            if(stdLecture.isEqualCourse(lecture)){
-                throw new IllegalArgumentException("중복된 수강입니다.");
-            }
         }
 
         Registering newReg = Registering.builder()
