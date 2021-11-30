@@ -1,8 +1,6 @@
 package infra.database.mapper;
 
-import domain.model.Lecture;
 import infra.database.option.lecture.LectureOption;
-import infra.dto.LectureDTO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -13,7 +11,7 @@ public interface LectureMapper {
     List<Map<String, Object>> findAll();
 
     @SelectProvider(type = infra.database.mapper.sql.LectureSql.class, method = "findByOption")
-    List<Map<String, Object>> findByOption(LectureOption ...lectureOptions);
+    List<Map<String, Object>> findByOption(LectureOption... lectureOptions);
 
 
     @SelectProvider(type = infra.database.mapper.sql.LectureSql.class, method = "findById")
@@ -34,14 +32,19 @@ public interface LectureMapper {
 
     @InsertProvider(type = infra.database.mapper.sql.LectureSql.class, method = "insert")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "lecture_PK")
-    int insert(@Param("courseID")long courseID, @Param("lectureCode")String lectureCode,
-                @Param("limit")int limit, @Param("applicant")int applicant,
-                @Param("professorCode")String professorCode);
+    int insert(Map<String, Object> lectureInfo);
+
+//    @InsertProvider(type = infra.database.mapper.sql.LectureSql.class, method = "insert")
+//    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "lecture_PK")
+//    int insert(@Param("courseID")long courseID, @Param("lectureCode")String lectureCode,
+//               @Param("limit")int limit, @Param("applicant")int applicant,
+//               @Param("professorCode")String professorCode);
+
 
     @InsertProvider(type = infra.database.mapper.sql.LectureSql.class, method = "insertLectureTime")
     void insertLectureTime(@Param("lectureID") long lectureID, @Param("lectureDay") String lectureDay,
-                            @Param("room") String room, @Param("startTime") int startTime,
-                                @Param("endTime") int endTime, @Param("lectureName") String lectureName);
+                           @Param("room") String room, @Param("startTime") int startTime,
+                           @Param("endTime") int endTime, @Param("lectureName") String lectureName);
 
     @InsertProvider(type = infra.database.mapper.sql.LectureSql.class, method = "insertPlanner")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "lecture_planner_PK")
@@ -49,14 +52,14 @@ public interface LectureMapper {
 
 
     @UpdateProvider(type = infra.database.mapper.sql.LectureSql.class, method = "updateLecture")
-    void updateLecture(@Param("courseID")long courseID, @Param("lectureCode")String lectureCode,
-                       @Param("limit")int limit, @Param("applicant")int applicant,
-                       @Param("professorCode")String professorCode, @Param("id")long id);
+    void updateLecture(@Param("courseID") long courseID, @Param("lectureCode") String lectureCode,
+                       @Param("limit") int limit, @Param("applicant") int applicant,
+                       @Param("professorCode") String professorCode, @Param("id") long id);
 
     @UpdateProvider(type = infra.database.mapper.sql.LectureSql.class, method = "updateLectureTime")
     void updateLectureTime(@Param("id") long id, @Param("lectureDay") String lectureDay,
                            @Param("room") String room, @Param("startTime") int startTime,
-                            @Param("endTime") int endTime, @Param("lectureName")String lectureName);
+                           @Param("endTime") int endTime, @Param("lectureName") String lectureName);
 
 
     @UpdateProvider(type = infra.database.mapper.sql.LectureSql.class, method = "updatePlanner")
