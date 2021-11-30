@@ -34,7 +34,7 @@ public class RegisterAppService {
         this.periodRepo = periodRepo;
     }
 
-    public void register(RegisteringDTO regDTO) throws IllegalStateException, IllegalArgumentException{
+    synchronized public void register(RegisteringDTO regDTO) throws IllegalStateException, IllegalArgumentException{
         Lecture lecture = lectureRepo.findByID(regDTO.getLectureID());
         Student student = stdRepo.findByOption(new StudentCodeOption(regDTO.getStudentCode())).get(0);
         Set<RegisteringPeriod> periodSet = new HashSet<>(periodRepo.findAll());

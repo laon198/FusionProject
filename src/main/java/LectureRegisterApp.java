@@ -1,3 +1,4 @@
+import application.RegisterAppService;
 import domain.repository.*;
 import infra.database.MyBatisConnectionFactory;
 import infra.database.repository.*;
@@ -17,6 +18,7 @@ public class LectureRegisterApp {
     private final StudentRepository stdRepo;
     private final PlannerPeriodRepository plannerPeriodRepo;
     private final SqlSessionFactory sqlSessionFactory;
+    private final RegisterAppService regService;
     private final Server mainServer;
 
     public LectureRegisterApp(){
@@ -32,10 +34,15 @@ public class LectureRegisterApp {
         regPeriodRepo = new RDBRegPeriodRepository();
         stdRepo = new RDBStudentRepository();
         plannerPeriodRepo = new RDBPlannerPeriodRepository();
+        regService = new RegisterAppService(
+                lectureRepo, stdRepo, courseRepo,
+                regRepo, regPeriodRepo
+        );
         mainServer = new Server(
                 accRepo, adminRepo, courseRepo,
                 lectureRepo, profRepo, regRepo,
-                regPeriodRepo, stdRepo, plannerPeriodRepo
+                regPeriodRepo, stdRepo, plannerPeriodRepo,
+                regService
         );
     }
 

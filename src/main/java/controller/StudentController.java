@@ -42,6 +42,7 @@ public class StudentController implements DefinedController {
             ProfessorRepository profRepo, RegisteringRepository regRepo,
             RegPeriodRepository regPeriodRepo, StudentRepository stdRepo,
             PlannerPeriodRepository plannerPeriodRepo,
+            RegisterAppService regService,
             InputStream is, OutputStream os){
         this.accRepo = accRepo;
         this.adminRepo = adminRepo;
@@ -55,11 +56,9 @@ public class StudentController implements DefinedController {
         this.is = is;
         this.os = os;
 
+        this.regService = regService;
         stdService = new StudentAppService(stdRepo, accRepo, regRepo);
         lectureService = new LectureAppService(lectureRepo, courseRepo, profRepo, plannerPeriodRepo);
-        regService = new RegisterAppService(
-                lectureRepo, stdRepo, courseRepo, regRepo, regPeriodRepo
-        );
     }
 
     @Override

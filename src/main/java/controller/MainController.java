@@ -1,5 +1,6 @@
 package controller;
 
+import application.RegisterAppService;
 import domain.repository.*;
 import infra.network.Protocol;
 import infra.network.Server;
@@ -34,13 +35,14 @@ public class MainController extends Thread {
     private final RegPeriodRepository regPeriodRepo;
     private final StudentRepository stdRepo;
     private final PlannerPeriodRepository plannerPeriodRepo;
+    private final RegisterAppService regService;
 
     // 스레드 생성자
     public MainController(
             AccountRepository accRepo, AdminRepository adminRepo, CourseRepository courseRepo,
             LectureRepository lectureRepo, ProfessorRepository profRepo, RegisteringRepository regRepo,
             RegPeriodRepository regPeriodRepo, StudentRepository stdRepo,
-            PlannerPeriodRepository plannerPeriodRepo, Socket socket
+            PlannerPeriodRepository plannerPeriodRepo, RegisterAppService regService, Socket socket
     ){
         this.accRepo = accRepo;
         this.adminRepo = adminRepo;
@@ -51,6 +53,7 @@ public class MainController extends Thread {
         this.regPeriodRepo = regPeriodRepo;
         this.stdRepo = stdRepo;
         this.plannerPeriodRepo = plannerPeriodRepo;
+        this.regService = regService;
         this.socket = socket;
         clientID = socket.getPort();
         this.socket = socket;
@@ -117,7 +120,7 @@ public class MainController extends Thread {
                             accRepo, adminRepo, courseRepo,
                             lectureRepo, profRepo, regRepo,
                             regPeriodRepo, stdRepo, plannerPeriodRepo,
-                            is, os
+                            regService, is, os
                     );
                 }
                 break;
@@ -137,7 +140,7 @@ public class MainController extends Thread {
                             accRepo, adminRepo, courseRepo,
                             lectureRepo, profRepo, regRepo,
                             regPeriodRepo, stdRepo, plannerPeriodRepo,
-                            is, os
+                            regService, is, os
                     );
                 }
                 break;
