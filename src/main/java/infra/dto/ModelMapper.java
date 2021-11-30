@@ -3,6 +3,7 @@ package infra.dto;
 import domain.model.LectureTime;
 import domain.model.Period;
 import domain.model.*;
+import org.apache.ibatis.jdbc.Null;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
@@ -162,6 +163,7 @@ public class ModelMapper {
 
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.getStackTrace();
+        }catch(NullPointerException e){
         }
 
         return null;
@@ -355,8 +357,9 @@ public class ModelMapper {
                     .department(department)
                     .courseName(courseName)
                     .build();
-        }catch(NoSuchFieldException | IllegalAccessException e){
+        }catch(NoSuchFieldException | IllegalAccessException  e){
             e.getStackTrace();
+        }catch(NullPointerException e){
         }
 
         return null;
@@ -421,6 +424,6 @@ public class ModelMapper {
     public static long getLongField(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
         Field f1 = obj.getClass().getDeclaredField(fieldName);
         f1.setAccessible(true);
-        return (long) f1.get(obj);
+        return f1.getLong(obj);
     }
 }
