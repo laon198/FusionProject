@@ -36,8 +36,10 @@ public class RDBProfessorRepository implements ProfessorRepository {
             pstmt.setLong(1, id);
             res = pstmt.executeQuery();
             prof = getProfFrom(res).get(0);
-        }catch(SQLException sqlException){
-            sqlException.printStackTrace();
+        }catch(SQLException e){
+            e.printStackTrace();
+        } catch(IndexOutOfBoundsException ie){
+            throw new IllegalArgumentException("해당하는 결과가 없습니다.");
         }finally {
             try{
                 conn.close();
@@ -78,7 +80,12 @@ public class RDBProfessorRepository implements ProfessorRepository {
             conn = ds.getConnection();
             pstmt = conn.prepareStatement(new String(query));
             res = pstmt.executeQuery();
-            return getProfFrom(res);
+            List<Professor> resList = getProfFrom(res);
+            if(resList.size()==0){
+                throw new IllegalArgumentException("해당하는 결과가 없습니다.");
+            }else{
+                return resList;
+            }
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }finally {
@@ -106,6 +113,11 @@ public class RDBProfessorRepository implements ProfessorRepository {
             pstmt = conn.prepareStatement(new String(query));
             res = pstmt.executeQuery();
             list = getProfFrom(res);
+            if(list.size()==0){
+                throw new IllegalArgumentException("해당하는 결과가 없습니다.");
+            }else{
+                return list;
+            }
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }finally {
@@ -166,11 +178,6 @@ public class RDBProfessorRepository implements ProfessorRepository {
             stdStmt.execute();
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
-//            try{
-//                conn.rollback();
-//            }catch (SQLException e){
-//                e.printStackTrace();
-//            }
         }finally {
             try{
                 conn.close();

@@ -31,7 +31,8 @@ public class RDBAdminRepository implements AdminRepository {
             return getAdminFrom(res).get(0);
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
-            throw new IllegalArgumentException("잘못된 id값입니다.");
+        }catch(IndexOutOfBoundsException e){
+            throw new IllegalArgumentException("해당하는 결과가 없습니다.");
         }finally {
             try{
                 conn.close();
@@ -39,6 +40,7 @@ public class RDBAdminRepository implements AdminRepository {
                 sqlException.printStackTrace();
             }
         }
+        return null;
     }
 
     @Override
@@ -53,7 +55,12 @@ public class RDBAdminRepository implements AdminRepository {
             conn = ds.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(new String(query));
             ResultSet res = pstmt.executeQuery();
-            return getAdminFrom(res);
+            List<Admin> resList = getAdminFrom(res);
+            if(resList.size()==0){
+                throw new IllegalArgumentException("해당하는 결과가 없습니다.");
+            }else{
+                return resList;
+            }
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }finally {

@@ -30,7 +30,8 @@ public class RDBAccountRepository implements AccountRepository {
             return getAccFrom(res).get(0);
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
-            throw new IllegalArgumentException("잘못된 id값입니다.");
+        }catch(IndexOutOfBoundsException e){
+            throw new IllegalArgumentException("해당하는 결과가 없습니다.");
         }finally {
             try{
                 conn.close();
@@ -38,6 +39,7 @@ public class RDBAccountRepository implements AccountRepository {
                 sqlException.printStackTrace();
             }
         }
+        return null;
     }
 
     @Override
@@ -65,7 +67,13 @@ public class RDBAccountRepository implements AccountRepository {
             conn = ds.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(new String(query));
             ResultSet res = pstmt.executeQuery();
-            return getAccFrom(res);
+            List<Account> resList = getAccFrom(res);
+
+            if(resList.size()==0){
+                throw new IllegalArgumentException("해당하는 결과가 없습니다.");
+            }else{
+                return resList;
+            }
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }finally {

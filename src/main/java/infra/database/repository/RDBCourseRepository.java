@@ -25,6 +25,10 @@ public class RDBCourseRepository implements CourseRepository {
             session = sqlSessionFactory.openSession();
             list = session.selectList("mapper.CourseMapper.ReadAll");
             session.commit();
+
+            if(list.size()==0){
+                throw new IllegalArgumentException("해당하는 결과가 없습니다.");
+            }
         }
         catch (Exception e){
             e.printStackTrace();
@@ -69,6 +73,9 @@ public class RDBCourseRepository implements CourseRepository {
             session = sqlSessionFactory.openSession();
             course = session.selectOne("mapper.CourseMapper.findByID", id);
             session.commit();
+            if(course==null){
+                throw new IllegalArgumentException("해당하는 결과가 없습니다.");
+            }
         }
         catch (Exception e){
             e.printStackTrace();
@@ -87,6 +94,9 @@ public class RDBCourseRepository implements CourseRepository {
             session = sqlSessionFactory.openSession();
             list = session.selectList("mapper.CourseMapper.ReadTargetGrade",year);
             session.commit();
+            if(list.size()==0){
+                throw new IllegalArgumentException("해당하는 결과가 없습니다.");
+            }
         }
         catch (Exception e){
             e.printStackTrace();
