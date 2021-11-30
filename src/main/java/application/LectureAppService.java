@@ -115,7 +115,30 @@ public class LectureAppService {
         LecturePlannerDTO plannerDTO = lectureDTO.getPlanner();
         lecture.writePlanner("goal", plannerDTO.getGoal());
         lecture.writePlanner("summary", plannerDTO.getSummary());
-        //TODO : 업데이트할 항목 추가필요
+
+        lecture.setLectureCode(lectureDTO.getLectureCode());
+
+        lecture.setLimit(lectureDTO.getLimit());
+
+        Professor prof = profRepo.findByID(lectureDTO.getProfessor().getId());
+        lecture.setProfessor(prof);
+
+        //강의시간변경
+        Set<LectureTime> times = new HashSet<>();
+        for(LectureTimeDTO dto : lectureDTO.getLectureTimes()){
+            times.add(
+                    LectureTime.builder()
+                            .id(dto.getId())
+                            .startTime(dto.getStartTime())
+                            .endTime(dto.getEndTime())
+                            .lectureDay(dto.getLectureDay())
+                            .room(dto.getRoom())
+                            .lectureName(dto.getLectureName())
+                            .build()
+            );
+        }
+        lecture.setLectureTimes(times);
+
 
         lectureRepo.save(lecture);
     }

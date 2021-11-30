@@ -54,7 +54,7 @@ public class LectureSql {
 
     public String selectLectureTimes(long id) {
         SQL sql = new SQL() {{
-            SELECT("start_period, end_period, day_of_week, lecture_room");
+            SELECT("lecture_time_PK, start_period, end_period, day_of_week, lecture_room, lecture_name");
             FROM("lECTURE_TIMES_TB");
             INNER_JOIN("LECTURES_TB ON LECTURE_TIMES_TB.lecture_PK = LECTURES_TB.lecture_PK");
             WHERE("LECTURES_TB.lecture_PK = #{id}");

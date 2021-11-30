@@ -6,6 +6,7 @@ public class LectureTime {
     public enum DayOfWeek {
         MON, TUE, WED, THU, FRI
     }
+
     public enum LecturePeriod {
         FIRST, SECOND, THIRD, FOURTH,
         FIFTH, SIXTH, SEVENTH, EIGHTH, NINTH
@@ -29,7 +30,7 @@ public class LectureTime {
     private String room;
     private String lectureName;
 
-    public static class Builder{
+    public static class Builder {
         private long id;
         private DayOfWeek lectureDay;
         private LecturePeriod startTime;
@@ -37,8 +38,8 @@ public class LectureTime {
         private String room;
         private String lectureName;
 
-        public Builder lectureDay(String value){
-            switch(value){
+        public Builder lectureDay(String value) {
+            switch (value) {
                 case "MON":
                     lectureDay = DayOfWeek.MON;
                     break;
@@ -60,23 +61,23 @@ public class LectureTime {
             return this;
         }
 
-        public Builder id(long value){
+        public Builder id(long value) {
             id = value;
             return this;
         }
 
-        public Builder lectureName(String value){
+        public Builder lectureName(String value) {
             lectureName = value;
             return this;
         }
 
-        public Builder room(String value){
+        public Builder room(String value) {
             room = value;
             return this;
         }
 
-        public Builder startTime(int value){
-            switch (value){
+        public Builder startTime(int value) {
+            switch (value) {
                 case 1:
                     startTime = LecturePeriod.FIRST;
                     break;
@@ -108,8 +109,8 @@ public class LectureTime {
             return this;
         }
 
-        public Builder endTime(int value){
-            switch (value){
+        public Builder endTime(int value) {
+            switch (value) {
                 case 1:
                     endTime = LecturePeriod.FIRST;
                     break;
@@ -141,16 +142,16 @@ public class LectureTime {
             return this;
         }
 
-        public LectureTime build(){
+        public LectureTime build() {
             return new LectureTime(this);
         }
     }
 
-    public static Builder builder(){
+    public static Builder builder() {
         return new Builder();
     }
 
-    private LectureTime(Builder builder){
+    private LectureTime(Builder builder) {
         id = builder.id;
         lectureDay = builder.lectureDay;
         startTime = builder.startTime;
@@ -159,39 +160,30 @@ public class LectureTime {
         lectureName = builder.lectureName;
     }
 
-    public LectureTime(long id, DayOfWeek dayOfWeek, LecturePeriod startTime, LecturePeriod endTime, String room){
+    public LectureTime(long id, DayOfWeek dayOfWeek, LecturePeriod startTime, LecturePeriod endTime, String room, String lectureName) {
         this.id = id;
         isValidTime(startTime, endTime);
         lectureDay = dayOfWeek;
         this.startTime = startTime;
         this.endTime = endTime;
         this.room = room;
+        this.lectureName = lectureName;
     }
 
-    private void isValidTime(LecturePeriod startTime, LecturePeriod endTime){
-        if(endTime.compareTo(startTime) < 0){
+    private void isValidTime(LecturePeriod startTime, LecturePeriod endTime) {
+        if (endTime.compareTo(startTime) < 0) {
             throw new IllegalArgumentException("시간설정 잘못됨");
         }
     }
 
-    public boolean isOverlappedTime(LectureTime time){
-        return lectureDay==time.lectureDay &&
-                startTime.compareTo(time.endTime)<=0 &&
-                endTime.compareTo(time.startTime)>=0;
+    public boolean isOverlappedTime(LectureTime time) {
+        return lectureDay == time.lectureDay &&
+                startTime.compareTo(time.endTime) <= 0 &&
+                endTime.compareTo(time.startTime) >= 0;
     }
 
-    public boolean isSameRoom(LectureTime time){
+    public boolean isSameRoom(LectureTime time) {
         return room.equals(time.room);
-    }
-
-    public LectureTime setRoom(String room) {
-        return new LectureTime(
-                this.id,
-                this.lectureDay,
-                this.startTime,
-                this.endTime,
-                room
-        );
     }
 
     @Override

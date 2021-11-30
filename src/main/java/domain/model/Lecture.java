@@ -120,6 +120,18 @@ public class Lecture {
         this.limit = limit;
     }
 
+    public void setLectureCode(String value){
+        lectureCode = value;
+    }
+
+    public  void setProfessor(Professor professor){
+        this.professor = professor;
+    }
+
+    public void setLectureTimes(Set<LectureTime> lectureTimes) {
+        this.lectureTimes = lectureTimes;
+    }
+
     public void register(Registering registering) {
         myRegisterings.add(registering);
     }
