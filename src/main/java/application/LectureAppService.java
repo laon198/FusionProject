@@ -78,11 +78,13 @@ public class LectureAppService {
         return lectureListToDTOArr(lectureRepo.findByOption(options));
     }
 
-    public LectureDTO[] getRegisteredLectures(RegisteringDTO[] regs){
-        LectureDTO[] res = new LectureDTO[regs.length];
+    public LectureDTO[] getRegisteredLectures(Student std){
+        Set<Registering> regs = std.getMyRegisterings();
+        LectureDTO[] res = new LectureDTO[regs.size()];
 
-        for(int i=0; i<res.length; i++){
-            res[i] = ModelMapper.lectureToDTO(lectureRepo.findByID(regs[i].getLectureID()));
+        int i=0;
+        for(Registering reg : regs){
+            res[i++] = ModelMapper.lectureToDTO(lectureRepo.findByID(reg.getLectureID()));
         }
 
         return res;

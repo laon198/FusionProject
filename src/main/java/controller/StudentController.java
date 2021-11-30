@@ -4,6 +4,7 @@ import application.AccountAppService;
 import application.LectureAppService;
 import application.RegisterAppService;
 import application.StudentAppService;
+import domain.model.Student;
 import domain.repository.*;
 import infra.database.option.lecture.LectureOption;
 import infra.database.option.student.StudentOption;
@@ -173,8 +174,8 @@ public class StudentController implements DefinedController {
                 StudentDTO[] res = stdService.retrieveAll();
                 sendPt.setObjectArray(res);
                 sendPt.send(os);
-                break;
             }
+            break;
             case Protocol.READ_BY_ID:{
                 try{
                     sendPt.setCode(Protocol.T2_CODE_SUCCESS);
@@ -182,11 +183,11 @@ public class StudentController implements DefinedController {
                     StudentDTO res = stdService.retrieveByID(stdDTO.getId());
                     sendPt.setObject(res);
                     sendPt.send(os);
-                    break;
                 }catch(IllegalArgumentException e){
                     sendPt.setCode(Protocol.T2_CODE_FAIL);
                     sendPt.send(os);
                 }
+                break;
             }
             case Protocol.READ_BY_OPTION:{
                 try{
@@ -195,11 +196,11 @@ public class StudentController implements DefinedController {
                     StudentDTO[] res = stdService.retrieveByOption(options);
                     sendPt.setObjectArray(res);
                     sendPt.send(os);
-                    break;
                 }catch(IllegalArgumentException e){
                     sendPt.setCode(Protocol.T2_CODE_FAIL);
                     sendPt.send(os);
                 }
+                break;
             }
         }
     }
@@ -223,11 +224,11 @@ public class StudentController implements DefinedController {
                     LectureDTO res = lectureService.retrieveByID(lectureDTO.getId());
                     sendPt.setObject(res);
                     sendPt.send(os);
-                    break;
                 }catch(IllegalArgumentException e){
                     sendPt.setCode(Protocol.T2_CODE_FAIL);
                     sendPt.send(os);
                 }
+                break;
             }
             case Protocol.READ_BY_OPTION:{
                 try{
@@ -236,11 +237,11 @@ public class StudentController implements DefinedController {
                     LectureDTO[] res = lectureService.retrieveByOption(options);
                     sendPt.setObjectArray(res);
                     sendPt.send(os);
-                    break;
                 }catch(IllegalArgumentException e){
                     sendPt.setCode(Protocol.T2_CODE_FAIL);
                     sendPt.send(os);
                 }
+                break;
             }
         }
     }
@@ -270,7 +271,8 @@ public class StudentController implements DefinedController {
 
         try{
             StudentDTO stdDTO = (StudentDTO) recvPt.getObject();
-            LectureDTO[] res = lectureService.getRegisteredLectures(stdDTO.getMyRegisterings());
+            Student std = stdRepo.findByID(stdDTO.getId());
+            LectureDTO[] res = lectureService.getRegisteredLectures(std);
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
             sendPt.setObjectArray(res);
             sendPt.send(os);
@@ -324,14 +326,12 @@ public class StudentController implements DefinedController {
                 regRepo, regPeriodRepo
         );
         RegisteringDTO regDTO = (RegisteringDTO) recvPt.getObject();
-
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         try {
             regService.cancel(regDTO);
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
             sendPt.send(os);
-
         } catch (IllegalArgumentException e) { // 삭제 실패 (존재하지 않는 pk) - 이런 경우가 있을진 모르겠음
             sendPt.setCode(Protocol.T2_CODE_FAIL);
             sendPt.send(os);
