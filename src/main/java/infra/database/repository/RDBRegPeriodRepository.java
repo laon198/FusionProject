@@ -79,7 +79,7 @@ public class RDBRegPeriodRepository implements RegPeriodRepository {
     @Override
     public void remove(RegisteringPeriod registeringPeriod) {
         StringBuilder query = new StringBuilder()
-                .append("DELETE * FROM registering_periods_tb AS r ")
+                .append("DELETE FROM registering_periods_tb AS r ")
                 .append("WHERE r.registering_period_PK=? ");
 
         Connection conn = null;
