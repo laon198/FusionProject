@@ -118,7 +118,7 @@ public class RDBLectureRepository implements LectureRepository {
             items.put("id", Long.toString(lectureDTO.getId()));
             mapper.updateLecturePlanner(items);
             mapper.updateLecture(
-                    lectureDTO.getCourseID(), lectureDTO.getProfessorCode(),
+                    lectureDTO.getCourseID(), lectureDTO.getLectureCode(),
                     lectureDTO.getLimit(), lectureDTO.getApplicant(),
                     lectureDTO.getProfessorCode(), lectureDTO.getId()
             );
@@ -272,9 +272,11 @@ public class RDBLectureRepository implements LectureRepository {
         for (Map time : times) {
             lectureTimes.add(
                     LectureTime.builder()
+                            .id((Long) time.get("lecture_time_PK"))
                             .lectureDay(time.get("day_of_week").toString())
                             .startTime((int) time.get("start_period"))
                             .endTime((int) time.get("end_period"))
+                            .lectureName((String)time.get("lecture_name"))
                             .room(time.get("lecture_room").toString())
                             .build()
             );
