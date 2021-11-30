@@ -94,7 +94,7 @@ public class MainController extends Thread {
         switch(userType){
             case USER_UNDEFINED:
                 UndefinedController undefinedController = new UndefinedController(
-                        socket, is, os, clientID, accRepo
+                        socket, is, os, clientID, accRepo, adminRepo
                 );
                 userType = undefinedController.handler(pt);
                 setMyController();

@@ -1,8 +1,11 @@
 package controller;
 
 import application.AccountAppService;
+import application.AdminAppService;
 import domain.repository.AccountRepository;
+import domain.repository.AdminRepository;
 import infra.dto.AccountDTO;
+import infra.dto.AdminDTO;
 import infra.network.*;
 
 import java.io.IOException;
@@ -17,18 +20,20 @@ public class UndefinedController {
     public static final int ADMIN_TYPE = 3;
 
     private AccountRepository accRepo;
+    private AdminRepository adminRepo;
     private Socket socket;
     private InputStream is;
     private OutputStream os;
     private int clientID;
 
     public UndefinedController(Socket socket, InputStream is, OutputStream os,
-                               int clientID, AccountRepository accRepo){
+                               int clientID, AccountRepository accRepo, AdminRepository adminRepo){
         this.socket = socket;
         this.is = is;
         this.os = os;
         this.clientID = clientID;
         this.accRepo = accRepo;
+        this.adminRepo = adminRepo;
     }
 
     public int handler(Protocol recvPt){
@@ -82,8 +87,22 @@ public class UndefinedController {
         return USER_UNDEFINED;
     }
 
-    private void createAdmin(Protocol recvPt){
-//        if(recvPt.getEntity()!=Protocol.ENTITY_AD)
+    private void createAdmin(Protocol recvPt) throws Exception{
+        if(recvPt.getEntity()!=Protocol.ENTITY_ADMIN){
+            //TODO : 처리
+        }
+        AdminAppService adminService = new AdminAppService(adminRepo, accRepo);
+        Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
+        try{
+            AdminDTO dto = (AdminDTO) recvPt.getObject();
+            adminService.create(dto);
+            sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+            sendPt.send(os);
+        }catch(IllegalArgumentException e){
+            sendPt.setCode(Protocol.T2_CODE_FAIL);
+            sendPt.send(os);
+        }
     }
 
     private void logoutReq() throws IOException {
@@ -91,7 +110,5 @@ public class UndefinedController {
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
         sendPt.send(os);
     }
-
-
 }
 
