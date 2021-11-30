@@ -6,6 +6,7 @@ import domain.repository.AccountRepository;
 import domain.repository.AdminRepository;
 import infra.dto.AccountDTO;
 import infra.dto.AdminDTO;
+import infra.dto.MessageDTO;
 import infra.network.*;
 
 import java.io.IOException;
@@ -65,8 +66,6 @@ public class UndefinedController {
             AccountAppService accService = new AccountAppService(accRepo);
             AccountDTO resAccDTO= accService.login(accDTO);
 
-            // < DB >
-            // 로그인 성공
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
             sendPt.setObject(resAccDTO);
             sendPt.send(os);
@@ -79,8 +78,8 @@ public class UndefinedController {
                 return ADMIN_TYPE;
             }
         }catch(IllegalArgumentException e){
-//            // 로그인 실패
             sendPt.setCode(Protocol.T2_CODE_FAIL);
+            sendPt.setObject(new MessageDTO(e.getMessage()));
             sendPt.send(os);
         }
 

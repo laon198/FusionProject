@@ -31,7 +31,7 @@ public class RDBAccountRepository implements AccountRepository {
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }catch(IndexOutOfBoundsException e){
-            throw new IllegalArgumentException("해당하는 결과가 없습니다.");
+            throw new IllegalArgumentException("id에 해당하는 결과가 없습니다.");
         }finally {
             try{
                 conn.close();

@@ -14,7 +14,6 @@ public class AccountAppService {
     }
 
     public AccountDTO login(AccountDTO accDTO) throws IllegalArgumentException{
-        //TODO : 해당아이디 없을때 예외처리필요
         Account acc = accRepo.findByOption(new AccountIDOption(accDTO.getId())).get(0);
 
         if(!acc.checkPassword(accDTO.getPassword())){
