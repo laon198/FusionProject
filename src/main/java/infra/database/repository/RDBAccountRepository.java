@@ -126,8 +126,8 @@ public class RDBAccountRepository implements AccountRepository {
 
     private long add(AccountDTO accDTO){
         StringBuilder query = new StringBuilder(
-                "INSERT INTO accounts_tb (account_ID, account_PW, member_PK) " +
-                        "VALUES(?, ?, ?) "
+                "INSERT INTO accounts_tb (account_ID, account_PW, member_PK, position) " +
+                        "VALUES(?, ?, ?, ?) "
         );
 
         Connection conn = null;
