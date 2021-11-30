@@ -15,7 +15,7 @@ public class Course {
     }
 
     public static class Builder {
-        private long id=-1;
+        private long id = -1;
         private String courseCode;
         private String courseName;
         private String department;
@@ -61,7 +61,8 @@ public class Course {
         return new Builder();
     }
 
-    public Course(){}
+    public Course() {
+    }
 
     private Course(Builder builder) {
         id = builder.id;
@@ -84,9 +85,31 @@ public class Course {
     public long getId() {
         return id;
     }
+
     public int getCredit() {
         return credit;
     }
+
+    public void setCourseCode(String value) {
+        courseCode = value;
+    }
+
+    public void setDepartment(String value) {
+        department = value;
+    }
+
+    public void setTargetYear(int value) {
+        targetYear = value;
+    }
+
+    public void setCourseName(String value) {
+        courseName = value;
+    }
+
+    public void setCredit(int value) {
+        credit = value;
+    }
+
 
     @Override
     public boolean equals(Object o) {
