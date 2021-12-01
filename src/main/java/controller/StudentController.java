@@ -258,10 +258,16 @@ public class StudentController implements DefinedController {
 
         switch(recvPt.getReadOption()){
             case Protocol.READ_ALL:{
-                sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-                RegisteringPeriodDTO[] res = regService.retrieveRegPeriodAll();
-                sendPt.setObjectArray(res);
-                sendPt.send(os);
+                try{
+                    sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+                    RegisteringPeriodDTO[] res = regService.retrieveRegPeriodAll();
+                    sendPt.setObjectArray(res);
+                    sendPt.send(os);
+                }catch(IllegalArgumentException e){
+                    sendPt.setCode(Protocol.T2_CODE_FAIL);
+                    sendPt.setObject(new MessageDTO(e.getMessage()));
+                    sendPt.send(os);
+                }
                 break;
             }
             default:{
