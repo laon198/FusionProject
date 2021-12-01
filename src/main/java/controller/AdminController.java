@@ -243,8 +243,7 @@ public class AdminController implements DefinedController {
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);  // 성공
             sendPt.send(os);
         }catch (IllegalArgumentException e){
-            // 개설교과목 생성 실패 - ?
-             sendPt.setCode(Protocol.T2_CODE_FAIL);
+            sendPt.setCode(Protocol.T2_CODE_FAIL);
             sendPt.send(os);
         }
     }
@@ -297,6 +296,7 @@ public class AdminController implements DefinedController {
                     sendPt.send(os);
                 }catch(IllegalArgumentException e){
                     sendPt.setCode(Protocol.T2_CODE_FAIL);
+                    sendPt.setObject(new MessageDTO(e.getMessage()));
                     sendPt.send(os);
                 }
                 break;
@@ -342,6 +342,7 @@ public class AdminController implements DefinedController {
                     sendPt.send(os);
                 }catch(IllegalArgumentException e){
                     sendPt.setCode(Protocol.T2_CODE_FAIL);
+                    sendPt.setObject(new MessageDTO(e.getMessage()));
                     sendPt.send(os);
                 }
                 break;
@@ -391,6 +392,7 @@ public class AdminController implements DefinedController {
                     sendPt.send(os);
                 }catch(IllegalArgumentException e){
                     sendPt.setCode(Protocol.T2_CODE_FAIL);
+                    sendPt.setObject(new MessageDTO(e.getMessage()));
                     sendPt.send(os);
                 }
                 break;
@@ -404,24 +406,11 @@ public class AdminController implements DefinedController {
                     sendPt.send(os);
                 }catch(IllegalArgumentException e){
                     sendPt.setCode(Protocol.T2_CODE_FAIL);
+                    sendPt.setObject(new MessageDTO(e.getMessage()));
                     sendPt.send(os);
                 }
                 break;
             }
-            //TODO
-//            case Protocol.READ_BY_OPTION:{
-//                try{
-//                    ProfessorOption[] options = (ProfessorOption[]) recvPt.getObjectArray();
-//                    ProfessorDTO[] res = profService.retrieveByOption(options);
-//                    sendPt.setObjectArray(res);
-//                    sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-//                    sendPt.send(os);
-//                }catch(IllegalArgumentException e){
-//                    sendPt.setCode(Protocol.T2_CODE_FAIL);
-//                    sendPt.send(os);
-//                }
-//                break;
-//            }
         }
     }
 
@@ -440,6 +429,7 @@ public class AdminController implements DefinedController {
                     sendPt.send(os);
                 }catch(IllegalArgumentException e){
                     sendPt.setCode(Protocol.T2_CODE_FAIL);
+                    sendPt.setObject(new MessageDTO(e.getMessage()));
                     sendPt.send(os);
                 }
                 break;
@@ -483,6 +473,7 @@ public class AdminController implements DefinedController {
             sendPt.send(os);
         }catch(IllegalArgumentException e){
             sendPt.setCode(Protocol.T2_CODE_FAIL);
+            sendPt.setObject(new MessageDTO(e.getMessage()));
             sendPt.send(os);
         }
     }
@@ -497,6 +488,7 @@ public class AdminController implements DefinedController {
             sendPt.send(os);
         }catch(IllegalArgumentException e){
             sendPt.setCode(Protocol.T2_CODE_FAIL);
+            sendPt.setObject(new MessageDTO(e.getMessage()));
             sendPt.send(os);
         }
     }

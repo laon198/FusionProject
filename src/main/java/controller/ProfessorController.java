@@ -6,10 +6,7 @@ import application.StudentAppService;
 import domain.repository.*;
 import infra.database.option.lecture.LectureOption;
 import infra.database.option.professor.ProfessorOption;
-import infra.dto.AccountDTO;
-import infra.dto.LectureDTO;
-import infra.dto.ProfessorDTO;
-import infra.dto.StudentDTO;
+import infra.dto.*;
 import infra.network.Protocol;
 
 import java.io.IOException;
@@ -148,10 +145,16 @@ public class ProfessorController implements DefinedController {
 
         switch(recvPt.getReadOption()){
             case Protocol.READ_ALL:{
-                sendPt.setCode(Protocol.T2_CODE_SUCCESS);
-                LectureDTO[] res = lectureService.retrieveAll();
-                sendPt.setObjectArray(res);
-                sendPt.send(os);
+                try{
+                    sendPt.setCode(Protocol.T2_CODE_SUCCESS);
+                    LectureDTO[] res = lectureService.retrieveAll();
+                    sendPt.setObjectArray(res);
+                    sendPt.send(os);
+                }catch(IllegalArgumentException e){
+                    sendPt.setCode(Protocol.T2_CODE_FAIL);
+                    sendPt.setObject(new MessageDTO(e.getMessage()));
+                    sendPt.send(os);
+                }
                 break;
             }
             case Protocol.READ_BY_ID:{

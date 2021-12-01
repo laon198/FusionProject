@@ -116,6 +116,7 @@ public class LectureSql {
         SQL sql = new SQL() {{
             INSERT_INTO("lecture_planners_tb");
             VALUES("lecture_goal", "#{goal}");
+            VALUES("lecture_summary", "#{summary}");
             VALUES("lecture_PK" , "#{lecturePK}");
         }};
         return sql.toString();

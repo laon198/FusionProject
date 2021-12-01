@@ -103,13 +103,17 @@ public class RDBPlannerPeriodRepository implements PlannerPeriodRepository {
         }
     }
 
-    private Period getPeriodFrom(ResultSet res) throws SQLException {
+    private Period getPeriodFrom(ResultSet res) throws SQLException, IllegalArgumentException {
         LocalDateTime beginTime = null;
         LocalDateTime endTime = null;
 
         while(res.next()){
             beginTime = res.getTimestamp("start_period").toLocalDateTime();
             endTime = res.getTimestamp("end_period").toLocalDateTime();
+        }
+
+        if(beginTime==null || endTime==null){
+            throw new IllegalArgumentException("해당하는 결과가 없습니다.");
         }
 
         return new Period(

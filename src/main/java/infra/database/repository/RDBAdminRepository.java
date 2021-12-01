@@ -118,6 +118,8 @@ public class RDBAdminRepository implements AdminRepository {
             stdStmt.setString(2, adminDTO.getAdminCode());
 
             stdStmt.execute();
+        }catch(SQLIntegrityConstraintViolationException e){
+            throw new IllegalArgumentException("중복되는 교직원코드입니다.");
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
 //            try{

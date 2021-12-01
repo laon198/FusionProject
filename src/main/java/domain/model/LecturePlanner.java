@@ -8,7 +8,8 @@ public class LecturePlanner {
     private String summary;
 
     public LecturePlanner(){
-        //TODO : 기본값을 빈문자열로?
+        goal = " ";
+        summary = " ";
     }
 
     public void writeItem(String itemName, String content) {

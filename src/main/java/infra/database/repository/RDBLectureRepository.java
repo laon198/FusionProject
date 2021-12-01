@@ -248,6 +248,10 @@ public class RDBLectureRepository implements LectureRepository {
             session.close();
         }
 
+        if(list.size()==0){
+            throw new IllegalArgumentException("해당하는 결과가 없습니다.");
+        }
+
         return list;
     }
 

@@ -42,15 +42,19 @@ public class LectureManageService {
     }
 
     private boolean isExistingTimes(Set<LectureTime> times){
-        for(Lecture existingLecture : lectureRepo.findAll()){
-            for(LectureTime existingTime : existingLecture.getLectureTimes()){
-                for(LectureTime newTime : times){
-                    if(existingTime.isSameRoom(newTime) &&
-                            existingTime.isOverlappedTime(newTime)){
-                        return true;
+        try{
+            for(Lecture existingLecture : lectureRepo.findAll()){
+                for(LectureTime existingTime : existingLecture.getLectureTimes()){
+                    for(LectureTime newTime : times){
+                        if(existingTime.isSameRoom(newTime) &&
+                                existingTime.isOverlappedTime(newTime)){
+                            return true;
+                        }
                     }
                 }
             }
+        }catch(IllegalArgumentException e){
+            return false;
         }
         return false;
     }

@@ -3,8 +3,8 @@ package infra.dto;
 import java.util.Map;
 
 public class LecturePlannerDTO {
-    private String goal;
-    private String summary;
+    private String goal = " ";
+    private String summary = " ";
 
     public static class Builder{
         private String goal;

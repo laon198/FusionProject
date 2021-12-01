@@ -21,7 +21,6 @@ public class AdminAppService {
     }
 
     public void create(AdminDTO adminDTO){
-        //TODO : 생성시 발리데이션 체크필요
         Admin admin = Admin.builder()
                 .name(adminDTO.getName())
                 .birthDate(adminDTO.getBirthDate())
@@ -41,7 +40,6 @@ public class AdminAppService {
         accRepo.save(acc);
     }
 
-    //TODO : partial update 불가
     //TODO : 바뀌면 안되는 값에 대한 처리?
     public void update(AdminDTO adminDTO){
         Admin admin = Admin.builder()

@@ -26,15 +26,16 @@ public class RDBCourseRepository implements CourseRepository {
             list = session.selectList("mapper.CourseMapper.ReadAll");
             session.commit();
 
-            if(list.size()==0){
-                throw new IllegalArgumentException("해당하는 결과가 없습니다.");
-            }
         }
         catch (Exception e){
             e.printStackTrace();
             session.rollback();
         }finally {
             session.close();
+        }
+
+        if(list.size()==0){
+            throw new IllegalArgumentException("해당하는 결과가 없습니다.");
         }
         return list;
     }
@@ -54,6 +55,10 @@ public class RDBCourseRepository implements CourseRepository {
             session = sqlSessionFactory.openSession();
             list = session.selectList("mapper.CourseMapper.FindByOption");
             session.commit();
+
+            if(list.size()==0){
+                throw new IllegalArgumentException("해당하는 결과가 없습니다.");
+            }
         }
         catch (Exception e){
             e.printStackTrace();

@@ -34,7 +34,6 @@ public class CourseAppService {
         course.setDepartment(courseDTO.getDepartment());
         course.setTargetYear(courseDTO.getTargetYear());
         course.setCredit(courseDTO.getCredit());
-        //TODO : 업데이트될 항목추가 필요
 
         courseRepo.save(course);
     }

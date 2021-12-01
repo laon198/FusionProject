@@ -87,19 +87,20 @@ public class UndefinedController {
     }
 
     private void createAdmin(Protocol recvPt) throws Exception{
-        if(recvPt.getEntity()!=Protocol.ENTITY_ADMIN){
-            //TODO : 처리
-        }
         AdminAppService adminService = new AdminAppService(adminRepo, accRepo);
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
-
         try{
+            if(recvPt.getEntity()!=Protocol.ENTITY_ADMIN){
+                throw new IllegalArgumentException("교직원만 생성가능");
+            }
+
             AdminDTO dto = (AdminDTO) recvPt.getObject();
             adminService.create(dto);
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
             sendPt.send(os);
         }catch(IllegalArgumentException e){
             sendPt.setCode(Protocol.T2_CODE_FAIL);
+            sendPt.setObject(new MessageDTO(e.getMessage()));
             sendPt.send(os);
         }
     }

@@ -12,6 +12,7 @@ import infra.database.repository.*;
 import infra.dto.*;
 import infra.network.Deserializer;
 import infra.network.Serializer;
+import jdk.nashorn.internal.runtime.ECMAException;
 
 
 import java.lang.reflect.InvocationTargetException;
@@ -21,6 +22,15 @@ import java.util.List;
 public class test {
 
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException {
+        try{
+            PlannerPeriodRepository p = new RDBPlannerPeriodRepository();
+           Period c = p.find();
+            System.out.println("c = " + c);
+                   
+            
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 //        CourseRepository c = new RDBCourseRepository(MyBatisConnectionFactory.getSqlSessionFactory());
 //        LectureRepository r = new RDBLectureRepository(c, profRepo, MyBatisConnectionFactory.getSqlSessionFactory());
 //        LectureOption[] options = new LectureOption[]{

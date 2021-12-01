@@ -101,8 +101,12 @@ public class RDBStudentRepository implements StudentRepository {
             conn = ds.getConnection();
             pstmt = conn.prepareStatement(new String(query));
             ResultSet res = pstmt.executeQuery();
-            return getStdFrom(res);
-
+            List<Student> resList = getStdFrom(res);
+            if(resList.size()==0){
+                throw new IllegalArgumentException("해당하는 결과가 없습니다.");
+            }else{
+                return resList;
+            }
         }catch(SQLException sqlException){
             sqlException.printStackTrace();
         }finally {
