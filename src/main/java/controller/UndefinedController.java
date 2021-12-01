@@ -40,12 +40,12 @@ public class UndefinedController {
     public int handler(Protocol recvPt){
         try{
             switch (recvPt.getCode()) {
-                case Protocol.T1_CODE_LOGIN:   // 로그인
+                case Protocol.T1_CODE_LOGIN:   // 로그인 요청
                     return loginReq(recvPt);
-                case Protocol.T1_CODE_CREATE: //admin 생성
+                case Protocol.T1_CODE_CREATE: // 관리자 생성 요청
                     createAdmin(recvPt);
                     return USER_UNDEFINED;
-                case Protocol.T1_CODE_LOGOUT:  // 로그아웃
+                case Protocol.T1_CODE_LOGOUT:  // 로그아웃 요청
                     logoutReq();
                     break;
             }
@@ -57,19 +57,21 @@ public class UndefinedController {
         return USER_UNDEFINED;
     }
 
+    // 로그인
     private int loginReq(Protocol recvPt) throws Exception{
         System.out.println("login entry");
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
         AccountDTO accDTO = (AccountDTO) recvPt.getObject();
-
+        // 클라이언트로부터 받은 accountDTO로 로그인
         try{
             AccountAppService accService = new AccountAppService(accRepo);
             AccountDTO resAccDTO= accService.login(accDTO);
-
+            // 로그인 성공 - 성공 메시지 전송
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
             sendPt.setObject(resAccDTO);
             sendPt.send(os);
 
+            // return userType
             if(resAccDTO.getPosition().equals("STUD")){
                 return STUD_TYPE;
             }else if(resAccDTO.getPosition().equals("PROF")){
@@ -78,33 +80,37 @@ public class UndefinedController {
                 return ADMIN_TYPE;
             }
         }catch(IllegalArgumentException e){
+            // 로그인 실패 - 실패 메시지 전송
             sendPt.setCode(Protocol.T2_CODE_FAIL);
             sendPt.setObject(new MessageDTO(e.getMessage()));
             sendPt.send(os);
         }
-
         return USER_UNDEFINED;
     }
 
+    // 관리자 계정 생성
     private void createAdmin(Protocol recvPt) throws Exception{
         AdminAppService adminService = new AdminAppService(adminRepo, accRepo);
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
+
         try{
-            if(recvPt.getEntity()!=Protocol.ENTITY_ADMIN){
+            if(recvPt.getEntity() != Protocol.ENTITY_ADMIN){
                 throw new IllegalArgumentException("교직원만 생성가능");
             }
-
+            // 클라이언트로부터 받은 adminDTO로 관리자 계정 생성
             AdminDTO dto = (AdminDTO) recvPt.getObject();
             adminService.create(dto);
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
             sendPt.send(os);
         }catch(IllegalArgumentException e){
+            // 계정 생성 실패
             sendPt.setCode(Protocol.T2_CODE_FAIL);
             sendPt.setObject(new MessageDTO(e.getMessage()));
             sendPt.send(os);
         }
     }
 
+    // 로그아웃
     private void logoutReq() throws IOException {
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);

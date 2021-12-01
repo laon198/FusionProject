@@ -45,9 +45,8 @@ public class Server {
     }
 
     private static ServerSocket serverSocket;
-    private static MainController clients[];
-    private static int clientCount;
-
+    private static MainController clients[];    // MainController는 thread를 상속받음. 스레드 배열.
+    private static int clientCount; // 연결된 클라이언트 개수
 
     // 구동
     public void run() {
@@ -65,7 +64,9 @@ public class Server {
         }
     }
 
+    // 스레드 생성
     public synchronized void addThread(Socket socket) throws IOException {
+        // 최대 스레드 개수를 넘지 않을 때만
         if (clientCount < clients.length) {
             MainController thread = new MainController(
                     accRepo, adminRepo, courseRepo,
@@ -73,10 +74,11 @@ public class Server {
                     regPeriodRepo, stdRepo, plannerPeriodRepo, regService,
                     socket
             );
-            clients[clientCount++] = thread;
+            clients[clientCount++] = thread;     // 스레드 배열에 생성한 스레드 추가
             System.out.println("Create thread : clientCount = " + clientCount);
             System.out.println("client Port : " + thread.getClientID());
-            thread.start();
+            thread.start(); // 스레드 run
+
         } else {
             System.out.println("Client refused: maximum " + clients.length + " reached.");
             socket.close();
