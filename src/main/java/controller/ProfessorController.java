@@ -64,21 +64,21 @@ public class ProfessorController implements DefinedController {
     @Override
     public int handler(Protocol recvPt) throws Exception {
         switch (recvPt.getCode()) {
-            case Protocol.T1_CODE_READ:   // 조회
+            case Protocol.T1_CODE_READ:   // 조회요청
                 readReq(recvPt);
                 break;
-            case Protocol.T1_CODE_UPDATE:  // 변경
+            case Protocol.T1_CODE_UPDATE:  // 변경요청
                 updateReq(recvPt);
                 break;
-            case Protocol.T1_CODE_LOGOUT:
+            case Protocol.T1_CODE_LOGOUT:   // 로그아웃요청
                 logoutReq();
                 return USER_UNDEFINED;
             default:
         }
-
         return PROF_TYPE;
     }
 
+    // 로그아웃 요청이 왔을 때 수행할 일
     private void logoutReq() throws IOException {
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
         sendPt.setCode(Protocol.T2_CODE_SUCCESS);
@@ -88,13 +88,13 @@ public class ProfessorController implements DefinedController {
     // 조회 요청
     private void readReq (Protocol recv) throws Exception {
         switch (recv.getEntity()) {
-            case Protocol.ENTITY_PROFESSOR: // 계정정보 조회
+            case Protocol.ENTITY_PROFESSOR: // 개인정보 조회 요청
                 readProfessor(recv);
                 break;
-            case Protocol.ENTITY_LECTURE:  // 개설교과목 조회
+            case Protocol.ENTITY_LECTURE:  // 개설교과목 조회 요청
                 readLecture(recv);
                 break;
-            case Protocol.ENTITY_REGISTRATION:  // 수강신청학생목록 조회
+            case Protocol.ENTITY_REGISTRATION:  // 수강신청학생목록 조회 요청
                 readLectureStudList(recv);
                 break;
             default:
@@ -104,34 +104,34 @@ public class ProfessorController implements DefinedController {
     // 변경 요청
     private void updateReq (Protocol recv) throws Exception {
         switch (recv.getEntity()) {
-            case Protocol.ENTITY_ACCOUNT: // 비밀번호 변경
+            case Protocol.ENTITY_ACCOUNT: // 비밀번호 변경 요청
                 changePassword(recv);
                 break;
-            case Protocol.ENTITY_PROFESSOR: // 개인정보 변경
+            case Protocol.ENTITY_PROFESSOR: // 개인정보 변경 요청
                 updateProfessor(recv);
                 break;
-            case Protocol.ENTITY_LECTURE:
+            case Protocol.ENTITY_LECTURE:   // 개설교과목(강의게획서) 변경 요청
                 updateLecturePlanner(recv);
                 break;
             default:
         }
     }
 
-    /*
-    < 개인정보 조회 >
-     */
+    // 개인정보 조회 
     private void readProfessor(Protocol recvPt) throws Exception {
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         switch (recvPt.getReadOption()) {
-            case Protocol.READ_BY_ID: {
+            case Protocol.READ_BY_ID: { // 교수의 id로 조회
                 try {
+                    // 해당 교수의 id로 개인정보 조회하여 응답 
                     ProfessorDTO profDTO = (ProfessorDTO) recvPt.getObject();
                     ProfessorDTO res = profService.retrieveByID(profDTO.getId());
                     sendPt.setObject(res);
                     sendPt.setCode(Protocol.T2_CODE_SUCCESS);
                     sendPt.send(os);
                 } catch (IllegalArgumentException e) {
+                    // 개인정보 조회 실패
                     sendPt.setCode(Protocol.T2_CODE_FAIL);
                     sendPt.send(os);
                 }
@@ -140,24 +140,27 @@ public class ProfessorController implements DefinedController {
         }
     }
 
+    // 개설교과목 조회
     private void readLecture(Protocol recvPt) throws Exception {
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
         switch(recvPt.getReadOption()){
-            case Protocol.READ_ALL:{
+            case Protocol.READ_ALL:{    // 전체조회 요청일 때
                 try{
+                    // 전체 개설교과목 목록 조회하여 응답
                     sendPt.setCode(Protocol.T2_CODE_SUCCESS);
                     LectureDTO[] res = lectureService.retrieveAll();
                     sendPt.setObjectArray(res);
                     sendPt.send(os);
                 }catch(IllegalArgumentException e){
+                    // 개설교과목 존재하지 않아 실패 응답
                     sendPt.setCode(Protocol.T2_CODE_FAIL);
                     sendPt.setObject(new MessageDTO(e.getMessage()));
                     sendPt.send(os);
                 }
                 break;
             }
-            case Protocol.READ_BY_ID:{
+            case Protocol.READ_BY_ID:{  // id로 조회
                 try{
                     sendPt.setCode(Protocol.T2_CODE_SUCCESS);
                     LectureDTO lectureDTO = (LectureDTO) recvPt.getObject();
@@ -170,7 +173,7 @@ public class ProfessorController implements DefinedController {
                     sendPt.send(os);
                 }
             }
-            case Protocol.READ_BY_OPTION:{
+            case Protocol.READ_BY_OPTION:{      // 옵션으로 조회
                 try{
                     sendPt.setCode(Protocol.T2_CODE_SUCCESS);
                     LectureOption[] options = (LectureOption[]) recvPt.getObjectArray();
@@ -186,10 +189,7 @@ public class ProfessorController implements DefinedController {
         }
     }
 
-    /*
-     < 개설교과목 수강신청 학생목록 조회 >
-     클라이언트에서 해당 교수의 개설 교과목 조회 -> 교수가 개설교과목 선택 -> 개설교과목 pk전송
-     */
+    // 개설교과목 수강신청 학생목록 조회
     private void readLectureStudList(Protocol recvPt) throws Exception {
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
@@ -200,14 +200,13 @@ public class ProfessorController implements DefinedController {
             sendPt.setObjectArray(res);
             sendPt.send(os);
         }catch (IllegalArgumentException e){
+            // 수강신청 학생목록 없을 경우
             sendPt.setCode(Protocol.T2_CODE_FAIL);
             sendPt.send(os);
         }
     }
 
-    /*
-     < 개인정보(전화번호) 수정 및 비밀번호 수정 >
-     */
+    // 비밀번호 수정
     private void changePassword(Protocol recvPt) throws Exception {
         AccountDTO accDTO = (AccountDTO) recvPt.getObject();
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
@@ -217,13 +216,14 @@ public class ProfessorController implements DefinedController {
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
             sendPt.send(os);
 
-        } catch (IllegalArgumentException e) { //TODO : 이런로직없어 현재 비밀번호 불일치
+        } catch (IllegalArgumentException e) {
             sendPt.setCode(Protocol.T2_CODE_FAIL);
             sendPt.send(os);
 
         }
     }
 
+    // 개인정보 수정
     private void updateProfessor(Protocol recv) throws Exception {
         ProfessorDTO profDTO = (ProfessorDTO) recv.getObject();
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
@@ -238,6 +238,7 @@ public class ProfessorController implements DefinedController {
         }
     }
 
+    // 강의계획서 수정
     private void updateLecturePlanner(Protocol recvPt) throws Exception {
         LectureDTO lectureDTO = (LectureDTO) recvPt.getObject();
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);

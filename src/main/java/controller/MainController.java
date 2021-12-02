@@ -12,18 +12,18 @@ import java.net.Socket;
 
 public class MainController extends Thread {
     // USER 구분
-    public static final int USER_UNDEFINED = 0;
+    public static final int USER_UNDEFINED = 0; 
     public static final int STUD_TYPE = 1;
     public static final int PROF_TYPE = 2;
     public static final int ADMIN_TYPE = 3;
     private int userType;
 
-    private int clientID;
+    private int clientID;   // client port 번호
     private Socket socket;
     private InputStream is;
     private OutputStream os;
 
-    private boolean running;
+    private boolean running;    // run() 메소드의 while문 flag
     private DefinedController myController;
 
     private final AccountRepository accRepo;
@@ -68,15 +68,14 @@ public class MainController extends Thread {
     @Override
     public void run() {
         running = true;
-        while (running) {
+        while (running) {    // thread 종료 메소드 호출될 시 running은 fasle가 됨
             try {
                 System.out.println("main controller entry");
                 Protocol pt = new Protocol();
-                handler(pt.read(is));
+                handler(pt.read(is)); // 클라이언트로부터 받은 패킷을 읽고 handler로 전달
             } catch (Exception e) {
                 e.printStackTrace();
-//                System.err.println(e.getStackTrace());
-                exit();
+                exit();     // thread 종료 메소드 호출
             }
         }
         System.out.println("thread 종료");
@@ -88,21 +87,17 @@ public class MainController extends Thread {
 
     public void handler(Protocol pt) throws Exception {
         System.out.println("handler entry");
-        if (pt.getType() == Protocol.TYPE_REQUEST &&
-                pt.getCode() == Protocol.T1_CODE_EXIT){
-            exit();
-            return;
-        }
 
         switch(userType){
-            case USER_UNDEFINED:
+            case USER_UNDEFINED:        // userType이 지정되지 않은 경우
                 UndefinedController undefinedController = new UndefinedController(
                         socket, is, os, clientID, accRepo, adminRepo
                 );
+                // undefinedController에서 사용자가 로그인하여 사용자 종류가 지정될 시 userType 지정
                 userType = undefinedController.handler(pt);
                 setMyController();
                 break;
-
+                // userType이 지정되면 해당 사용자 종류의 controller의 handler 실행
             case STUD_TYPE:
             case PROF_TYPE:
             case ADMIN_TYPE:
@@ -112,10 +107,11 @@ public class MainController extends Thread {
         }
     }
 
+    // 사용자 종류가 지정되면 해당 사용자 종류 전용 controller 생성
     private void setMyController() {
         switch (userType){
             case STUD_TYPE:
-                if(myController==null){
+                if(myController==null){     // 지정된 controller가 없을 때만 새로 생성
                     myController = new StudentController(
                             accRepo, adminRepo, courseRepo,
                             lectureRepo, profRepo, regRepo,
@@ -153,18 +149,11 @@ public class MainController extends Thread {
     // 소켓 종료 및 스레드 종료
     private void exit() {
         Server.removeThread(clientID);
-        socketClose();
-        running = false;
-    }
-
-    public void socketClose() {
         try {
             socket.close();
-            is.close();
-            os.close();
         } catch (IOException e) {
             System.err.println(e);
         }
+        running = false;
     }
-
 }

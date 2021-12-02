@@ -38,7 +38,7 @@ public class LectureRegisterApp {
                 lectureRepo, stdRepo, courseRepo,
                 regRepo, regPeriodRepo
         );
-        mainServer = new Server(
+        mainServer = new Server(    // 서버 생성
                 accRepo, adminRepo, courseRepo,
                 lectureRepo, profRepo, regRepo,
                 regPeriodRepo, stdRepo, plannerPeriodRepo,
@@ -46,7 +46,7 @@ public class LectureRegisterApp {
         );
     }
 
-    public void run(){
+    public void run(){  // 서버 실행
         try{
             mainServer.run();
         }catch (Exception e) {
