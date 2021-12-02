@@ -65,19 +65,7 @@ public class Account {
         return position;
     }
 
-    //TODO : 비밀번호 변경시 제약사항?
     public void changePassword(String pwd){
         password = pwd;
-    }
-
-    //TODO : 테스트용
-    @Override
-    public String toString() {
-        return "Account{" +
-                "pk=" + pk +
-                ", id='" + id + '\'' +
-                ", password='" + password + '\'' +
-                ", memberID=" + memberID +
-                '}';
     }
 }

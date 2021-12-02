@@ -6,6 +6,7 @@ import domain.repository.LectureRepository;
 
 import java.util.Set;
 
+//개설교과목과 관련된 제약사항 구현한 객체
 public class LectureManageService {
     private LectureRepository lectureRepo;
 
@@ -13,15 +14,16 @@ public class LectureManageService {
         this.lectureRepo = lectureRepo;
     }
 
+    //생성과 관련된 제약사항 수행
     public Lecture create(Course course, String lectureCode, Professor professor,
             int limit, Set<LectureTime> lectureTimes){
-        //TODO : 더 좋은방법?
-        //TODO : 강의를 다가져오기에는 부하가 너무 크지않나?
+
+        //현재 존재하는 시간이면, 강의 생성불가
         if(isExistingTimes(lectureTimes)){
             throw new IllegalArgumentException("유효하지않은 시간입니다.");
         }
 
-        //TODO : 다른방식으로 생성?
+        //강의 객체 생성해서 반환
         return Lecture.builder()
                 .course(course)
                 .lectureCode(lectureCode)
@@ -32,8 +34,9 @@ public class LectureManageService {
     }
 
 
-    //TODO : 교수와 학생의 강의시간 의존 문제
+    //수정과 관련된 제약사항
     public Lecture update(Lecture lecture){
+        //현재 존재하는 시간이면, 변경 불가
         if(isExistingTimes(lecture.getLectureTimes())){
             throw new IllegalArgumentException("유효하지않은 시간입니다.");
         }
@@ -41,6 +44,7 @@ public class LectureManageService {
         return lecture;
     }
 
+    //현재 존재하는 강의시간인지 확인
     private boolean isExistingTimes(Set<LectureTime> times){
         try{
             for(Lecture existingLecture : lectureRepo.findAll()){

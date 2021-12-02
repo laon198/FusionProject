@@ -12,17 +12,6 @@ public class LectureTime {
         FIFTH, SIXTH, SEVENTH, EIGHTH, NINTH
     }
 
-    //TODO : 테스트용
-    @Override
-    public String toString() {
-        return "LectureTime{" +
-                "lectureDay=" + lectureDay +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", room='" + room + '\'' +
-                '}';
-    }
-
     private long id;
     private DayOfWeek lectureDay;
     private LecturePeriod startTime;
@@ -170,12 +159,14 @@ public class LectureTime {
         this.lectureName = lectureName;
     }
 
+    //시작교시가 끝교시보다 작아야하는 유효성 체크
     private void isValidTime(LecturePeriod startTime, LecturePeriod endTime) {
         if (endTime.compareTo(startTime) < 0) {
             throw new IllegalArgumentException("시간설정 잘못됨");
         }
     }
 
+    //겹치는 수강시간인지 확인
     public boolean isOverlappedTime(LectureTime time) {
         return lectureDay == time.lectureDay &&
                 startTime.compareTo(time.endTime) <= 0 &&

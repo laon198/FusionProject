@@ -165,7 +165,7 @@ public class StudentController implements DefinedController {
         }
     }
     
-    // 개인 정보 조회 //TODO id 조회만 있어야함  
+    // 개인 정보 조회
     private void readStudent(Protocol recvPt) throws Exception {
         Protocol sendPt = new Protocol(Protocol.TYPE_RESPONSE);
 
@@ -311,7 +311,7 @@ public class StudentController implements DefinedController {
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
             sendPt.send(os);
 
-        } catch (IllegalArgumentException e) { //TODO : 이런로직없어 현재 비밀번호 불일치
+        } catch (IllegalArgumentException e) {
             sendPt.setCode(Protocol.T2_CODE_FAIL);
             sendPt.send(os);
 
@@ -327,7 +327,7 @@ public class StudentController implements DefinedController {
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
             sendPt.send(os);
 
-        } catch (IllegalArgumentException e) { // 삭제 실패 (존재하지 않는 pk) - 이런 경우가 있을진 모르겠음
+        } catch (IllegalArgumentException e) {
             sendPt.setCode(Protocol.T2_CODE_FAIL);
             sendPt.send(os);
         }
@@ -349,7 +349,7 @@ public class StudentController implements DefinedController {
             regService.cancel(regDTO);
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
             sendPt.send(os);
-        } catch (IllegalArgumentException e) { // 삭제 실패 (존재하지 않는 pk) - 이런 경우가 있을진 모르겠음
+        } catch (IllegalArgumentException e) {
             sendPt.setCode(Protocol.T2_CODE_FAIL);
             sendPt.send(os);
         }

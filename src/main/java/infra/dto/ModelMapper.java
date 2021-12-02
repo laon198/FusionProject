@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+// model객체(협력을 통해 기능을 수행하는 객체)를 DTO객체(DB저장 혹은 통신에 사용하기위한
+// 값만 가지고있는 객체)로 변환해주는 클래스
 public class ModelMapper {
 
     public static RegisteringPeriodDTO regPeriodToDTO(RegisteringPeriod regPeriod){

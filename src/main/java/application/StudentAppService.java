@@ -15,6 +15,7 @@ import infra.dto.StudentDTO;
 
 import java.util.List;
 
+//학생과 관련된 기능을 수행하는 객체
 public class StudentAppService {
     private StudentRepository stdRepo;
     private AccountRepository accRepo;
@@ -28,8 +29,9 @@ public class StudentAppService {
         this.regRepo = regRepo;
     }
 
+    //학생 생성 기능
     public void create(StudentDTO stdDTO) {
-        //TODO : 생성시의 Validation 예외필요
+        //받은 정보로 학생객체 생성
         Student std = Student.builder()
                 .name(stdDTO.getName())
                 .birthDate(stdDTO.getBirthDate())
@@ -40,8 +42,10 @@ public class StudentAppService {
                 .maxCredit(stdDTO.getMaxCredit())
                 .build();
 
+        //생성한 학생 객체 데이터베이스에 저장
         long stdID = stdRepo.save(std);
 
+        //학생객체에 대한 계정 생성
         Account acc = Account.builder()
                 .id(std.getStudentCode())
                 .password(stdDTO.getBirthDate())
@@ -49,39 +53,41 @@ public class StudentAppService {
                 .position("STUD")
                 .build();
 
+        //생성한 계정 객체 데이터베이스에 저장
         accRepo.save(acc);
     }
 
-    //TODO : partial update 불가
-    //TODO : 바뀌면 안되는 값에 대한 처리?
+    //학생 수정 기능
     public void update(StudentDTO stdDTO) throws IllegalArgumentException {
         Student std = stdRepo.findByID(stdDTO.getId());
         std.setName(stdDTO.getName());
-        //TODO : 업데이트 가능한 항목들 추가필요
 
         stdRepo.save(std);
     }
 
-    //TODO : id가 없을때 예외처리
+    //학생 삭제 기능
     public void delete(StudentDTO stdDTO) {
         Student std = Student.builder().id(stdDTO.getId()).build();
 
         stdRepo.remove(std);
     }
 
+    //학생 id로 조회기능
     public StudentDTO retrieveByID(long id) {
         return ModelMapper.studentToDTO(stdRepo.findByID(id));
     }
 
+    //학생 조건부 조회 기능
     public StudentDTO[] retrieveByOption(StudentOption... options) {
         return stdListToDTOArr(stdRepo.findByOption(options));
     }
 
-    //TODO : 비효율적
+    //학생 전체조회 기능
     public StudentDTO[] retrieveAll() {
         return stdListToDTOArr(stdRepo.findAll());
     }
 
+    //해당 개설교과목에 수강중인 학생배열 조회
     public StudentDTO[] retrieveRegisteringStd(LectureDTO lectureDTO) {
         List<Registering> regs = regRepo.findByOption(new LectureIDOption(lectureDTO.getId()));
         StudentDTO[] res = new StudentDTO[regs.size()];

@@ -5,11 +5,13 @@ import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+//객체배열 혹은 객체를 바이트배열로 직렬화 해주는 클래스
 public class Serializer {
     private final static int LEN_MAX_CLASSNAME = 64;
     private final static int LEN_LENGTH_FIELD = 4;
     private final static int LEN_COUNT_FIELD = 4;
 
+    //객체 배열을 바이트배열로 직렬화 해주는 메서드
     public static byte[] objectArrToBytes(Object[] objs) throws IllegalAccessException, IllegalArgumentException{
         if(objs.length==0){
             throw new IllegalArgumentException();
@@ -17,6 +19,7 @@ public class Serializer {
 
         List<byte[]> byteList = new LinkedList<>();
 
+        //배열의 클래스 이름을 바이트배열로 변환
         byte[] classNameBytes = new byte[LEN_MAX_CLASSNAME];
         String className = objs.getClass().getName().replace(";","");
         System.arraycopy(
@@ -30,6 +33,7 @@ public class Serializer {
         int count = 0;
 
         try{
+            //배열내부의 객체를 바이트배열로 변환
             for(Object obj : objs){
                 byte[] objBytes = objectToBytes(obj);
 
@@ -49,12 +53,15 @@ public class Serializer {
             cursor+=b.length;
         }
 
+        //바이트 배열 반환
         return result;
     }
 
+    //객체를 바이트배열로 바꿔주는 메서드
     public static byte[] objectToBytes(Object obj) throws IllegalAccessException {
         List<byte[]> byteList = new LinkedList<>();
 
+        //객체의 클래스 이름을 바이트배열로 변환
         byte[] classNameBytes = new byte[LEN_MAX_CLASSNAME];
         String className = obj.getClass().getName().replace(";","");
         System.arraycopy(
@@ -65,6 +72,7 @@ public class Serializer {
 
         int allLength = LEN_MAX_CLASSNAME;
 
+        //객체의 필드들을 순서대로 바이트배열로 변환
         try{
             for(Field f : getAllFields(obj.getClass())){
                 byte[] fieldBytes = getBytesFrom(obj, f);
@@ -85,9 +93,11 @@ public class Serializer {
             cursor+=b.length;
         }
 
+        //바이트배열 반환
         return result;
     }
 
+    //클래스의 필드 정보를 반환(부모클래스의 필드포함)
     public static List<Field> getAllFields(Class clazz){
         if(clazz==Object.class){
             return Collections.emptyList();
@@ -105,6 +115,7 @@ public class Serializer {
         return result;
     }
 
+    //객체의 필드를 바이트배열로 변환
     public static byte[] getBytesFrom(Object obj, Field f) throws IllegalAccessException {
         String typeName = f.getType().getSimpleName();
         f.setAccessible(true);
@@ -113,7 +124,6 @@ public class Serializer {
             typeName = "array";
         }
 
-        //TODO : primitive 타입 추가필요
         switch(typeName){
             case "byte":
                 return new byte[]{f.getByte(obj)};

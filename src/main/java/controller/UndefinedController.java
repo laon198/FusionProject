@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+//로그인전에 요청을 수행하는 객체
 public class UndefinedController {
     public static final int USER_UNDEFINED = 0;
     public static final int STUD_TYPE = 1;

@@ -8,6 +8,9 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import java.io.IOException;
 
 public class LectureRegisterApp {
+    //각각의 DAO, 프로그램에서 하나 생성해서 의존성 주입함.
+    //수강신청을 담당하는 regService는 동기화를 위해 프로그램에서
+    //하나만 생성하여 의존성 주입함.
     private final AccountRepository accRepo;
     private final AdminRepository adminRepo;
     private final CourseRepository courseRepo;

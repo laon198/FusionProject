@@ -58,6 +58,7 @@ public class RegisteringPeriod {
         allowedYear = builder.allowedYear;
     }
 
+    //해당학년이 수강신청가능한 기간인지 확인
     public boolean isSatisfiedBy(Student std, Course course){
         LocalDateTime nowTime = LocalDateTime.now();
 
@@ -72,6 +73,7 @@ public class RegisteringPeriod {
         return true;
     }
 
+    //해당학년이 수강신청가능한 학년인지 확인
     private boolean isAllowedYear(Student.Year year, int courseYear){
         if(allowedYear==year){
             switch (year){

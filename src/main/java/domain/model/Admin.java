@@ -48,5 +48,4 @@ public class Admin extends Member {
         super(builder.id, builder.name, builder.department, builder.birthDate);
         adminCode=builder.adminCode;
     }
-
 }

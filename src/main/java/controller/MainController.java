@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+//사용자의 요청이 들어왔을 받아서 하위 Controller로
+//요청을 넘기는 객체
 public class MainController extends Thread {
     // USER 구분
     public static final int USER_UNDEFINED = 0; 
@@ -89,15 +91,15 @@ public class MainController extends Thread {
         System.out.println("handler entry");
 
         switch(userType){
-            case USER_UNDEFINED:        // userType이 지정되지 않은 경우
+            //로그인하기전 요청 처리
+            case USER_UNDEFINED:
                 UndefinedController undefinedController = new UndefinedController(
                         socket, is, os, clientID, accRepo, adminRepo
                 );
-                // undefinedController에서 사용자가 로그인하여 사용자 종류가 지정될 시 userType 지정
                 userType = undefinedController.handler(pt);
                 setMyController();
                 break;
-                // userType이 지정되면 해당 사용자 종류의 controller의 handler 실행
+                //로그인 후의 요청처리
             case STUD_TYPE:
             case PROF_TYPE:
             case ADMIN_TYPE:

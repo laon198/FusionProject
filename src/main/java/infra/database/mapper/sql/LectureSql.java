@@ -170,7 +170,6 @@ public class LectureSql {
 
     // <DELETE>-------------------------------------------------------------------------------------------
 
-    //TODO lecture 삭제시, 연결된 lecture, lecture_time, registering, lecture_planner 삭제
     public String delete() {
         SQL sql = new SQL() {{
             DELETE_FROM("LECTURES_TB");

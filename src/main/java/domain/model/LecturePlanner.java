@@ -22,11 +22,4 @@ public class LecturePlanner {
             throw new IllegalArgumentException("존재하지않는 항목입니다.");
         }
     }
-
-    //TODO : 테스트용
-    @Override
-    public String toString() {
-        return "LecturePlanner{" +
-                '}';
-    }
 }

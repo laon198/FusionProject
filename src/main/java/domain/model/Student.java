@@ -111,8 +111,18 @@ public class Student extends Member{
     public Set<Registering> getMyRegisterings(){
         return new HashSet<>(myRegisterings);
     }
+
     public Year getYear(){return year;}
 
+    public String getStudentCode() {
+        return studentCode;
+    }
+
+    public void setName(String value){
+        name = value;
+    }
+
+    //수강신청시 나의 수강내역과, 시간표, 수강학점 변경
     public void register(Registering registering,
                             Set<LectureTime> lectureTimes, int lectureCredit){
         credit += lectureCredit;
@@ -120,6 +130,7 @@ public class Student extends Member{
         timeTable.addAll(lectureTimes);
     }
 
+    //수강취소시 나의 수강내역과, 시간표, 수강학점 변경
     public void cancel(Registering registering,
                        Set<LectureTime> lectureTimes, int lectureCredit){
         credit -= lectureCredit;
@@ -127,6 +138,7 @@ public class Student extends Member{
         timeTable.removeAll(lectureTimes);
     }
 
+    //나의 시간표와 겹치는 시간인지 확인
     public boolean isDuplicatedTime(Set<LectureTime> lectureTimes){
         for(LectureTime myTime : timeTable){
             for(LectureTime lectureTime : lectureTimes){
@@ -138,6 +150,7 @@ public class Student extends Member{
         return false;
     }
 
+    //수강학점이 나의 최대학점을 넘지않는지 확인
     public boolean isValidCredit(int lectureCredit) {
         if(credit+lectureCredit>=maxCredit){
             return false;
@@ -146,6 +159,7 @@ public class Student extends Member{
         return true;
     }
 
+    //내가 수강하고있는 개설교과목인지 확인
     public boolean hasLecture(long lectureID) {
         for(Registering registering : myRegisterings){
             if(registering.getLectureID()==lectureID){
@@ -153,10 +167,6 @@ public class Student extends Member{
             }
         }
         return false;
-    }
-
-    public String getStudentCode() {
-        return studentCode;
     }
 
     @Override
@@ -170,22 +180,5 @@ public class Student extends Member{
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public void setName(String value){
-        name = value;
-    }
-
-    //TODO : 테스트용
-    @Override
-    public String toString() {
-        return "Student{" +
-                "year=" + year +
-                ", maxCredit=" + maxCredit +
-                ", credit=" + credit +
-                ", studentCode='" + studentCode + '\'' +
-                ", myRegisterings=" + myRegisterings +
-                ", timeTable=" + timeTable +
-                '}';
     }
 }

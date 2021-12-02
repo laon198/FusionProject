@@ -124,16 +124,4 @@ public class Course {
         return Objects.hash(id);
     }
 
-    //TODO : 테스트용
-    @Override
-    public String toString() {
-        return "Course{" +
-                "id=" + id +
-                ", courseCode='" + courseCode + '\'' +
-                ", courseName='" + courseName + '\'' +
-                ", department='" + department + '\'' +
-                ", targetYear=" + targetYear +
-                ", credit=" + credit +
-                '}';
-    }
 }

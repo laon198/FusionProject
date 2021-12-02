@@ -59,6 +59,7 @@ public class AdminController implements DefinedController { // 관리자 control
         this.is = is;
         this.os = os;
 
+        //각 기능을 수행할 (서비스)객체
         this.regService = regService;
         stdService = new StudentAppService(stdRepo, accRepo, regRepo);
         profService = new ProfessorAppService(profRepo, accRepo);
@@ -264,7 +265,6 @@ public class AdminController implements DefinedController { // 관리자 control
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
             sendPt.send(os);
         }catch (IllegalArgumentException e){
-            // 수강신청기간 등록 실패 - 중복 기간 존재 (시작, 끝 날짜가 완전히 중복)
              sendPt.setCode(Protocol.T2_CODE_FAIL);
             sendPt.send(os);
         }
@@ -281,7 +281,6 @@ public class AdminController implements DefinedController { // 관리자 control
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
             sendPt.send(os);
         }catch (IllegalArgumentException e){
-            // 강의계획서 입력기간 등록 실패 - 중복 기간 존재 (시작, 끝 날짜가 완전히 중복)
             sendPt.setCode(Protocol.T2_CODE_FAIL);
             sendPt.send(os);
         }
@@ -508,9 +507,6 @@ public class AdminController implements DefinedController { // 관리자 control
         }
     }
 
-
-    //TODO 클라이언트에 학생, 교수 수정 없음
-
     // 개인정보(전화번호) 수정 및 비밀번호 수정
     private void updateStudent(Protocol recvPt) throws Exception {
         StudentDTO stdDTO = (StudentDTO) recvPt.getObject();
@@ -536,7 +532,7 @@ public class AdminController implements DefinedController { // 관리자 control
             sendPt.setCode(Protocol.T2_CODE_SUCCESS);
             sendPt.send(os);
 
-        } catch (IllegalArgumentException e) { // 삭제 실패 (존재하지 않는 pk) - 이런 경우가 있을진 모르겠음
+        } catch (IllegalArgumentException e) {
             sendPt.setCode(Protocol.T2_CODE_FAIL);
             sendPt.send(os);
         }

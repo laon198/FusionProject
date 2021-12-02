@@ -8,33 +8,40 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+//바이트 배열을 객체 혹은 객체 배열로 변환하여 반환하는 클래스
 public class Deserializer {
     private final static int LEN_MAX_CLASSNAME = 64;
     private final static int LEN_LENGTH_FIELD = 4;
     private final static int LEN_COUNT_FIELD = 4;
 
+    //바이트 배열을 객체 배열로 변환하는 메서드
     public static Object bytesToObjectArr(byte[] bytes) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        //배열의 클래스 이름 얻어옴
         String className = new String(
                 bytes, 0, LEN_MAX_CLASSNAME
         ).trim();
 
         int count = bytesToInt(bytes, LEN_MAX_CLASSNAME);
 
+        //얻어온 클래스 이름으로 클래스 가져옴
         className = className.replace("[L","");
         Class clazz = Class.forName(className);
-//        Constructor constructor = clazz.getDeclaredConstructor(); //TODO : 각객체는 빈생성자 가져야함
+        //배열 생성
         Object objectArr = Array.newInstance(clazz, count);
 
         int cursor = LEN_MAX_CLASSNAME+LEN_COUNT_FIELD;
         for(int i=0; i<count; i++){
+            //배열 내부에 있는 객체의 클래스이름 가져옴
             String objClassName = new String(
                     bytes, cursor, LEN_MAX_CLASSNAME
             ).trim();
             Class objClass = Class.forName(objClassName);
+            //배열 내부의 객체 생성자를 통해 객체 생성
             Constructor constructor = objClass.getDeclaredConstructor();
             Object obj = constructor.newInstance();
 
             cursor += LEN_MAX_CLASSNAME;
+            //클래스의 필드정보로 값 채워넣음
             for(Field f : getAllFields(objClass)){
                 int length = bytesToInt(bytes, cursor);
                 cursor += LEN_LENGTH_FIELD;
@@ -45,22 +52,28 @@ public class Deserializer {
             Array.set(objectArr, i, obj);
         }
 
+
+        //배열반환
         return objectArr;
     }
 
-    //TODO : 예외처리필요
+    //바이트배열을 객체로 반환하는 메서드
     public static Object bytesToObject(byte[] bytes) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        //객체의 클래스이름 가져옴
         String className = new String(
                 bytes, 0, LEN_MAX_CLASSNAME
         ).trim();
 
 
+        //클래스로 부터 생성자 받아옴
         Class clazz = Class.forName(className);
-        Constructor constructor = clazz.getDeclaredConstructor(); //TODO : 각객체는 빈생성자 가져야함
+        Constructor constructor = clazz.getDeclaredConstructor();
 
         int cursor = LEN_MAX_CLASSNAME;
+        //객체 생성
         Object obj = constructor.newInstance();
 
+        //클래스의 필드정보로 객체에 값 채워넣음
         for(Field f : getAllFields(clazz)){
             int length = bytesToInt(bytes, cursor);
             cursor += LEN_LENGTH_FIELD;
@@ -68,9 +81,11 @@ public class Deserializer {
             cursor += length;
         }
 
+        //객체 반환
         return obj;
     }
 
+    //클래스의 필드 정보 반환(부모 클래스의 필드까지포함)
     private static List<Field> getAllFields(Class clazz){
         if(clazz==Object.class){
             return Collections.emptyList();
@@ -88,6 +103,7 @@ public class Deserializer {
         return result;
     }
 
+    //객체에 필드에 값저장
     private static void setData(Object obj, Field f, byte[] bytes, int cursor, int length) throws IllegalAccessException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException {
         String typeName = f.getType().getSimpleName();
         f.setAccessible(true);
@@ -96,7 +112,6 @@ public class Deserializer {
             typeName = "array";
         }
 
-        //TODO : primitive 타입 추가필요
         switch(typeName){
             case "byte":
                 f.setByte(obj, bytes[cursor]);

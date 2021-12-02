@@ -78,15 +78,4 @@ public class Registering {
     public int hashCode() {
         return Objects.hash(id, lectureID, studentCode, registeringTime);
     }
-
-    //TODO : 테스트용
-    @Override
-    public String toString() {
-        return "Registering{" +
-                "id=" + id +
-                ", lectureID=" + lectureID +
-                ", studentCode='" + studentCode + '\'' +
-                ", registeringTime='" + registeringTime + '\'' +
-                '}';
-    }
 }

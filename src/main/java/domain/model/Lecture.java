@@ -89,18 +89,6 @@ public class Lecture {
 
     public Lecture() {}
 
-//    public Lecture(long lectureID, String professorID, int limitPersonNum, Course course, String lectureCode,
-//                   Set<LectureTime> lectureTimes, Set<Registering> registerings) {
-//        id = lectureID;
-//        lecturerID = professorID;
-//        limit = limitPersonNum;
-//        this.lectureTimes = lectureTimes;
-//        this.course = course;
-//        planner = new LecturePlanner();
-//        this.lectureCode = lectureCode;
-//        myRegisterings = registerings;
-//    }
-
     public long getID() {
         return id;
     }
@@ -137,7 +125,6 @@ public class Lecture {
     }
 
     public void writePlanner(String itemName, String content) throws IllegalArgumentException{
-
         planner.writeItem(itemName, content);
     }
 
@@ -167,18 +154,5 @@ public class Lecture {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    //TODO : 테스트용
-    @Override
-    public String toString() {
-        return "Lecture{" +
-                "id=" + id +
-                ", lectureCode='" + lectureCode + '\'' +
-                ", limit=" + limit +
-                ", lectureTimes=" + lectureTimes +
-                ", myRegisterings=" + myRegisterings +
-                ", planner=" + planner +
-                '}';
     }
 }

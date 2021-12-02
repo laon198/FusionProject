@@ -68,6 +68,7 @@ public class Professor extends Member{
     }
 
 
+    //시간표 추가 : 담당교과목이 추가되었을때
     public void addTimeTable(Set<LectureTime> lectureTimes){
         if(isDuplicatedLectureTime(lectureTimes)){
             throw new IllegalArgumentException("같은시간에 강의가 존재합니다.");
@@ -76,7 +77,7 @@ public class Professor extends Member{
         timeTable.addAll(lectureTimes);
     }
 
-    //TODO : lectureTimes를 하나의 객체로?
+    //나의 시간표내의 시간과 겹치는 시간이 있는지 확인
     private boolean isDuplicatedLectureTime(Set<LectureTime> lectureTimes){
         for(LectureTime myTime : timeTable){
             for(LectureTime lectureTime : lectureTimes){
@@ -94,15 +95,4 @@ public class Professor extends Member{
     public void setName(String value){name = value;}
 
     public String getProfessorCode(){return professorCode;}
-    //TODO : 테스트용
-
-    @Override
-    public String toString() {
-        return "Professor{" +
-                "id= " + getID() + '\''+
-                "timeTable=" + timeTable +
-                ", professorCode='" + professorCode + '\'' +
-                ", telePhone='" + telePhone + '\'' +
-                '}';
-    }
 }

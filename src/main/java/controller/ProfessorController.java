@@ -52,6 +52,7 @@ public class ProfessorController implements DefinedController {
         this.stdRepo = stdRepo;
         this.plannerPeriodRepo = plannerPeriodRepo;
 
+        //각 기능을 수행하는 서비스
         profService = new ProfessorAppService(profRepo, accRepo);
         lectureService = new LectureAppService(lectureRepo, courseRepo, profRepo, plannerPeriodRepo);
         stdService = new StudentAppService(stdRepo, accRepo, regRepo);

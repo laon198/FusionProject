@@ -8,9 +8,9 @@ import infra.database.option.professor.ProfessorOption;
 import infra.dto.ModelMapper;
 import infra.dto.ProfessorDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
+//교수와 관련된 기능을 수행하는 객체
 public class ProfessorAppService {
     private ProfessorRepository profRepo;
     private AccountRepository accRepo;
@@ -20,8 +20,9 @@ public class ProfessorAppService {
         this.accRepo = accRepo;
     }
 
+    //교수 생성 기능
     public void create(ProfessorDTO profDTO) {
-        //TODO : 생성시 validation 로직 필요
+        //받은 DTO로 교수 객체 생성
         Professor prof = Professor.builder()
                 .name(profDTO.getName())
                 .birthDate(profDTO.getBirthDate())
@@ -30,8 +31,10 @@ public class ProfessorAppService {
                 .telePhone(profDTO.getTelePhone())
                 .build();
 
+        //교수 객체 데이터베이스 저장
         long profID = profRepo.save(prof);
 
+        //교수 정보로 계정 생성
         Account acc = Account.builder()
                 .id(profDTO.getProfessorCode())
                 .password(profDTO.getBirthDate())
@@ -39,43 +42,52 @@ public class ProfessorAppService {
                 .position("PROF")
                 .build();
 
+        //계정 데이터베이스에 저장
         accRepo.save(acc);
     }
 
-    //TODO : partial update 불가
-    //TODO : 바뀌면 안되는 값에 대한 처리?
+    //교수 정보 수정 기능
     public void update(ProfessorDTO profDTO) {
+        //받은 정보로 교수 객체 조회
         Professor prof = profRepo.findByID(profDTO.getId());
 
+        //교수객체에 값변경
         prof.setName(profDTO.getName());
         prof.setTelePhone(profDTO.getTelePhone());
-        //TODO : 교수 업데이트 되는 항목 추가필요
 
+        //데이터베이스에 변경된 교수 저장
         profRepo.save(prof);
     }
 
-    //TODO : id가 없을때 예외처리
+    //교수 삭제 기능
     public void delete(ProfessorDTO profDTO) {
+        //교수객체 생성(삭제될 교수의 id값만 가지는)
         Professor prof = Professor.builder().id(profDTO.getId()).build();
 
+        //데이터베이스에 교수 삭제
         profRepo.remove(prof);
     }
 
+    //id로 교수 조회 기능
     public ProfessorDTO retrieveByID(long id) {
+        //id값에 해당하는 교수 조회후 DTO로 반환
         return ModelMapper.professorToDTO(profRepo.findByID(id));
     }
 
-    //TODO : 추후구현
+    //조건으로 교수 조회
     public ProfessorDTO[] retrieveByOption(ProfessorOption...options) {
+        //조건으로 교수 조회해서 DTO배열로 반환
         return profListToDTOArr(profRepo.findByOption(options));
     }
 
 
-    //TODO : 비효율적
+    //교수 전체 조회
     public ProfessorDTO[] retrieveAll() {
+        //교수 전체 조회해서 DTO배열로 반환
         return profListToDTOArr(profRepo.findAll());
     }
 
+    //교수 list를 DTO배열로 변환
     private ProfessorDTO[] profListToDTOArr(List<Professor> profList) {
         ProfessorDTO[] arr = new ProfessorDTO[profList.size()];
 

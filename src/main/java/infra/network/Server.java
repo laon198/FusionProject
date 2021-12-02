@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+//각 클라이언트와 TCP통신을 연결하고, 쓰레드를 생성하는 객체
 public class Server {
     private final AccountRepository accRepo;
     private final AdminRepository adminRepo;
