@@ -17,56 +17,33 @@ public class Student extends Member{
         }
     }
 
-    public static class Builder{
-        private long id=-1;
-        private int credit;
-        private int maxCredit=21;
+    public static class Builder extends Member.Builder{
         private Year year;
-        private String name;
-        private String department;
         private String studentCode;
-        private String birthDate;
+        private int credit=0;
+        private int maxCredit=21;
         private Set<Registering> myRegisterings = new HashSet<>();
         private Set<LectureTime> timeTable = new HashSet<>();
 
-        public Builder id(long value){
-            id = value;
-            return this;
+        private Builder(String name, String department, String birthDate,
+                                String studentCode, int year){
+            super(name, department, birthDate);
+            this.studentCode = studentCode;
+            this.year = toYear(year);
         }
 
-        public Builder name(String value){
-            name = value;
-            return this;
-        }
-
-        public Builder department(String value){
-            department = value;
-            return this;
-        }
-
-        public Builder birthDate(String value){
-            birthDate = value;
-            return this;
-        }
-
-        public Builder studentCode(String value){
-            studentCode = value;
-            return this;
-        }
-
-        public Builder year(int value){
+        private Year toYear(int value){
             if(value==1){
-                year = Year.FRESHMAN;
+                return Year.FRESHMAN;
             }else if(value==2){
-                year = Year.SOPHOMORE;
+                return Year.SOPHOMORE;
             }else if(value==3){
-                year = Year.JUNIOR;
+                return Year.JUNIOR;
             }else if(value==4){
-                year = Year.SENIOR;
+                return Year.SENIOR;
             }else{
                 throw new IllegalArgumentException("1~4학년만 존재합니다.");
             }
-            return this;
         }
 
         public Builder credit(int value){
@@ -89,23 +66,28 @@ public class Student extends Member{
             return this;
         }
 
+        @Override
         public Student build(){
             return new Student(this);
         }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
     }//end of builder class
 
-    public static Builder builder(){
-        return new Builder();
+    public static Builder builder(String name, String department, String birthDate,
+                                  String studentCode, int year){
+        return new Builder(name, department, birthDate, studentCode, year);
     }
 
     private Student(Builder builder){
-        super(builder.id, builder.name, builder.department, builder.birthDate);
-        year = builder.year;
+        super(builder);
         myRegisterings = builder.myRegisterings;
         timeTable = builder.timeTable;
         credit = builder.credit;
         maxCredit = builder.maxCredit;
-        studentCode = builder.studentCode;
     }
 
     public Set<Registering> getMyRegisterings(){

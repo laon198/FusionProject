@@ -337,13 +337,8 @@ public class RDBStudentRepository implements StudentRepository {
             }
 
             stdList.add(
-                    Student.builder()
+                    Student.builder(name, department, birthDate, studentCode, year)
                             .id(resID)
-                            .year(year)
-                            .name(name)
-                            .birthDate(birthDate)
-                            .department(department)
-                            .studentCode(studentCode)
                             .credit(credit)
                             .maxCredit(maxCredit)
                             .timeTable(timeTable)
