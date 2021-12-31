@@ -7,38 +7,15 @@ public class Professor extends Member{
     private String professorCode;
     private String telePhone;
 
-    public static class Builder{
-        private long id=-1;
-        private String name;
-        private String department;
-        private String birthDate;
+    public static class Builder extends Member.Builder<Builder>{
         private String professorCode;
         private String telePhone;
         private Set<LectureTime> timeTable = new HashSet<>();
 
-        public Builder id(long value){
-            id = value;
-            return this;
-        }
-
-        public Builder name(String value){
-            name = value;
-            return this;
-        }
-
-        public Builder department(String value){
-            department = value;
-            return this;
-        }
-
-        public Builder birthDate(String value){
-            birthDate = value;
-            return this;
-        }
-
-        public Builder professorCode(String value){
-            professorCode = value;
-            return this;
+        private Builder(String name, String department, String birthDate,
+                            String professorCode){
+            super(name, department, birthDate);
+            this.professorCode = professorCode;
         }
 
         public Builder telePhone(String value){
@@ -54,14 +31,20 @@ public class Professor extends Member{
         public Professor build(){
             return new Professor(this);
         }
+
+        @Override
+        protected Builder self() {
+            return this;
+        }
     }//end of builder class
 
-    public static Builder builder(){
-        return new Builder();
+    public static Builder builder(String name, String department, String birthDate,
+                                  String professorCode){
+        return new Builder(name, department, birthDate, professorCode);
     }
 
     public Professor(Builder builder){
-        super(builder.id, builder.name, builder.department, builder.birthDate);
+        super(builder);
         timeTable = builder.timeTable;
         professorCode = builder.professorCode;
         telePhone = builder.telePhone;

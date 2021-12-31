@@ -17,7 +17,7 @@ public class Student extends Member{
         }
     }
 
-    public static class Builder extends Member.Builder{
+    public static class Builder extends Member.Builder<Builder>{
         private Year year;
         private String studentCode;
         private int credit=0;

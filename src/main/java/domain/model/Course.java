@@ -22,33 +22,17 @@ public class Course {
         private int targetYear;
         private int credit;
 
+        private Builder(String courseCode, String courseName, String department,
+                            int targetYear, int credit){
+            this.courseCode = courseCode;
+            this.courseName = courseName;
+            this.department = department;
+            this.targetYear = targetYear;
+            this.credit = credit;
+        }
+
         public Builder id(long id) {
             this.id = id;
-            return this;
-        }
-
-        public Builder courseCode(String courseCode) {
-            this.courseCode = courseCode;
-            return this;
-        }
-
-        public Builder courseName(String courseName) {
-            this.courseName = courseName;
-            return this;
-        }
-
-        public Builder department(String department) {
-            this.department = department;
-            return this;
-        }
-
-        public Builder targetYear(int targetYear) {
-            this.targetYear = targetYear;
-            return this;
-        }
-
-        public Builder credit(int credit) {
-            this.credit = credit;
             return this;
         }
 
@@ -57,12 +41,12 @@ public class Course {
         }
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public static Builder builder(String courseCode, String courseName, String department,
+                                  int targetYear, int credit) {
+        return new Builder(courseCode, courseName, department, targetYear, credit);
     }
 
-    public Course() {
-    }
+    public Course() {}
 
     private Course(Builder builder) {
         id = builder.id;

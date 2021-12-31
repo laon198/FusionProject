@@ -3,49 +3,31 @@ package domain.model;
 public class Admin extends Member {
     private String adminCode;
 
-    public static class Builder{
-        private long id=-1L;
-        private String name;
-        private String department;
-        private String birthDate;
+    public static class Builder extends Member.Builder<Builder>{
         private String adminCode;
 
-        public Builder id(long value){
-            id = value;
-            return this;
-        }
-
-        public Builder name(String value){
-            name = value;
-            return this;
-        }
-
-        public Builder department(String value){
-            department = value;
-            return this;
-        }
-
-        public Builder birthDate(String value){
-            birthDate = value;
-            return this;
-        }
-
-        public Builder adminCode(String value){
-            adminCode = value;
-            return this;
+        private Builder(String name, String department, String birthDate,
+                            String adminCode){
+            super(name, department, birthDate);
+            this.adminCode = adminCode;
         }
 
         public Admin build(){
             return new Admin(this);
         }
+
+        protected Builder self(){
+            return this;
+        }
     }
 
-    public static Builder builder(){
-        return new Builder();
+    public static Builder builder(String name, String department, String birthDate,
+                                  String adminCode){
+        return new Builder(name, department, birthDate, adminCode);
     }
 
     private Admin(Builder builder){
-        super(builder.id, builder.name, builder.department, builder.birthDate);
+        super(builder);
         adminCode=builder.adminCode;
     }
 }

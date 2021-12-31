@@ -298,12 +298,8 @@ public class RDBProfessorRepository implements ProfessorRepository {
             }
 
             profList.add(
-                    Professor.builder()
+                    Professor.builder(name, birthDay, department, professor_code)
                             .id(resID)
-                            .name(name)
-                            .birthDate(birthDay)
-                            .department(department)
-                            .professorCode(professor_code)
                             .telePhone(telePhone)
                             .timeTable(timeTable)
                             .build()

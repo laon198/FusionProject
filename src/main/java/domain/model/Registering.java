@@ -14,23 +14,14 @@ public class Registering {
         private String studentCode;
         private String registeringTime;
 
+        private Builder(long lectureID, String studentCode, String registeringTime){
+            this.lectureID = lectureID;
+            this.studentCode = studentCode;
+            this.registeringTime = registeringTime;
+        }
+
         public Builder id(long value){
             id = value;
-            return this;
-        }
-
-        public Builder lectureID(long value){
-            lectureID = value;
-            return this;
-        }
-
-        public Builder studentCode(String value){
-            studentCode = value;
-            return this;
-        }
-
-        public Builder registeringTime(String value){
-            registeringTime = value;
             return this;
         }
 
@@ -39,8 +30,8 @@ public class Registering {
         }
     }
 
-    public static Builder builder(){
-        return new Builder();
+    public static Builder builder(long lectureID, String studentCode, String registeringTime){
+        return new Builder(lectureID, studentCode, registeringTime);
     }
 
     public Registering(Builder builder){

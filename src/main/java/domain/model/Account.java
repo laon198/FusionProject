@@ -15,28 +15,16 @@ public class Account {
         private String position;
         private long memberID;
 
+        private Builder(String id, String password,
+                            String position, long memberID){
+            this.id = id;
+            this.password = password;
+            this.position = position;
+            this.memberID = memberID;
+        }
+
         public Builder pk(long value){
             pk = value;
-            return this;
-        }
-
-        public Builder memberID(long value){
-            memberID = value;
-            return this;
-        }
-
-        public Builder position(String value){
-            position = value;
-            return this;
-        }
-
-        public Builder id(String value){
-            id = value;
-            return this;
-        }
-
-        public Builder password(String value){
-            password = value;
             return this;
         }
 
@@ -45,8 +33,9 @@ public class Account {
         }
     }
 
-    public static Builder builder(){
-        return new Builder();
+    public static Builder builder(String id, String password,
+                                  String position, long memberID){
+        return new Builder(id, password, position, memberID);
     }
 
     private Account(Builder builder) {
