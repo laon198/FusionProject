@@ -23,7 +23,7 @@ public class Course {
         private int credit;
 
         private Builder(String courseCode, String courseName, String department,
-                            int targetYear, int credit){
+                            Year targetYear, int credit){
             this.courseCode = courseCode;
             this.courseName = courseName;
             this.department = department;
@@ -42,7 +42,7 @@ public class Course {
     }
 
     public static Builder builder(String courseCode, String courseName, String department,
-                                  int targetYear, int credit) {
+                                  Year targetYear, int credit) {
         return new Builder(courseCode, courseName, department, targetYear, credit);
     }
 
