@@ -9,7 +9,7 @@ public class LectureTime {
 
     public enum LecturePeriod {
         FIRST, SECOND, THIRD, FOURTH,
-        FIFTH, SIXTH, SEVENTH, EIGHTH, NINTH
+        FIFTH, SIXTH, SEVENTH, EIGHTH, NINTH;
     }
 
     private long id;
@@ -27,26 +27,8 @@ public class LectureTime {
         private String room;
         private String lectureName;
 
-        public Builder lectureDay(String value) {
-            switch (value) {
-                case "MON":
-                    lectureDay = DayOfWeek.MON;
-                    break;
-                case "TUE":
-                    lectureDay = DayOfWeek.TUE;
-                    break;
-                case "WED":
-                    lectureDay = DayOfWeek.WED;
-                    break;
-                case "THU":
-                    lectureDay = DayOfWeek.THU;
-                    break;
-                case "FRI":
-                    lectureDay = DayOfWeek.FRI;
-                    break;
-                default:
-                    throw new IllegalArgumentException("잘못된 요일입니다");
-            }
+        public Builder lectureDay(DayOfWeek value) {
+            this.lectureDay = value;
             return this;
         }
 
@@ -65,69 +47,13 @@ public class LectureTime {
             return this;
         }
 
-        public Builder startTime(int value) {
-            switch (value) {
-                case 1:
-                    startTime = LecturePeriod.FIRST;
-                    break;
-                case 2:
-                    startTime = LecturePeriod.SECOND;
-                    break;
-                case 3:
-                    startTime = LecturePeriod.THIRD;
-                    break;
-                case 4:
-                    startTime = LecturePeriod.FOURTH;
-                    break;
-                case 5:
-                    startTime = LecturePeriod.FIFTH;
-                    break;
-                case 6:
-                    startTime = LecturePeriod.SIXTH;
-                    break;
-                case 7:
-                    startTime = LecturePeriod.SEVENTH;
-                    break;
-                case 8:
-                    startTime = LecturePeriod.EIGHTH;
-                    break;
-                case 9:
-                    startTime = LecturePeriod.NINTH;
-                    break;
-            }
+        public Builder startTime(LecturePeriod value) {
+            this.startTime = value;
             return this;
         }
 
-        public Builder endTime(int value) {
-            switch (value) {
-                case 1:
-                    endTime = LecturePeriod.FIRST;
-                    break;
-                case 2:
-                    endTime = LecturePeriod.SECOND;
-                    break;
-                case 3:
-                    endTime = LecturePeriod.THIRD;
-                    break;
-                case 4:
-                    endTime = LecturePeriod.FOURTH;
-                    break;
-                case 5:
-                    endTime = LecturePeriod.FIFTH;
-                    break;
-                case 6:
-                    endTime = LecturePeriod.SIXTH;
-                    break;
-                case 7:
-                    endTime = LecturePeriod.SEVENTH;
-                    break;
-                case 8:
-                    endTime = LecturePeriod.EIGHTH;
-                    break;
-                case 9:
-                    endTime = LecturePeriod.NINTH;
-                    break;
-            }
+        public Builder endTime(LecturePeriod value) {
+            this.endTime = value;
             return this;
         }
 

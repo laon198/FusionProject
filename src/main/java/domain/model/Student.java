@@ -9,13 +9,6 @@ public class Student extends Member{
     private String studentCode;
     private final Set<Registering> myRegisterings;
     private final Set<LectureTime> timeTable;
-    public enum Year {
-        FRESHMAN(1), SOPHOMORE(2), JUNIOR(3), SENIOR(4);
-        private final int year;
-        Year(int year){
-            this.year = year;
-        }
-    }
 
     public static class Builder extends Member.Builder<Builder>{
         private Year year;
@@ -26,24 +19,10 @@ public class Student extends Member{
         private Set<LectureTime> timeTable = new HashSet<>();
 
         private Builder(String name, String department, String birthDate,
-                                String studentCode, int year){
+                                String studentCode, Year year){
             super(name, department, birthDate);
             this.studentCode = studentCode;
-            this.year = toYear(year);
-        }
-
-        private Year toYear(int value){
-            if(value==1){
-                return Year.FRESHMAN;
-            }else if(value==2){
-                return Year.SOPHOMORE;
-            }else if(value==3){
-                return Year.JUNIOR;
-            }else if(value==4){
-                return Year.SENIOR;
-            }else{
-                throw new IllegalArgumentException("1~4학년만 존재합니다.");
-            }
+            this.year = year;
         }
 
         public Builder credit(int value){
@@ -78,7 +57,7 @@ public class Student extends Member{
     }//end of builder class
 
     public static Builder builder(String name, String department, String birthDate,
-                                  String studentCode, int year){
+                                  String studentCode, Year year){
         return new Builder(name, department, birthDate, studentCode, year);
     }
 

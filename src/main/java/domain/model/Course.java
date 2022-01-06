@@ -7,10 +7,10 @@ public class Course {
     private String courseCode;
     private String courseName;
     private String department;
-    private int targetYear;
+    private Year targetYear;
     private int credit;
 
-    public int getYear() {
+    public Year getYear() {
         return targetYear;
     }
 
@@ -19,7 +19,7 @@ public class Course {
         private String courseCode;
         private String courseName;
         private String department;
-        private int targetYear;
+        private Year targetYear;
         private int credit;
 
         private Builder(String courseCode, String courseName, String department,
@@ -57,7 +57,7 @@ public class Course {
         credit = builder.credit;
     }
 
-    public Course(long id, String courseCode, String courseName, String department, int targetYear, int credit) {
+    public Course(long id, String courseCode, String courseName, String department, Year targetYear, int credit) {
         this.id = id;
         this.courseCode = courseCode;
         this.courseName = courseName;
@@ -82,7 +82,7 @@ public class Course {
         department = value;
     }
 
-    public void setTargetYear(int value) {
+    public void setTargetYear(Year value) {
         targetYear = value;
     }
 
