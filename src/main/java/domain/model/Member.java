@@ -1,5 +1,7 @@
 package domain.model;
 
+import java.util.Objects;
+
 public abstract class Member{
     protected long id;
     protected String name;
@@ -37,5 +39,18 @@ public abstract class Member{
 
     public long getID(){
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if(!(o instanceof Member)) return false;
+        Member member = (Member) o;
+        return id == member.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

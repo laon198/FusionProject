@@ -44,9 +44,17 @@ public class Period {
     }
 
     @Override
+    public String toString() {
+        return "Period{" +
+                "beginTime=" + beginTime +
+                ", endTime=" + endTime +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if(!(o instanceof Period)) return false;
         Period period = (Period) o;
         return Objects.equals(beginTime, period.beginTime) && Objects.equals(endTime, period.endTime);
     }

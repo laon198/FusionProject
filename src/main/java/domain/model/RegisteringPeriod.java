@@ -72,15 +72,24 @@ public class RegisteringPeriod {
     }
 
     @Override
+    public String toString() {
+        return "RegisteringPeriod{" +
+                "id=" + id +
+                ", period=" + period +
+                ", allowedYear=" + allowedYear +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if(!(o instanceof RegisteringPeriod)) return false;
         RegisteringPeriod that = (RegisteringPeriod) o;
-        return Objects.equals(period, that.period) && allowedYear == that.allowedYear;
+        return id==that.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(period, allowedYear);
+        return Objects.hash(id);
     }
 }

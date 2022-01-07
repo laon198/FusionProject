@@ -131,15 +131,18 @@ public class Student extends Member{
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Student student = (Student) o;
-        return Objects.equals(id, student.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", department='" + department + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                ", year=" + year +
+                ", maxCredit=" + maxCredit +
+                ", credit=" + credit +
+                ", studentCode='" + studentCode + '\'' +
+                ", myRegisterings=" + myRegisterings +
+                ", timeTable=" + timeTable +
+                '}';
     }
 }

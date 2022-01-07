@@ -78,4 +78,17 @@ public class Professor extends Member{
     public void setName(String value){name = value;}
 
     public String getProfessorCode(){return professorCode;}
+
+    @Override
+    public String toString() {
+        return "Professor{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", department='" + department + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                ", timeTable=" + timeTable +
+                ", professorCode='" + professorCode + '\'' +
+                ", telePhone='" + telePhone + '\'' +
+                '}';
+    }
 }

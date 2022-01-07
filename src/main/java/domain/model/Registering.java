@@ -60,13 +60,13 @@ public class Registering {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if(!(o instanceof Registering)) return false;
         Registering that = (Registering) o;
-        return id == that.id && lectureID == that.lectureID && studentCode == that.studentCode && Objects.equals(registeringTime, that.registeringTime);
+        return id==that.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, lectureID, studentCode, registeringTime);
+        return Objects.hash(id);
     }
 }

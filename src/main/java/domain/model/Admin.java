@@ -30,4 +30,15 @@ public class Admin extends Member {
         super(builder);
         adminCode=builder.adminCode;
     }
+
+    @Override
+    public String toString() {
+        return "Admin{" +
+                "adminCode='" + adminCode + '\'' +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", department='" + department + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                '}';
+    }
 }

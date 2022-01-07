@@ -94,11 +94,22 @@ public class Course {
         credit = value;
     }
 
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", courseCode='" + courseCode + '\'' +
+                ", courseName='" + courseName + '\'' +
+                ", department='" + department + '\'' +
+                ", targetYear=" + targetYear +
+                ", credit=" + credit +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if(!(o instanceof Course)) return false;
         Course course = (Course) o;
         return id == course.id;
     }

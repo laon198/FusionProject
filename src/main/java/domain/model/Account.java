@@ -1,6 +1,8 @@
 package domain.model;
 
 
+import java.util.Objects;
+
 public class Account {
     private long pk;
     private String id;
@@ -56,5 +58,29 @@ public class Account {
 
     public void changePassword(String pwd){
         password = pwd;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "pk=" + pk +
+                ", id='" + id + '\'' +
+                ", password='" + password + '\'' +
+                ", position='" + position + '\'' +
+                ", memberID=" + memberID +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if(!(o instanceof Account)) return false;
+        Account account = (Account) o;
+        return pk == account.pk;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pk);
     }
 }

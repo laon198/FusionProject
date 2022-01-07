@@ -144,9 +144,23 @@ public class Lecture {
     }
 
     @Override
+    public String toString() {
+        return "Lecture{" +
+                "id=" + id +
+                ", course=" + course +
+                ", lectureCode='" + lectureCode + '\'' +
+                ", professor=" + professor +
+                ", limit=" + limit +
+                ", lectureTimes=" + lectureTimes +
+                ", myRegisterings=" + myRegisterings +
+                ", planner=" + planner +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if(!(o instanceof Lecture)) return false;
         Lecture lecture = (Lecture) o;
         return Objects.equals(id, lecture.id);
     }

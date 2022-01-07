@@ -1,7 +1,5 @@
 package domain.model;
 
-import java.time.LocalDateTime;
-import java.util.*;
 
 public class LecturePlanner {
     private String goal;

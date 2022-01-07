@@ -104,16 +104,27 @@ public class LectureTime {
     }
 
     @Override
+    public String toString() {
+        return "LectureTime{" +
+                "id=" + id +
+                ", lectureDay=" + lectureDay +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", room='" + room + '\'' +
+                ", lectureName='" + lectureName + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if(!(o instanceof LectureTime)) return false;
         LectureTime that = (LectureTime) o;
-        return lectureDay == that.lectureDay && startTime == that.startTime
-                && endTime == that.endTime && Objects.equals(room, that.room);
+        return id==that.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(lectureDay, startTime, endTime, room);
+        return Objects.hash(id);
     }
 }
