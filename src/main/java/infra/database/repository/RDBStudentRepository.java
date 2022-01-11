@@ -5,8 +5,8 @@ import domain.model.Registering;
 import domain.model.Student;
 import domain.repository.StudentRepository;
 import infra.database.PooledDataSource;
-import infra.dto.ModelMapper;
-import infra.dto.StudentDTO;
+import dto.ModelMapper;
+import dto.StudentDTO;
 import infra.database.option.student.StudentOption;
 
 import javax.sql.DataSource;

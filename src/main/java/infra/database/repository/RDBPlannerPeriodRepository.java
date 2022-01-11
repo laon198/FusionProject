@@ -3,8 +3,8 @@ package infra.database.repository;
 import domain.model.Period;
 import domain.repository.PlannerPeriodRepository;
 import infra.database.PooledDataSource;
-import infra.dto.ModelMapper;
-import infra.dto.PeriodDTO;
+import dto.ModelMapper;
+import dto.PeriodDTO;
 
 import javax.sql.DataSource;
 import java.sql.*;

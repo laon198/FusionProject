@@ -4,9 +4,10 @@ import domain.model.Account;
 import domain.model.Admin;
 import domain.repository.AccountRepository;
 import domain.repository.AdminRepository;
-import infra.database.option.student.StudentOption;
-import infra.dto.ModelMapper;
-import infra.dto.AdminDTO;
+import dto.ModelMapper;
+import dto.AdminDTO;
+import factory.AccountFactory;
+import factory.AdminFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,32 +16,26 @@ import java.util.List;
 public class AdminAppService {
     private AdminRepository adminRepo;
     private AccountRepository accRepo;
+    private AdminFactory adminFactory;
+    private AccountFactory accountFactory;
 
     public AdminAppService(AdminRepository adminRepo, AccountRepository accRepo) {
         this.adminRepo = adminRepo;
         this.accRepo = accRepo;
+        adminFactory = new AdminFactory();
+        accountFactory = new AccountFactory();
     }
 
     //관리자 계정 생성 기능
     public void create(AdminDTO adminDTO){
         //통신을통해 받은 정보로 관리자 생성
-        Admin admin = Admin.builder()
-                .name(adminDTO.getName())
-                .birthDate(adminDTO.getBirthDate())
-                .department(adminDTO.getDepartment())
-                .adminCode(adminDTO.getAdminCode())
-                .build();
+        Admin admin = adminFactory.create(adminDTO);
 
         //관리자 데이터베이스에 저장
         long adminID = adminRepo.save(admin);
 
         //생성된 관리자 정보 기반으로 계정 생성
-        Account acc = Account.builder()
-                .id(adminDTO.getAdminCode())
-                .password(adminDTO.getBirthDate())
-                .memberID(adminID)
-                .position("ADMIN")
-                .build();
+        Account acc = accountFactory.create(adminDTO, adminID, "ADMIN");
 
         //계정 데이터베이스에 저장
         accRepo.save(acc);

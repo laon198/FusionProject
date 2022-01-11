@@ -1,10 +1,10 @@
-package infra.dto;
+package dto;
 
 import domain.model.Member;
 
 import java.time.LocalDate;
 
-public class MemberDTO {
+abstract public class MemberDTO {
     protected long id;
     protected String name;
     protected String department;
@@ -34,4 +34,6 @@ public class MemberDTO {
     public String getBirthDate() {
         return birthDate;
     }
+
+    abstract public String getCode();
 }

@@ -1,7 +1,7 @@
-package infra.dto;
+package dto;
 
 
-import domain.model.Course;
+import domain.model.Year;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 public class CourseDTO {
     private long id;
-    private int targetYear;
+    private Year targetYear;
     private int credit;
     private String courseCode;
     private String department;
@@ -22,7 +22,7 @@ public class CourseDTO {
         private String courseCode;
         private String courseName;
         private String department;
-        private int targetYear;
+        private Year targetYear;
         private int credit;
 
         public Builder id(long id) {
@@ -45,7 +45,7 @@ public class CourseDTO {
             return this;
         }
 
-        public Builder targetYear(int targetYear) {
+        public Builder targetYear(Year value) {
             this.targetYear = targetYear;
             return this;
         }

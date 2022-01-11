@@ -6,20 +6,24 @@ import domain.model.Student;
 import domain.repository.AccountRepository;
 import domain.repository.RegisteringRepository;
 import domain.repository.StudentRepository;
+import factory.AccountFactory;
+import factory.StudentFactory;
 import infra.database.option.registering.LectureIDOption;
 import infra.database.option.student.StudentCodeOption;
 import infra.database.option.student.StudentOption;
-import infra.dto.LectureDTO;
-import infra.dto.ModelMapper;
-import infra.dto.StudentDTO;
+import dto.LectureDTO;
+import dto.ModelMapper;
+import dto.StudentDTO;
 
 import java.util.List;
 
 //학생과 관련된 기능을 수행하는 객체
 public class StudentAppService {
-    private StudentRepository stdRepo;
-    private AccountRepository accRepo;
-    private RegisteringRepository regRepo;
+    private final StudentRepository stdRepo;
+    private final AccountRepository accRepo;
+    private final RegisteringRepository regRepo;
+    private final StudentFactory stdFactory;
+    private final AccountFactory accountFactory;
 
     public StudentAppService(
             StudentRepository stdRepo, AccountRepository accRepo,
@@ -27,31 +31,20 @@ public class StudentAppService {
         this.stdRepo = stdRepo;
         this.accRepo = accRepo;
         this.regRepo = regRepo;
+        stdFactory = new StudentFactory();
+        accountFactory = new AccountFactory();
     }
 
     //학생 생성 기능
     public void create(StudentDTO stdDTO) {
         //받은 정보로 학생객체 생성
-        Student std = Student.builder()
-                .name(stdDTO.getName())
-                .birthDate(stdDTO.getBirthDate())
-                .department(stdDTO.getDepartment())
-                .year(stdDTO.getYear())
-                .studentCode(stdDTO.getStudentCode())
-                .credit(stdDTO.getCredit())
-                .maxCredit(stdDTO.getMaxCredit())
-                .build();
+        Student std = stdFactory.create(stdDTO);
 
         //생성한 학생 객체 데이터베이스에 저장
         long stdID = stdRepo.save(std);
 
         //학생객체에 대한 계정 생성
-        Account acc = Account.builder()
-                .id(std.getStudentCode())
-                .password(stdDTO.getBirthDate())
-                .memberID(stdID)
-                .position("STUD")
-                .build();
+        Account acc = accountFactory.create(stdDTO, stdID, "STUD");
 
         //생성한 계정 객체 데이터베이스에 저장
         accRepo.save(acc);

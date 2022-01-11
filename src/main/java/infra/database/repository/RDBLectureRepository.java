@@ -10,9 +10,9 @@ import domain.repository.ProfessorRepository;
 import infra.database.mapper.LectureMapper;
 import infra.database.option.lecture.LectureOption;
 import infra.database.option.professor.ProfessorCodeOption;
-import infra.dto.LectureDTO;
-import infra.dto.LectureTimeDTO;
-import infra.dto.ModelMapper;
+import dto.LectureDTO;
+import dto.LectureTimeDTO;
+import dto.ModelMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 

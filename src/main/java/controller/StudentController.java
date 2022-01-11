@@ -6,6 +6,7 @@ import application.RegisterAppService;
 import application.StudentAppService;
 import domain.model.Student;
 import domain.repository.*;
+import dto.*;
 import infra.database.option.lecture.LectureOption;
 import infra.database.option.student.StudentOption;
 import infra.dto.*;

@@ -1,4 +1,4 @@
-package infra.dto;
+package dto;
 
 public class AccountDTO {
     private long pk;

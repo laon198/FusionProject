@@ -1,16 +1,14 @@
-package infra.dto;
+package dto;
 
 import domain.model.LectureTime;
 import domain.model.Period;
 import domain.model.*;
-import org.apache.ibatis.jdbc.Null;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 // model객체(협력을 통해 기능을 수행하는 객체)를 DTO객체(DB저장 혹은 통신에 사용하기위한

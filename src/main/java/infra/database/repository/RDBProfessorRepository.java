@@ -5,8 +5,8 @@ import domain.model.Professor;
 import domain.repository.ProfessorRepository;
 import infra.database.PooledDataSource;
 import infra.database.option.professor.ProfessorOption;
-import infra.dto.ModelMapper;
-import infra.dto.ProfessorDTO;
+import dto.ModelMapper;
+import dto.ProfessorDTO;
 
 import javax.sql.DataSource;
 import java.sql.*;

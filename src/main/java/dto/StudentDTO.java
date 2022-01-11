@@ -1,11 +1,13 @@
-package infra.dto;
+package dto;
+
+import domain.model.Year;
 
 import java.util.*;
 
 public class StudentDTO extends MemberDTO {
     private int maxCredit = 21;
     private int credit;
-    private int year;
+    private Year year;
     private String studentCode;
     private RegisteringDTO[] myRegisterings;
     private LectureTimeDTO[] timeTable;
@@ -14,7 +16,7 @@ public class StudentDTO extends MemberDTO {
         private Long id=-1L;
         private int credit;
         private int maxCredit=21;
-        private int year;
+        private Year year;
         private String name;
         private String department;
         private String studentCode;
@@ -47,7 +49,7 @@ public class StudentDTO extends MemberDTO {
             return this;
         }
 
-        public Builder year(int value){
+        public Builder year(Year value){
             year = value;
             return this;
         }
@@ -98,7 +100,12 @@ public class StudentDTO extends MemberDTO {
         return studentCode;
     }
 
-    public int getYear() {
+    @Override
+    public String getCode() {
+        return studentCode;
+    }
+
+    public Year getYear() {
         return year;
     }
 

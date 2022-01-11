@@ -1,10 +1,8 @@
 package controller;
 
 import application.*;
-import domain.model.Lecture;
-import domain.model.RegisteringPeriod;
 import domain.repository.*;
-import infra.database.option.lecture.LectureCodeOption;
+import dto.*;
 import infra.database.option.lecture.LectureOption;
 import infra.database.option.professor.ProfessorOption;
 import infra.database.option.student.StudentOption;

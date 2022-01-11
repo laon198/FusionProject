@@ -1,4 +1,4 @@
-package infra.dto;
+package dto;
 
 import domain.model.LectureTime;
 import lombok.Getter;

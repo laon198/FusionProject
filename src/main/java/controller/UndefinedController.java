@@ -4,9 +4,9 @@ import application.AccountAppService;
 import application.AdminAppService;
 import domain.repository.AccountRepository;
 import domain.repository.AdminRepository;
-import infra.dto.AccountDTO;
-import infra.dto.AdminDTO;
-import infra.dto.MessageDTO;
+import dto.AccountDTO;
+import dto.AdminDTO;
+import dto.MessageDTO;
 import infra.network.*;
 
 import java.io.IOException;

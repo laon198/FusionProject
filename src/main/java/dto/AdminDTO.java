@@ -1,6 +1,4 @@
-package infra.dto;
-
-import domain.model.Admin;
+package dto;
 
 public class AdminDTO extends MemberDTO {
     private String adminCode;
@@ -57,4 +55,8 @@ public class AdminDTO extends MemberDTO {
         return adminCode;
     }
 
+    @Override
+    public String getCode() {
+        return adminCode;
+    }
 }

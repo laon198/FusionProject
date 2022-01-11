@@ -3,8 +3,8 @@ package infra.database.repository;
 import domain.model.Admin;
 import domain.repository.AdminRepository;
 import infra.database.PooledDataSource;
-import infra.dto.AdminDTO;
-import infra.dto.ModelMapper;
+import dto.AdminDTO;
+import dto.ModelMapper;
 
 import javax.sql.DataSource;
 import java.sql.*;

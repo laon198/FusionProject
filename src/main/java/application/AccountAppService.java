@@ -3,8 +3,8 @@ package application;
 import domain.model.Account;
 import domain.repository.AccountRepository;
 import infra.database.option.account.AccountIDOption;
-import infra.dto.AccountDTO;
-import infra.dto.ModelMapper;
+import dto.AccountDTO;
+import dto.ModelMapper;
 
 //계정과 관련된 기능을 수행하는 객체
 public class AccountAppService {

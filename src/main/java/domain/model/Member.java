@@ -40,6 +40,7 @@ public abstract class Member{
     public long getID(){
         return id;
     }
+    abstract public String getCode();
 
     @Override
     public boolean equals(Object o) {

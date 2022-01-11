@@ -5,9 +5,9 @@ import domain.model.*;
 import domain.repository.*;
 import domain.service.Registrar;
 import infra.database.option.student.StudentCodeOption;
-import infra.dto.ModelMapper;
-import infra.dto.RegisteringDTO;
-import infra.dto.RegisteringPeriodDTO;
+import dto.ModelMapper;
+import dto.RegisteringDTO;
+import dto.RegisteringPeriodDTO;
 
 import java.util.HashSet;
 import java.util.List;

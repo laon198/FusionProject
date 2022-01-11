@@ -1,4 +1,4 @@
-package infra.dto;
+package dto;
 
 public class RegisteringPeriodDTO {
     private long id;

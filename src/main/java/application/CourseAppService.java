@@ -2,29 +2,26 @@ package application;
 
 import domain.model.Course;
 import domain.repository.CourseRepository;
-import infra.dto.CourseDTO;
-import infra.dto.ModelMapper;
+import dto.CourseDTO;
+import dto.ModelMapper;
+import factory.CourseFactory;
 
 import java.util.List;
 
 //교과목과 관련된 기능을 수행하는 객체
 public class CourseAppService {
     private final CourseRepository courseRepo;
+    private final CourseFactory courseFactory;
 
     public CourseAppService(CourseRepository courseRepo) {
         this.courseRepo = courseRepo;
+        courseFactory = new CourseFactory();
     }
 
     //교과목 생성 기능
     public void create(CourseDTO courseDTO) {
         //받은 정보로 교과목 생성
-        Course course = Course.builder()
-                .courseCode(courseDTO.getCourseCode())
-                .courseName(courseDTO.getCourseName())
-                .department(courseDTO.getDepartment())
-                .targetYear(courseDTO.getTargetYear())
-                .credit(courseDTO.getCredit())
-                .build();
+        Course course = courseFactory.create(courseDTO);
 
         //생성한 교과목 데이터베이스에 저장
         courseRepo.save(course);

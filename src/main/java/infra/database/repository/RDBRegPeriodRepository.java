@@ -4,8 +4,8 @@ import domain.model.Period;
 import domain.model.RegisteringPeriod;
 import domain.repository.RegPeriodRepository;
 import infra.database.PooledDataSource;
-import infra.dto.ModelMapper;
-import infra.dto.RegisteringPeriodDTO;
+import dto.ModelMapper;
+import dto.RegisteringPeriodDTO;
 
 import javax.sql.DataSource;
 import java.sql.*;

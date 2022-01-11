@@ -1,6 +1,4 @@
-package infra.dto;
-
-import java.util.Map;
+package dto;
 
 public class LecturePlannerDTO {
     private String goal = " ";

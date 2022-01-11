@@ -4,8 +4,8 @@ import application.LectureAppService;
 import application.ProfessorAppService;
 import application.StudentAppService;
 import domain.repository.*;
+import dto.*;
 import infra.database.option.lecture.LectureOption;
-import infra.database.option.professor.ProfessorOption;
 import infra.dto.*;
 import infra.network.Protocol;
 

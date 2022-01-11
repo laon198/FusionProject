@@ -6,6 +6,7 @@ import domain.repository.LectureRepository;
 import domain.repository.PlannerPeriodRepository;
 import domain.repository.ProfessorRepository;
 import domain.service.LectureManageService;
+import dto.*;
 import infra.database.option.lecture.LectureOption;
 import infra.database.option.professor.ProfessorCodeOption;
 import infra.dto.*;

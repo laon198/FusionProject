@@ -4,8 +4,8 @@ import domain.model.Account;
 import domain.repository.AccountRepository;
 import infra.database.PooledDataSource;
 import infra.database.option.account.AccountOption;
-import infra.dto.AccountDTO;
-import infra.dto.ModelMapper;
+import dto.AccountDTO;
+import dto.ModelMapper;
 
 import javax.sql.DataSource;
 import java.sql.*;

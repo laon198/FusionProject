@@ -1,4 +1,4 @@
-package infra.dto;
+package dto;
 
 import java.util.*;
 
@@ -61,6 +61,7 @@ public class ProfessorDTO extends MemberDTO {
     }
 
     public ProfessorDTO(){}
+
     private ProfessorDTO(Builder builder){
         super(builder.id, builder.name,
                 builder.department, builder.birthDate);
@@ -75,6 +76,11 @@ public class ProfessorDTO extends MemberDTO {
 
     public String getTelePhone() {
         return telePhone;
+    }
+
+    @Override
+    public String getCode() {
+        return professorCode;
     }
 
 }

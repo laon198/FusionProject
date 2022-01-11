@@ -3,8 +3,8 @@ package infra.database.repository;
 import domain.model.Registering;
 import domain.repository.RegisteringRepository;
 import infra.database.PooledDataSource;
-import infra.dto.ModelMapper;
-import infra.dto.RegisteringDTO;
+import dto.ModelMapper;
+import dto.RegisteringDTO;
 import infra.database.option.registering.RegisteringOption;
 
 import javax.sql.DataSource;

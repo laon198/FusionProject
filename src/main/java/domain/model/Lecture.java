@@ -1,7 +1,5 @@
 package domain.model;
 
-import infra.dto.ProfessorDTO;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;

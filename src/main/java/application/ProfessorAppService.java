@@ -4,43 +4,38 @@ import domain.model.Account;
 import domain.model.Professor;
 import domain.repository.AccountRepository;
 import domain.repository.ProfessorRepository;
+import factory.AccountFactory;
+import factory.ProfessorFactory;
 import infra.database.option.professor.ProfessorOption;
-import infra.dto.ModelMapper;
-import infra.dto.ProfessorDTO;
+import dto.ModelMapper;
+import dto.ProfessorDTO;
 
 import java.util.List;
 
 //교수와 관련된 기능을 수행하는 객체
 public class ProfessorAppService {
-    private ProfessorRepository profRepo;
-    private AccountRepository accRepo;
+    private final ProfessorRepository profRepo;
+    private final AccountRepository accRepo;
+    private final ProfessorFactory profFactory;
+    private final AccountFactory accountFactory;
 
     public ProfessorAppService(ProfessorRepository profRepo, AccountRepository accRepo) {
         this.profRepo = profRepo;
         this.accRepo = accRepo;
+        profFactory = new ProfessorFactory();
+        accountFactory = new AccountFactory();
     }
 
     //교수 생성 기능
     public void create(ProfessorDTO profDTO) {
         //받은 DTO로 교수 객체 생성
-        Professor prof = Professor.builder()
-                .name(profDTO.getName())
-                .birthDate(profDTO.getBirthDate())
-                .department(profDTO.getDepartment())
-                .professorCode(profDTO.getProfessorCode())
-                .telePhone(profDTO.getTelePhone())
-                .build();
+        Professor prof = profFactory.create(profDTO);
 
         //교수 객체 데이터베이스 저장
         long profID = profRepo.save(prof);
 
         //교수 정보로 계정 생성
-        Account acc = Account.builder()
-                .id(profDTO.getProfessorCode())
-                .password(profDTO.getBirthDate())
-                .memberID(profID)
-                .position("PROF")
-                .build();
+        Account acc = accountFactory.create(profDTO, profID, "PROF");
 
         //계정 데이터베이스에 저장
         accRepo.save(acc);
