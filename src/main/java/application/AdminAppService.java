@@ -59,7 +59,7 @@ public class AdminAppService {
     //관리자 삭제 기능
     public void delete(AdminDTO adminDTO){
         //받은 정보로 삭제할 관리자 생성
-        Admin admin = Admin.builder().id(adminDTO.getId()).build();
+        Admin admin = adminRepo.findByID(adminDTO.getId();
 
         //관리자 삭제
         adminRepo.remove(admin);

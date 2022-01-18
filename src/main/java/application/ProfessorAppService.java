@@ -57,7 +57,7 @@ public class ProfessorAppService {
     //교수 삭제 기능
     public void delete(ProfessorDTO profDTO) {
         //교수객체 생성(삭제될 교수의 id값만 가지는)
-        Professor prof = Professor.builder().id(profDTO.getId()).build();
+        Professor prof = profRepo.findByID(profDTO.getId());
 
         //데이터베이스에 교수 삭제
         profRepo.remove(prof);

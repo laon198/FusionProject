@@ -44,8 +44,7 @@ public class CourseAppService {
 
     //교과목 삭제 기능
     public void delete(CourseDTO courseDTO) {
-        //받은 정보로 삭제할 교과목(id만 가짐) 임의로 생성
-        Course course = Course.builder().id(courseDTO.getId()).build();
+        Course course = courseRepo.findByID(courseDTO.getId());
         //해당 교과목 삭제
         courseRepo.remove(course);
     }

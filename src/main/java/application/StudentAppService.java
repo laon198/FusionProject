@@ -60,7 +60,7 @@ public class StudentAppService {
 
     //학생 삭제 기능
     public void delete(StudentDTO stdDTO) {
-        Student std = Student.builder().id(stdDTO.getId()).build();
+        Student std = stdRepo.findByID(stdDTO.getId());
 
         stdRepo.remove(std);
     }
