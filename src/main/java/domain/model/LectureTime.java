@@ -12,7 +12,6 @@ public class LectureTime {
         FIFTH, SIXTH, SEVENTH, EIGHTH, NINTH;
     }
 
-    private long id;
     private DayOfWeek lectureDay;
     private LecturePeriod startTime;
     private LecturePeriod endTime;
@@ -20,7 +19,6 @@ public class LectureTime {
     private String lectureName;
 
     public static class Builder {
-        private long id;
         private DayOfWeek lectureDay;
         private LecturePeriod startTime;
         private LecturePeriod endTime;
@@ -29,11 +27,6 @@ public class LectureTime {
 
         public Builder lectureDay(DayOfWeek value) {
             this.lectureDay = value;
-            return this;
-        }
-
-        public Builder id(long value) {
-            id = value;
             return this;
         }
 
@@ -67,7 +60,6 @@ public class LectureTime {
     }
 
     private LectureTime(Builder builder) {
-        id = builder.id;
         lectureDay = builder.lectureDay;
         startTime = builder.startTime;
         endTime = builder.endTime;
@@ -75,8 +67,7 @@ public class LectureTime {
         lectureName = builder.lectureName;
     }
 
-    public LectureTime(long id, DayOfWeek dayOfWeek, LecturePeriod startTime, LecturePeriod endTime, String room, String lectureName) {
-        this.id = id;
+    public LectureTime(DayOfWeek dayOfWeek, LecturePeriod startTime, LecturePeriod endTime, String room, String lectureName) {
         isValidTime(startTime, endTime);
         lectureDay = dayOfWeek;
         this.startTime = startTime;
@@ -106,7 +97,6 @@ public class LectureTime {
     @Override
     public String toString() {
         return "LectureTime{" +
-                "id=" + id +
                 ", lectureDay=" + lectureDay +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
@@ -118,13 +108,13 @@ public class LectureTime {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if(!(o instanceof LectureTime)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         LectureTime that = (LectureTime) o;
-        return id==that.id;
+        return lectureDay == that.lectureDay && startTime == that.startTime && endTime == that.endTime && Objects.equals(room, that.room) && Objects.equals(lectureName, that.lectureName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(lectureDay, startTime, endTime, room, lectureName);
     }
 }

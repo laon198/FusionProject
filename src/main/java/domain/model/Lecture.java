@@ -6,9 +6,9 @@ import java.util.Set;
 
 public class Lecture {
     private long id;
-    private Course course;
+    private long courseID;
     private String lectureCode;
-    private Professor professor;
+    private long professorID;
     private int limit;
     private Set<LectureTime> lectureTimes;
     private Set<Registering> myRegisterings;
@@ -16,9 +16,9 @@ public class Lecture {
 
     public static class Builder {
         private long id;
-        private Course course;
+        private long courseID;
         private String lectureCode;
-        private Professor professor;
+        private long professorID;
         private int limit;
         private Set<LectureTime> lectureTimes = new HashSet<>();
         private Set<Registering> myRegisterings = new HashSet<>();
@@ -30,8 +30,8 @@ public class Lecture {
             return this;
         }
 
-        public Builder course(Course course) {
-            this.course = course;
+        public Builder courseID(long value) {
+            courseID = value;
             return this;
         }
 
@@ -40,8 +40,8 @@ public class Lecture {
             return this;
         }
 
-        public Builder professor(Professor value) {
-            professor = value;
+        public Builder professorID(long value) {
+            professorID = value;
             return this;
         }
 
@@ -76,9 +76,9 @@ public class Lecture {
 
     private Lecture(Builder builder) {
         id = builder.id;
-        course = builder.course;
+        courseID = builder.courseID;
         lectureCode = builder.lectureCode;
-        professor = builder.professor;
+        professorID = builder.professorID;
         limit = builder.limit;
         lectureTimes = builder.lectureTimes;
         myRegisterings = builder.myRegisterings;
@@ -91,8 +91,8 @@ public class Lecture {
         return id;
     }
 
-    public Course getCourse() {
-        return course;
+    public long getCourseID() {
+        return courseID;
     }
 
     public Set<LectureTime> getLectureTimes() {
@@ -110,8 +110,8 @@ public class Lecture {
         lectureCode = value;
     }
 
-    public  void setProfessor(Professor professor){
-        this.professor = professor;
+    public  void setProfessorID(long id){
+        professorID = id;
     }
 
     public void setLectureTimes(Set<LectureTime> lectureTimes) {
@@ -138,16 +138,16 @@ public class Lecture {
     }
 
     public boolean isEqualCourse(Lecture lecture) {
-        return course.equals(lecture.course);
+        return courseID==lecture.courseID;
     }
 
     @Override
     public String toString() {
         return "Lecture{" +
                 "id=" + id +
-                ", course=" + course +
+                ", courseID=" + courseID +
                 ", lectureCode='" + lectureCode + '\'' +
-                ", professor=" + professor +
+                ", professorID=" + professorID +
                 ", limit=" + limit +
                 ", lectureTimes=" + lectureTimes +
                 ", myRegisterings=" + myRegisterings +
