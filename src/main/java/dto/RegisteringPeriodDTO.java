@@ -1,14 +1,16 @@
 package dto;
 
+import domain.model.Year;
+
 public class RegisteringPeriodDTO {
     private long id;
     private PeriodDTO period;
-    private int allowedYear;
+    private Year allowedYear;
 
     public static class Builder{
         private long id;
         private PeriodDTO period;
-        private int allowedYear;
+        private Year allowedYear;
 
         public Builder id(long value){
             id = value;
@@ -20,7 +22,7 @@ public class RegisteringPeriodDTO {
             return this;
         }
 
-        public Builder allowedYear(int value){
+        public Builder allowedYear(Year value){
             allowedYear = value;
             return this;
         }
@@ -50,7 +52,7 @@ public class RegisteringPeriodDTO {
         return period;
     }
 
-    public int getAllowedYear() {
+    public Year getAllowedYear() {
         return allowedYear;
     }
 }

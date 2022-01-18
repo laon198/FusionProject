@@ -123,14 +123,13 @@ public class LectureAppService {
 
         //개설교과목 담당교수 수정
         Professor prof = profRepo.findByID(lectureDTO.getProfessor().getId());
-        lecture.setProfessor(prof);
+        lecture.setProfessorID(prof.getID());
 
         //강의시간변경
         Set<LectureTime> times = new HashSet<>();
         for(LectureTimeDTO dto : lectureDTO.getLectureTimes()){
             times.add(
                     LectureTime.builder()
-                            .id(dto.getId())
                             .startTime(dto.getStartTime())
                             .endTime(dto.getEndTime())
                             .lectureDay(dto.getLectureDay())

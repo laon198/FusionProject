@@ -43,23 +43,23 @@ public class AdminAppService {
 
     //관리자 정보 수정 기능
     public void update(AdminDTO adminDTO){
-        //받은 정보로 업데이트할 관리자 생성
-        Admin admin = Admin.builder()
-                .id(adminDTO.getId())
-                .name(adminDTO.getName())
-                .birthDate(adminDTO.getBirthDate())
-                .department(adminDTO.getDepartment())
-                .adminCode(adminDTO.getAdminCode())
-                .build();
-
-        //관리자 정보 수정
-        adminRepo.save(admin);
+//        //받은 정보로 업데이트할 관리자 생성
+//        Admin admin = Admin.builder()
+//                .id(adminDTO.getId())
+//                .name(adminDTO.getName())
+//                .birthDate(adminDTO.getBirthDate())
+//                .department(adminDTO.getDepartment())
+//                .adminCode(adminDTO.getAdminCode())
+//                .build();
+//
+//        //관리자 정보 수정
+//        adminRepo.save(admin);
     }
 
     //관리자 삭제 기능
     public void delete(AdminDTO adminDTO){
         //받은 정보로 삭제할 관리자 생성
-        Admin admin = adminRepo.findByID(adminDTO.getId();
+        Admin admin = adminRepo.findByID(adminDTO.getId());
 
         //관리자 삭제
         adminRepo.remove(admin);
