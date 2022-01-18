@@ -50,6 +50,10 @@ public class Professor extends Member{
         telePhone = builder.telePhone;
     }
 
+    @Override
+    public String getCode() {
+        return professorCode;
+    }
 
     //시간표 추가 : 담당교과목이 추가되었을때
     public void addTimeTable(Set<LectureTime> lectureTimes){

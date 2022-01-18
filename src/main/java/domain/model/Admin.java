@@ -32,6 +32,11 @@ public class Admin extends Member {
     }
 
     @Override
+    public String getCode() {
+        return adminCode;
+    }
+
+    @Override
     public String toString() {
         return "Admin{" +
                 "adminCode='" + adminCode + '\'' +

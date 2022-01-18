@@ -69,6 +69,11 @@ public class Student extends Member{
         maxCredit = builder.maxCredit;
     }
 
+    @Override
+    public String getCode() {
+        return studentCode;
+    }
+
     public Set<Registering> getMyRegisterings(){
         return new HashSet<>(myRegisterings);
     }
