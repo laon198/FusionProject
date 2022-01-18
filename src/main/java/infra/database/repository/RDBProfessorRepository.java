@@ -288,10 +288,13 @@ public class RDBProfessorRepository implements ProfessorRepository {
             while(lectureInfo.next()){
                 timeTable.add(
                         LectureTime.builder()
-                                .lectureDay(lectureInfo.getString("day_of_week"))
+                                .lectureDay(LectureTime.DayOfWeek.valueOf(
+                                        lectureInfo.getString("day_of_week")))
                                 .room(lectureInfo.getString("lecture_room"))
-                                .startTime(lectureInfo.getInt("start_period"))
-                                .endTime(lectureInfo.getInt("end_period"))
+                                .startTime(LectureTime.LecturePeriod.valueOf(
+                                lectureInfo.getString("start_period")))
+                                .endTime(LectureTime.LecturePeriod.valueOf(
+                                        lectureInfo.getString("end_period")))
                                 .lectureName(lectureInfo.getString("lecture_name"))
                                 .build()
                 );

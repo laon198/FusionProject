@@ -3,6 +3,7 @@ package infra.database.repository;
 import domain.model.LectureTime;
 import domain.model.Registering;
 import domain.model.Student;
+import domain.model.Year;
 import domain.repository.StudentRepository;
 import infra.database.PooledDataSource;
 import dto.ModelMapper;
@@ -166,7 +167,7 @@ public class RDBStudentRepository implements StudentRepository {
 
             stdStmt.setLong(1, id);
             stdStmt.setString(2, stdDTO.getStudentCode());
-            stdStmt.setInt(3, stdDTO.getYear());
+            stdStmt.setString(3, stdDTO.getYear().toString());
             stdStmt.setInt(4, stdDTO.getCredit());
             stdStmt.setInt(5, stdDTO.getMaxCredit());
 
@@ -223,7 +224,7 @@ public class RDBStudentRepository implements StudentRepository {
             memberStmt.setLong(4, stdDTO.getId());
 
             stdStmt.setString(1, stdDTO.getStudentCode());
-            stdStmt.setInt(2, stdDTO.getYear());
+            stdStmt.setString(2, stdDTO.getYear().toString());
             stdStmt.setInt(3, stdDTO.getMaxCredit());
             stdStmt.setInt(4, stdDTO.getCredit());
             stdStmt.setLong(5, stdDTO.getId());
@@ -289,7 +290,7 @@ public class RDBStudentRepository implements StudentRepository {
     private List<Student> getStdFrom(ResultSet resSet) throws SQLException {
         List<Student> stdList = new ArrayList<>();
         long resID = 0;
-        int year = 0;
+        Year year;
         int credit = 0;
         int maxCredit = 0;
         String name;
@@ -301,7 +302,7 @@ public class RDBStudentRepository implements StudentRepository {
 
         while(resSet.next()) {
             resID = resSet.getLong("member_PK");
-            year = resSet.getInt("year");
+            year = Year.valueOf(resSet.getString("year"));
             name = resSet.getString("name");
             department = resSet.getString("department");
             birthDate = resSet.getString("birthDay");
@@ -315,10 +316,13 @@ public class RDBStudentRepository implements StudentRepository {
             while(lectureInfo.next()){
                 timeTable.add(
                         LectureTime.builder()
-                        .lectureDay(lectureInfo.getString("day_of_week"))
+                        .lectureDay(LectureTime.DayOfWeek.valueOf(
+                        lectureInfo.getString("day_of_week")))
                         .room(lectureInfo.getString("lecture_room"))
-                        .startTime(lectureInfo.getInt("start_period"))
-                        .endTime(lectureInfo.getInt("end_period"))
+                        .startTime(LectureTime.LecturePeriod.valueOf(
+                                lectureInfo.getString("start_period")))
+                        .endTime(LectureTime.LecturePeriod.valueOf(
+                                lectureInfo.getString("end_period")))
                         .lectureName(lectureInfo.getString("lecture_name"))
                         .build()
                 );
@@ -327,11 +331,12 @@ public class RDBStudentRepository implements StudentRepository {
             ResultSet registering = findRegistering(studentCode);
             while(registering.next()){
                 myRegisterings.add(
-                        Registering.builder()
+                        Registering.builder(
+                                registering.getLong("lecture_PK"),
+                                registering.getString("student_code"),
+                                registering.getString("register_date")
+                        )
                         .id(registering.getLong("registering_PK"))
-                        .studentCode(registering.getString("student_code"))
-                        .lectureID(registering.getLong("lecture_PK"))
-                        .registeringTime(registering.getString("register_date"))
                         .build()
                 );
             }

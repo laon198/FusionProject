@@ -192,12 +192,8 @@ public class RDBAccountRepository implements AccountRepository {
             position = res.getString("position");
 
             list.add(
-                    Account.builder()
+                    Account.builder(id, password, position, memberID)
                         .pk(pk)
-                        .id(id)
-                        .password(password)
-                        .memberID(memberID)
-                        .position(position)
                         .build()
             );
         }

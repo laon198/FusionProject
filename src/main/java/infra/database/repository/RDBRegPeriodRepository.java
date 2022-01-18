@@ -2,6 +2,7 @@ package infra.database.repository;
 
 import domain.model.Period;
 import domain.model.RegisteringPeriod;
+import domain.model.Year;
 import domain.repository.RegPeriodRepository;
 import infra.database.PooledDataSource;
 import dto.ModelMapper;
@@ -61,7 +62,7 @@ public class RDBRegPeriodRepository implements RegPeriodRepository {
             stmt = conn.prepareStatement(new String(query), PreparedStatement.RETURN_GENERATED_KEYS);
             stmt.setTimestamp(1, Timestamp.valueOf(regPeriodDTO.getPeriodDTO().getBeginTime()));
             stmt.setTimestamp(2, Timestamp.valueOf(regPeriodDTO.getPeriodDTO().getEndTime()));
-            stmt.setInt(3, regPeriodDTO.getAllowedYear());
+            stmt.setString(3, regPeriodDTO.getAllowedYear().toString());
 
             stmt.executeUpdate();
             ResultSet res = stmt.getGeneratedKeys();
@@ -113,7 +114,7 @@ public class RDBRegPeriodRepository implements RegPeriodRepository {
             long id = res.getLong("registering_period_PK");
             LocalDateTime beginTime = res.getTimestamp("start_period").toLocalDateTime();
             LocalDateTime endTime = res.getTimestamp("end_period").toLocalDateTime();
-            int allowedYear = res.getInt("target_year");
+            Year allowedYear = Year.valueOf(res.getString("target_year"));
 
             list.add(
                     RegisteringPeriod.builder()

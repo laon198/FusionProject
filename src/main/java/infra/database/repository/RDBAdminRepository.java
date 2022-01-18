@@ -202,12 +202,8 @@ public class RDBAdminRepository implements AdminRepository {
             adminCode = res.getString("admin_code");
 
             list.add(
-                    Admin.builder()
+                    Admin.builder(name, department, birthDay, adminCode)
                     .id(id)
-                    .name(name)
-                    .department(department)
-                    .birthDate(birthDay)
-                    .adminCode(adminCode)
                     .build()
             );
         }

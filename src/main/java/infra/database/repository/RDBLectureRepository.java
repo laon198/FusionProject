@@ -125,15 +125,15 @@ public class RDBLectureRepository implements LectureRepository {
 
             for (LectureTimeDTO lectureTimeDTO : lectureTimes) {
                 if (lectureTimeDTO.getId() == -1) {
-                    mapper.insertLectureTime(lectureDTO.getId(), lectureTimeDTO.getLectureDay(),
-                            lectureTimeDTO.getRoom(), lectureTimeDTO.getStartTime(),
-                            lectureTimeDTO.getEndTime(), lectureTimeDTO.getLectureName());
+                    mapper.insertLectureTime(lectureDTO.getId(), lectureTimeDTO.getLectureDay().toString(),
+                            lectureTimeDTO.getRoom(), lectureTimeDTO.getStartTime().toString(),
+                            lectureTimeDTO.getEndTime().toString(), lectureTimeDTO.getLectureName());
                 } else {
                     mapper.updateLectureTime(
                             lectureTimeDTO.getId(),
-                            lectureTimeDTO.getLectureDay(),
-                            lectureTimeDTO.getRoom(), lectureTimeDTO.getStartTime(),
-                            lectureTimeDTO.getEndTime(), lectureTimeDTO.getLectureName()
+                            lectureTimeDTO.getLectureDay().toString(),
+                            lectureTimeDTO.getRoom(), lectureTimeDTO.getStartTime().toString(),
+                            lectureTimeDTO.getEndTime().toString(), lectureTimeDTO.getLectureName()
                     );
                 }
             }
@@ -173,9 +173,9 @@ public class RDBLectureRepository implements LectureRepository {
 
             for (LectureTimeDTO lectureTimeDTO : lectureTimes) {
                 mapper.insertLectureTime(
-                        Long.parseLong((String) lectureInfo.get("id")), lectureTimeDTO.getLectureDay(),
-                        lectureTimeDTO.getRoom(), lectureTimeDTO.getStartTime(),
-                        lectureTimeDTO.getEndTime(), lectureTimeDTO.getLectureName()
+                        Long.parseLong((String) lectureInfo.get("id")), lectureTimeDTO.getLectureDay().toString(),
+                        lectureTimeDTO.getRoom(), lectureTimeDTO.getStartTime().toString(),
+                        lectureTimeDTO.getEndTime().toString(), lectureTimeDTO.getLectureName()
                 );
             }
 
@@ -259,11 +259,12 @@ public class RDBLectureRepository implements LectureRepository {
         Set<Registering> registerings = new HashSet<>();
         for (Map<String, Object> reg : regs) {
             registerings.add(
-                    Registering.builder()
+                    Registering.builder(
+                            (long) reg.get("lecture_PK"),
+                            reg.get("student_code").toString(),
+                            reg.get("register_date").toString()
+                            )
                             .id((long) reg.get("registering_PK"))
-                            .studentCode(reg.get("student_code").toString())
-                            .registeringTime(reg.get("register_date").toString())
-                            .lectureID((long) reg.get("lecture_PK"))
                             .build()
             );
         }
@@ -276,10 +277,9 @@ public class RDBLectureRepository implements LectureRepository {
         for (Map time : times) {
             lectureTimes.add(
                     LectureTime.builder()
-                            .id((Long) time.get("lecture_time_PK"))
-                            .lectureDay(time.get("day_of_week").toString())
-                            .startTime((int) time.get("start_period"))
-                            .endTime((int) time.get("end_period"))
+                            .lectureDay(LectureTime.DayOfWeek.valueOf(time.get("day_of_week").toString()))
+                            .startTime(LectureTime.LecturePeriod.valueOf((String)time.get("start_period")))
+                            .endTime(LectureTime.LecturePeriod.valueOf((String)time.get("end_period")))
                             .lectureName((String)time.get("lecture_name"))
                             .room(time.get("lecture_room").toString())
                             .build()
@@ -292,15 +292,9 @@ public class RDBLectureRepository implements LectureRepository {
                                  Set<Registering> regs, LecturePlanner planner) {
         return Lecture.builder()
                 .id((long) lectureMap.get("lecture_PK"))
-                .course(courseRepo.findByID((long) lectureMap.get("course_PK")))
+                .courseID((long) lectureMap.get("course_PK"))
                 .lectureCode(lectureMap.get("lecture_code").toString())
-                .professor(
-                        profRepo.findByOption(
-                                new ProfessorCodeOption(
-                                        lectureMap.get("professor_code").toString()
-                                )
-                        ).get(0)
-                )
+                .professorID((long)lectureMap.get("professor_code"))
                 .limit((int) lectureMap.get("capacity"))
                 .registerings(regs)
                 .lectureTimes(times)

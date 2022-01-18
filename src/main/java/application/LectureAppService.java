@@ -9,7 +9,6 @@ import domain.service.LectureManageService;
 import dto.*;
 import infra.database.option.lecture.LectureOption;
 import infra.database.option.professor.ProfessorCodeOption;
-import infra.dto.*;
 
 import java.util.HashSet;
 import java.util.List;

@@ -14,12 +14,11 @@ import java.util.Set;
 // model객체(협력을 통해 기능을 수행하는 객체)를 DTO객체(DB저장 혹은 통신에 사용하기위한
 // 값만 가지고있는 객체)로 변환해주는 클래스
 public class ModelMapper {
-
     public static RegisteringPeriodDTO regPeriodToDTO(RegisteringPeriod regPeriod){
         try{
             long id = getLongField(regPeriod, "id");
             PeriodDTO periodDTO = periodToDTO(getPeriod(regPeriod, "period"));
-            int year = getYearField(regPeriod, "allowedYear");
+            Year year = getYearField(regPeriod, "allowedYear");
             return RegisteringPeriodDTO.builder()
                     .id(id)
                     .period(periodDTO)
@@ -178,7 +177,7 @@ public class ModelMapper {
             String studentCode = getStringField(std, "studentCode");
             int credit = getIntField(std, "credit");
             int maxCredit = getIntField(std, "maxCredit");
-            int year = getYearField(std, "year");
+            Year year = getYearField(std, "year");
             Set<LectureTimeDTO> timeTable = getLectureTimeDTOTable(getTimeTable(std, "timeTable"));
             Set<RegisteringDTO> myRegisterings = getRegDTOSet(getRegisteringSet(std, "myRegisterings"));
 
@@ -344,7 +343,7 @@ public class ModelMapper {
         try{
             long id = getLongField(course, "id");
             int credit = getIntField(course, "credit");
-            int targetYear = getIntField(course, "targetYear");
+            Year targetYear = getYearField(course, "targetYear");
             String courseCode = getStringField(course, "courseCode");
             String department = getStringField(course, "department");
             String courseName = getStringField(course, "courseName");
@@ -377,18 +376,10 @@ public class ModelMapper {
         return (long) f1.get(obj);
     }
 
-    private static int getYearField(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+    private static Year getYearField(Object obj, String fieldName) throws NoSuchFieldException, IllegalAccessException {
         Field f1 = obj.getClass().getDeclaredField(fieldName);
         f1.setAccessible(true);
-        if (f1.get(obj) == Student.Year.FRESHMAN) {
-            return 1;
-        } else if (f1.get(obj) == Student.Year.SOPHOMORE) {
-            return 2;
-        } else if (f1.get(obj) == Student.Year.JUNIOR) {
-            return 3;
-        } else {
-            return 4;
-        }
+        return (Year)f1.get(obj);
     }
 
     private static List<Long> getLongList(Object obj, String fieldName) throws IllegalAccessException, NoSuchFieldException {

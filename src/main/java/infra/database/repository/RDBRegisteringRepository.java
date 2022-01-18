@@ -147,11 +147,8 @@ public class RDBRegisteringRepository implements RegisteringRepository {
             registeringTime = res.getString("register_date");
 
             list.add(
-                    Registering.builder()
+                    Registering.builder(lectureID, studentCode, registeringTime)
                             .id(id)
-                            .lectureID(lectureID)
-                            .studentCode(studentCode)
-                            .registeringTime(registeringTime)
                             .build()
             );
         }
