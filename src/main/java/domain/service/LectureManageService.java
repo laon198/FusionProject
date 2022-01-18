@@ -25,9 +25,9 @@ public class LectureManageService {
 
         //강의 객체 생성해서 반환
         return Lecture.builder()
-                .course(course)
+                .courseID(course.getId())
                 .lectureCode(lectureCode)
-                .professor(professor)
+                .professorID(professor.getID())
                 .limit(limit)
                 .lectureTimes(lectureTimes)
                 .build();

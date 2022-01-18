@@ -22,7 +22,7 @@ public class Registrar {
 
     //수강신청 기능 (수강신청 제약사항 확인후 수강객체 생성하여 반환)
     public Registering register(Lecture lecture, Student student) throws  IllegalStateException, IllegalArgumentException{
-        Course course = lecture.getCourse();
+        Course course = courseRepo.findByID(lecture.getCourseID());
 
         //수강신청하는 학생의 중복된 수강 확인
         for(Registering registering : student.getMyRegisterings()){
@@ -54,10 +54,8 @@ public class Registrar {
         }
 
         //수강객체 생성
-        Registering newReg = Registering.builder()
-                                .lectureID(lecture.getID())
-                                .studentCode(student.getStudentCode())
-                                .registeringTime(LocalDateTime.now().toString())
+        Registering newReg = Registering.builder(
+                lecture.getID(), student.getStudentCode(), LocalDateTime.now().toString())
                                 .build();
 
         //개설교과목과 학생에게 수강과 관련된 변경 사항 저장
@@ -73,7 +71,7 @@ public class Registrar {
         if(!student.hasLecture(lecture.getID())){
             throw new IllegalArgumentException("수강하지 않는 강의 입니다.");
         }
-        Course course = lecture.getCourse();
+        Course course = courseRepo.findByID(lecture.getCourseID());
 
         //학생과 개설교과목 각각 수강 삭제
         student.cancel(registering, lecture.getLectureTimes(), course.getCredit());
